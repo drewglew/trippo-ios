@@ -2465,14 +2465,14 @@ remarks:
             self.ViewDocumentListHeightConstraint.constant=0;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"doc.on.doc.fill"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"doc.circle"] forState:UIControlStateNormal];
         }];
     } else {
         [UIView animateWithDuration:0.5 animations:^{
             self.ViewDocumentListHeightConstraint.constant=DocumentListingViewPresentedHeight;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"minus.circle.fill"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"minus.circle"] forState:UIControlStateNormal];
         }];
     }
 }

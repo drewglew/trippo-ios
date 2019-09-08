@@ -40,13 +40,7 @@ CGFloat Scale = 4.14f;
     if (![ToolBoxNSO HasTopNotch]) {
         self.HeaderViewHeightConstraint.constant = 70.0f;
     }
-    /*
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, self.HeaderViewHeightConstraint.constant)];
-    
-    self.TableViewDiary.tableHeaderView = headerView;
-    */
-    
-
+ 
     // Do any additional setup after loading the view.
     if (self.Trip.itemgrouping==[NSNumber numberWithInt:1]) {
         self.SegmentState.selectedSegmentIndex = 1;

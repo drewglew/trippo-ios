@@ -103,15 +103,9 @@ bool FirstLoad;
     
 }
 
-
-
-
-
-
-
 /*
  created date:      15/08/2018
- last modified:     23/04/2019
+ last modified:     08/09/2019
  remarks:
  */
 -(void)LocateTripContent {
@@ -129,63 +123,45 @@ bool FirstLoad;
     /* last trip 0/1 */
     TripRLM* lasttrip = [[TripRLM alloc] init];
 
-    RLMSortDescriptor *sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"enddt" ascending:YES];
-    [self.alltripitems sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
-
-    NSDate* tripdt = nil;
-    for (TripRLM* trip in self.alltripitems) {
-        RLMResults <ActivityRLM*> *allActivities = [ActivityRLM objectsWhere:@"tripkey=%@", trip.key];
-        NSDate *LastestDate = [allActivities maxOfProperty:@"enddt"];
-        // past item
-        //NSLog(@"trip enddt=%@",LastestDate);
-        if([currentDate compare: LastestDate] == NSOrderedDescending ) {
-            if (tripdt == nil) {
-                tripdt = LastestDate;
-                lasttrip.itemgrouping = [NSNumber numberWithInt:1];
-                lasttrip.key = trip.key;
-                lasttrip.name = trip.name;
-                lasttrip.startdt = trip.startdt;
-                lasttrip.enddt = trip.enddt;
-            } else if ([tripdt compare: LastestDate] == NSOrderedAscending) {
-                lasttrip.key = trip.key;
-                lasttrip.name = trip.name;
-                lasttrip.startdt = trip.startdt;
-                lasttrip.enddt = trip.enddt;
-                lasttrip.itemgrouping = [NSNumber numberWithInt:1];
-                tripdt = trip.enddt;
-            }
-        }
-    }
+    NSPredicate *predicateExpired = [NSPredicate predicateWithFormat:@"enddt < %@", currentDate];
+    RLMResults <TripRLM*> *expiredTrips = [self.alltripitems objectsWithPredicate:predicateExpired];
     
+    RLMSortDescriptor *sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"enddt" ascending:YES];
+    expiredTrips = [expiredTrips sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
+
+    if (expiredTrips.count >0) {
+        TripRLM* trip = [expiredTrips lastObject];
+   
+        lasttrip.itemgrouping = [NSNumber numberWithInt:1];
+        lasttrip.key = trip.key;
+        lasttrip.name = trip.name;
+        lasttrip.startdt = trip.startdt;
+        lasttrip.enddt = trip.enddt;
+    }
+   
     if (lasttrip.itemgrouping==[NSNumber numberWithInt:1]) {
         TripRLM *trip = [TripRLM objectForPrimaryKey:lasttrip.key];
         [self RetrieveImageItem :trip :imagesDirectory];
         [self.selectedtripitems addObject:lasttrip];
     }
 
+    NSPredicate *predicateActive = [NSPredicate predicateWithFormat:@"startdt <= %@ AND enddt >= %@", currentDate,currentDate];
+    RLMResults <TripRLM*> *activeTrips = [self.alltripitems objectsWithPredicate:predicateActive];
+
     /* active trip 0/1:M */
     bool found_active = false;
-    for (TripRLM* trip in self.alltripitems) {
-        RLMResults <ActivityRLM*> *allActivities = [ActivityRLM objectsWhere:@"tripkey=%@", trip.key];
-        NSDate *EarliestDate = [allActivities maxOfProperty:@"startdt"];
-        NSDate *LatestDate = [allActivities maxOfProperty:@"enddt"];
-
-        if ([currentDate compare: EarliestDate] == NSOrderedDescending && [currentDate compare: LatestDate] == NSOrderedAscending) {
-            
-            TripRLM* tripobject = [[TripRLM alloc] init];
-            tripobject.key = trip.key;
-            tripobject.name = trip.name;
-            tripobject.startdt = trip.startdt;
-            tripobject.enddt = trip.enddt;
-            tripobject.itemgrouping = [NSNumber numberWithInt:2];
-            
-            [self.selectedtripitems addObject:tripobject];
-            found_active = true;
-            [self RetrieveImageItem :trip :imagesDirectory];
-        }
-
+    for (TripRLM* trip in activeTrips) {
+        TripRLM* tripobject = [[TripRLM alloc] init];
+        tripobject.key = trip.key;
+        tripobject.name = trip.name;
+        tripobject.startdt = trip.startdt;
+        tripobject.enddt = trip.enddt;
+        tripobject.itemgrouping = [NSNumber numberWithInt:2];
+        [self.selectedtripitems addObject:tripobject];
+        found_active = true;
+        [self RetrieveImageItem :trip :imagesDirectory];
     }
-   
+
     /* optional new if no active trip found */
     if (!found_active) {
         TripRLM* emptytrip = [[TripRLM alloc] init];
@@ -200,31 +176,23 @@ bool FirstLoad;
     [self.alltripitems sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
 
     /* next trip 0/1 */
-    tripdt = nil;
+    NSPredicate *predicateFuture = [NSPredicate predicateWithFormat:@"startdt > %@", currentDate];
+    RLMResults <TripRLM*> *futureTrips = [self.alltripitems objectsWithPredicate:predicateFuture];
+       
+    sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
+    futureTrips = [futureTrips sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
+
     TripRLM* nexttrip = [[TripRLM alloc] init];
-
-    for (TripRLM* trip in self.alltripitems) {
-        // nexttrip item
-        RLMResults <ActivityRLM*> *allActivities = [ActivityRLM objectsWhere:@"tripkey=%@", trip.key];
-        NSDate *EarliestDate = [allActivities maxOfProperty:@"startdt"];
-
-        if([currentDate compare: EarliestDate] == NSOrderedAscending ) {
-            if (tripdt==nil) {
-                tripdt = EarliestDate;
-                nexttrip = [[TripRLM alloc] initWithValue:trip];
-                nexttrip.itemgrouping = [NSNumber numberWithInt:4];
-                nexttrip.key = trip.key;
-                nexttrip.name = trip.name;
-            } else if ([tripdt compare: EarliestDate] == NSOrderedDescending) {
-                nexttrip = [[TripRLM alloc] initWithValue:trip];
-                nexttrip.itemgrouping = [NSNumber numberWithInt:4];
-                tripdt = trip.startdt;
-                nexttrip.key = trip.key;
-                nexttrip.name = trip.name;
-            }
-        }
+    
+    if (futureTrips.count >0) {
+        TripRLM* trip = [futureTrips firstObject];
+        nexttrip.key = trip.key;
+        nexttrip.name = trip.name;
+        nexttrip.startdt = trip.startdt;
+        nexttrip.enddt = trip.enddt;
+        nexttrip.itemgrouping = [NSNumber numberWithInt:4];
     }
-
+    
     if (nexttrip.itemgrouping == [NSNumber numberWithInt:4]) {
         TripRLM *trip = [TripRLM objectForPrimaryKey:nexttrip.key];
         [self RetrieveImageItem :trip :imagesDirectory];
@@ -240,7 +208,6 @@ bool FirstLoad;
         [self.TripImageDictionary setObject:[UIImage imageNamed:@"Project"] forKey:emptytrip.key];
         [self.selectedtripitems addObject:emptytrip];
     }
-    
 }
 
 /*

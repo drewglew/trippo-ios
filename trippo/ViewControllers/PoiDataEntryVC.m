@@ -160,6 +160,7 @@ bool CenterSelectedType;
     RLMResults<ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"poikey==%@ and state==1",self.PointOfInterest.key];
     
     int totalelements = 0;
+    int occurances = 0;
     float total = 0.0f;
     float average = 0.0f;
    
@@ -176,6 +177,7 @@ bool CenterSelectedType;
     NSDate *LastVisitiedDt = [cal dateFromComponents:comp];
     
     for (ActivityRLM *activity in activities) {
+        occurances ++;
         if (activity.rating != [NSNumber numberWithFloat:0]) {
             totalelements ++;
             total += [activity.rating floatValue];
@@ -187,10 +189,14 @@ bool CenterSelectedType;
     
     if (total>0.0f) {
         average = total / totalelements;
-        self.LabelOccurances.text = [NSString stringWithFormat:@"Located in %d activities\nLast visited %@",totalelements, [self FormatPrettyDate:LastVisitiedDt]];
+        self.LabelOccurances.text = [NSString stringWithFormat:@"Visited %d times\n%@",occurances, [self FormatPrettyDate:LastVisitiedDt]];
     } else {
         average = 0.0f;
-        self.LabelOccurances.text = @"Not found in any activities";
+        if (occurances > 0) {
+             self.LabelOccurances.text = [NSString stringWithFormat:@"Visited %d times\n%@",occurances, [self FormatPrettyDate:LastVisitiedDt]];
+        } else {
+            self.LabelOccurances.text = @"Not found in any activities";
+        }
     }
     
     self.ViewStarRatings.maximumValue = 5;
@@ -2310,9 +2316,9 @@ remarks:
 -(NSString*)FormatPrettyDate :(NSDate*)Dt {
     NSDateFormatter *dateformatter = [[NSDateFormatter alloc] init];
     [dateformatter setDateFormat:@"EEE, dd MMM yyyy"];
-    NSDateFormatter *timeformatter = [[NSDateFormatter alloc] init];
-    [timeformatter setDateFormat:@"HH:mm"];
-    return [NSString stringWithFormat:@"%@ %@",[dateformatter stringFromDate:Dt], [timeformatter stringFromDate:Dt]];
+   // NSDateFormatter *timeformatter = [[NSDateFormatter alloc] init];
+   // [timeformatter setDateFormat:@"HH:mm"];
+    return [NSString stringWithFormat:@"%@",[dateformatter stringFromDate:Dt]];
 }
 
 /*

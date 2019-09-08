@@ -411,30 +411,24 @@ CGFloat TripScale = 4.14f;
 -(void)FilterProjectCollectionView {
 
     NSDate* currentDate = [NSDate date];
-    
     self.tripcollection = [TripRLM allObjects];
     
     if (self.SegmentFilterProjects.selectedSegmentIndex == 0) {
         NSLog(@"All - %d",0);
     } else if (self.SegmentFilterProjects.selectedSegmentIndex == 1) {
         NSLog(@"Past - %d",1);
-
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"enddt < %@", currentDate];
         self.tripcollection = [self.tripcollection objectsWithPredicate:predicate];
-        
-        //self.tripcollection = [TripRLM objectsInRealm:self.realm where:@"enddt < %@",currentDate];
     } else if (self.SegmentFilterProjects.selectedSegmentIndex == 2) {
         NSLog(@"Future - %d",2);
-        
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"startdt > %@", currentDate];
         self.tripcollection = [self.tripcollection objectsWithPredicate:predicate];
     } else {
-        
+        NSLog(@"Current");
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"startdt <= %@ AND enddt >= %@", currentDate,currentDate];
-        
         self.tripcollection = [self.tripcollection objectsWithPredicate:predicate];
-        // date BETWEEN {%@, %@}
     }
+    
     [self.CollectionViewProjects reloadData];
 }
 
