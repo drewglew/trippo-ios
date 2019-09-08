@@ -362,7 +362,7 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
 
 /*
  created date:      16/07/2018
- last modified:     19/08/2019
+ last modified:     08/09/2019
  remarks:           table view with sections.  TODO - REFRESH OF IMAGES STILL NOT IDEAL.
  */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -370,9 +370,6 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
     NearbyPoiNSO *item = [self.nearbyitems objectAtIndex:indexPath.row];
     NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
     [fmt setPositiveFormat:@"0.##"];
-    
-    
-    
 
     NSMeasurementFormatter *formatter = [[NSMeasurementFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
@@ -383,15 +380,12 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
 
     cell.LabelDist.text = [NSString stringWithFormat:@"%@",[formatter stringFromMeasurement:distance]];
     
-    
-    
-    // cell.LabelDist.text = [NSString stringWithFormat:@"%@ metres",[fmt stringFromNumber:item.dist]];
     cell.LabelTitle.text = item.title;
     cell.LabelType.text = item.type;
     
     if (item.Image == nil) {
         [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"command"]];
-        [cell.ImageViewThumbPhoto setTintColor:[UIColor colorNamed: @"TrippoColor"]];
+        [cell.ImageViewThumbPhoto setTintColor:[UIColor systemBlueColor]];
     } else {
         [cell.ImageViewThumbPhoto setImage:[ToolBoxNSO imageWithImage:item.Image scaledToSize:cell.ImageViewThumbPhoto.frame.size]];
     }

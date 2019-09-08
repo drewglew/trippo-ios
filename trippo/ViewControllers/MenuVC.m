@@ -421,7 +421,7 @@ remarks:
 
 /*
  created date:      15/08/2018
- last modified:     13/08/2019
+ last modified:     08/09/2019
  remarks:
  */
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -444,7 +444,9 @@ remarks:
             controller.realm = self.realm;
             
             controller.Trip = trip;
-            NSLog(@"startdt = %@",controller.Trip.startdt);
+            controller.TripImage = [self.TripImageDictionary objectForKey:trip.key];
+            
+            //NSLog(@"startdt = %@",controller.Trip.startdt);
             [controller setModalPresentationStyle:UIModalPresentationFullScreen];
             [self presentViewController:controller animated:YES completion:nil];
         }

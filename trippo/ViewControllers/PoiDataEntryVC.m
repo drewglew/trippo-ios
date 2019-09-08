@@ -45,7 +45,7 @@ bool CenterSelectedType;
     } else {
         [self.SwitchWeather setOn:true];
     }
-    
+
     if (self.newitem && !self.fromnearby) {
         if (![self.PointOfInterest.name isEqualToString:@""]) {
             self.TextFieldTitle.text = self.PointOfInterest.name;

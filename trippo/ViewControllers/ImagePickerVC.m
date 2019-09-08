@@ -219,6 +219,7 @@ CGFloat ImagePickerFooterFilterHeightConstant;
     dispatch_async(queue, ^{
         NSData *data = [[NSData alloc] initWithContentsOfURL:path];
         dispatch_async(dispatch_get_main_queue(), ^{
+
             if(data) {
                 completionBlock([[UIImage alloc] initWithData:data]);
             } else {
@@ -359,7 +360,7 @@ CGFloat ImagePickerFooterFilterHeightConstant;
 
 /*
  created date:      11/06/2018
- last modified:     02/02/2019
+ last modified:     08/09/2019
  remarks:           it gets the original image, but doesn't dismiss the view instantly.
                     BUG FOR EACH ADDITIONAL PHOTO ADDED DUPLICATES * AMT
  */
@@ -375,7 +376,6 @@ CGFloat ImagePickerFooterFilterHeightConstant;
     if (self.wikiimages && [self.SwitchHighQuality isOn]) {
         
         // This will be a view suspending all user activity until task is completed.
-        
         [self.ActivityLoading startAnimating];
         self.VisualEffectViewWaiting.hidden = false;
         
@@ -394,10 +394,11 @@ CGFloat ImagePickerFooterFilterHeightConstant;
             }
             NSURL *url = [NSURL URLWithString: item.originalsource];
             [self downloadImageFrom:url completion:^(UIImage *image) {
-                //dispatch_async(dispatch_get_main_queue(), ^(){
+                
                    
                 if (image!=nil) {
                     UIImage *squareimage = image;
+
                     if (image.size.height > image.size.width) {
                         CGRect aRect = CGRectMake(0,(image.size.height / 2) - (image.size.width / 2), image.size.width, image.size.width);
                         CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], aRect);
@@ -409,7 +410,14 @@ CGFloat ImagePickerFooterFilterHeightConstant;
                         squareimage = [UIImage imageWithCGImage:imageRef];
                         CGImageRelease(imageRef);
                     }
-
+                    
+                    /* It is possible from wikipedia the image is huge */
+                    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+                    if (squareimage.size.width > screenSize.width * 2.0f) {
+                        CGSize newSize = CGSizeMake(screenSize.width * 2.0f, screenSize.width * 2.0f);
+                        squareimage = [ToolBoxNSO imageWithImage:squareimage scaledToSize:newSize];
+                    }
+                    
                     item.Image = squareimage;
                     if (item == [imageCollection lastObject]) {
                         dispatch_async(dispatch_get_main_queue(), ^(){
@@ -418,13 +426,9 @@ CGFloat ImagePickerFooterFilterHeightConstant;
                             [self.delegate didAddImages :imageCollection];
                             [self dismissViewControllerAnimated:YES completion:Nil];
                         });
-
                     }
-                    
                 }
-
             }];
-            
         }
     } else {
         [self.delegate didAddImages :imageCollection];
