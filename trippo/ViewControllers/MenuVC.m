@@ -271,13 +271,13 @@ bool FirstLoad;
         pngData = [NSData dataWithContentsOfURL:imagefile options:NSDataReadingMappedIfSafe error:&err];
         
         if (pngData==nil) {
-            self.ImageViewFeaturedPoi.image = [UIImage imageNamed:@"Poi"];
+            self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
         } else {
             [self.ImageViewFeaturedPoi setImage:[UIImage imageWithData:pngData]];
         }
         
     } else {
-        self.ImageViewFeaturedPoi.image = [UIImage imageNamed:@"Poi"];
+        self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
     }
     
     [self.FeaturedPoiMap removeAnnotations:self.FeaturedPoiMap.annotations];

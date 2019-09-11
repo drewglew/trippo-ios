@@ -97,7 +97,7 @@
     }
     
     
-    UIImage *testImage = [UIImage imageNamed:@"Poi"];
+    UIImage *testImage = [UIImage systemImageNamed:@"command"];
     
     // Save to the album
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{

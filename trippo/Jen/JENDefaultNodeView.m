@@ -36,14 +36,19 @@
         [self addSubview:self.activityView];
         
         self.nameLabel = [[UILabel alloc] init];
-        self.nameLabel.text = self.nodeName;
+        [self.nameLabel setBackgroundColor:[UIColor clearColor]];
+        self.nameLabel.text = @"";
         [self.activityView addSubview:self.nameLabel];
         
         self.activityImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,NodeSize,NodeSize)];
         
         self.activityImageView.layer.cornerRadius = (self.activityImageView.bounds.size.width / 2);
         self.activityImageView.clipsToBounds = YES;
+       
         [self.activityImageView setImage:self.activityImage];
+        
+        [self.activityImageView setTintColor:[UIColor systemIndigoColor]];
+        [self.activityImageView setBackgroundColor:[UIColor systemBackgroundColor]];
         [self.activityView addSubview:self.activityImageView];
 
         if (NodeSize >= 40.0f) {
@@ -73,7 +78,7 @@
             UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
             moreButton.frame = CGRectMake(0.0, 0.0, NodeSize/3, NodeSize/3);
             [moreButton addTarget:self action:@selector(MoreButtonPressed ) forControlEvents:UIControlEventTouchUpInside];
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3 weight:UIImageSymbolWeightThin scale:UIImageSymbolScaleSmall];
             [moreButton setImage:[[UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
             moreButton.tintColor = [UIColor colorWithRed:218.0f/255.0f green:212.0f/255.0f blue:239.0f/255.0f alpha:1.0];
@@ -139,7 +144,7 @@ _travelBack = travelBack;
 -(void)setNodeName:(NSString *)nodeName {
     if(nodeName != _nodeName) {
         _nodeName = nodeName;
-        self.nameLabel.text = nodeName;
+        self.nameLabel.text = @"";
         
         if ([nodeName isEqualToString:@"Trip"]) {
             self.openOptionsButton.enabled = false;

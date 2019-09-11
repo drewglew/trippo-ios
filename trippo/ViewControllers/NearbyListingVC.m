@@ -14,7 +14,7 @@
 
 @implementation NearbyListingVC
 CGFloat lastNearbyListingFooterFilterHeightConstant;
-
+bool runOnce = true;
 
 - (void)viewDidLoad {
     
@@ -25,10 +25,7 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
     }
     lastNearbyListingFooterFilterHeightConstant = self.FooterWithSegmentConstraint.constant;
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 50)];
-    
-    
-    
-    
+
     self.TableViewNearbyPoi.tableHeaderView = headerView;
     
     if ([self checkInternet]) {
@@ -92,15 +89,15 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
     [self.locationManager stopUpdatingLocation];
     
     self.PointOfInterest = [[PoiRLM alloc] init];
-    
-    //self.Coordinates = self.locationManager.location.coordinate;
+
     self.PointOfInterest.lat = [NSNumber numberWithDouble: self.locationManager.location.coordinate.latitude];
     self.PointOfInterest.lon = [NSNumber numberWithDouble: self.locationManager.location.coordinate.longitude];
     
     
     CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
-    
+
     [geoCoder reverseGeocodeLocation: [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude] completionHandler:^(NSArray *placemarks, NSError *error) {
+  
         if (error) {
             NSLog(@"%@", [NSString stringWithFormat:@"%@", error.localizedDescription]);
         } else {
@@ -119,96 +116,101 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
 
 /*
  created date:      16/07/2018
- last modified:     02/02/2019
+ last modified:     11/09/2019
  remarks:  calls the wiki API and gets Array of results
  */
 -(void) LoadNearbyPoiItemsData {
-    self.nearbyitems = [[NSMutableArray alloc] init];
-    self.ViewLoading.hidden = false;
-    [self.LoadingActivityIndictor startAnimating];
     
-    NSString *PreferredLanguage;
-    if (self.SegmentWikiLanguageOption.selectedSegmentIndex == 0) {
-        PreferredLanguage = [AppDelegateDef.CountryDictionary objectForKey:AppDelegateDef.HomeCountryCode];
-    } else if (self.SegmentWikiLanguageOption.selectedSegmentIndex == 1) {
-        PreferredLanguage = [AppDelegateDef.CountryDictionary objectForKey:self.PointOfInterest.countrycode];
-    } else {
-        PreferredLanguage = @"en";
-    }
-  
-    /*
-     Obtain Wiki records based on coordinates & local language.  (radius is in meters, we should use same range as type used to search photos)
-     https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=1000&gscoord=52.5208626606277|13.4094035625458&format=json
-     
-     Or search by name with redirect.
-     https://en.wikipedia.org/w/api.php?action=query&titles=Göteborg&redirects&format=jsonfm&formatversion=2
-     */
-    
-    NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/w/api.php?action=query&list=geosearch&gsprop=type|name|dim|country|region|globe&gsradius=10000&gscoord=%@|%@&format=json&redirects&gslimit=120",PreferredLanguage ,self.PointOfInterest.lat, self.PointOfInterest.lon];
-    
-    bool GetImages = false;
-    
-    if ([self.SegmentImageEnabler selectedSegmentIndex] == 1) {
-        GetImages = true;
-    }
-    
-    bool FilterItems = false;
-    
-    if ([self.SegmentFilterType selectedSegmentIndex] == 0) {
-        FilterItems = true;
-    }
-    
-    url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-    [self fetchFromWikiApi:url withDictionary:^(NSDictionary *data) {
+    if (runOnce || self.PointOfInterest!=nil) {
+        runOnce = false;
+ 
+        self.nearbyitems = [[NSMutableArray alloc] init];
+        self.ViewLoading.hidden = false;
+        [self.LoadingActivityIndictor startAnimating];
         
-        NSDictionary *query = [data objectForKey:@"query"];
-        NSDictionary *geosearch =  [query objectForKey:@"geosearch"];
-        
-        NSArray *AllowedTypes = [[NSArray alloc] initWithObjects:@"landmark",@"building",@"isle",@"city",@"railwaystation",@"edu",@"river",@"airport",@"mountain",@"forest"@"waterbody",@"glacier",@"pass",nil];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF IN %@ AND SELF != nil", AllowedTypes];
-          
-          
-        /* we can process all later, but am only interested in the closest wiki entry */
-        for (NSDictionary *item in geosearch) {
-            /*
-             let us try and get the images if the switch user has set allows us!
-             */
-            bool typefound = true;
-            
-            if (FilterItems) {
-                typefound = [predicate evaluateWithObject:[item valueForKey:@"type"]];
-            }
-            
-            if (typefound) {
-                NearbyPoiNSO *poi = [[NearbyPoiNSO alloc] init];
-                
-                poi.wikititle = [NSString stringWithFormat:@"%@~%@",PreferredLanguage,[[item valueForKey:@"title"] stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
-                poi.title = [item valueForKey:@"title"];
-                poi.dist = [item valueForKey:@"dist"];
-                
-                if ([item objectForKey:@"type"] != [NSNull null]) {
-                    poi.type = [item valueForKey:@"type"];
-                }
-                poi.Coordinates = CLLocationCoordinate2DMake([[item valueForKey:@"lat"] doubleValue], [[item valueForKey:@"lon"] doubleValue]);
-                poi.PageId = [item valueForKey:@"pageid"];
-                
-                [self.nearbyitems addObject:poi];
-            }
-        }
-        
-        if (GetImages && self.nearbyitems.count > 0) {
-            [self uploadWikiThumbImage :PreferredLanguage];
+        NSString *PreferredLanguage;
+        if (self.SegmentWikiLanguageOption.selectedSegmentIndex == 0) {
+            PreferredLanguage = [AppDelegateDef.CountryDictionary objectForKey:AppDelegateDef.HomeCountryCode];
+        } else if (self.SegmentWikiLanguageOption.selectedSegmentIndex == 1) {
+            PreferredLanguage = [AppDelegateDef.CountryDictionary objectForKey:self.PointOfInterest.countrycode];
         } else {
-            dispatch_async(dispatch_get_main_queue(), ^(){
-                self.LabelTotalItems.text = [NSString stringWithFormat:@"%lu items", (unsigned long)self.nearbyitems.count];
-                [self.TableViewNearbyPoi reloadData];
-                [self.TableViewNearbyPoi setNeedsDisplay];
-                //[self.TableViewNearbyPoi setNeedsLayout];
-                self.ViewLoading.hidden = true;
-                [self.LoadingActivityIndictor stopAnimating];
-            });
+            PreferredLanguage = @"en";
         }
-    }];
+      
+        /*
+         Obtain Wiki records based on coordinates & local language.  (radius is in meters, we should use same range as type used to search photos)
+         https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gsradius=1000&gscoord=52.5208626606277|13.4094035625458&format=json
+         
+         Or search by name with redirect.
+         https://en.wikipedia.org/w/api.php?action=query&titles=Göteborg&redirects&format=jsonfm&formatversion=2
+         */
+        
+        NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/w/api.php?action=query&list=geosearch&gsprop=type|name|dim|country|region|globe&gsradius=10000&gscoord=%@|%@&format=json&redirects&gslimit=120",PreferredLanguage ,self.PointOfInterest.lat, self.PointOfInterest.lon];
+        
+        bool GetImages = false;
+        
+        if ([self.SegmentImageEnabler selectedSegmentIndex] == 1) {
+            GetImages = true;
+        }
+        
+        bool FilterItems = false;
+        
+        if ([self.SegmentFilterType selectedSegmentIndex] == 0) {
+            FilterItems = true;
+        }
+        
+        url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+        [self fetchFromWikiApi:url withDictionary:^(NSDictionary *data) {
+            
+            NSDictionary *query = [data objectForKey:@"query"];
+            NSDictionary *geosearch =  [query objectForKey:@"geosearch"];
+            
+            NSArray *AllowedTypes = [[NSArray alloc] initWithObjects:@"landmark",@"building",@"isle",@"city",@"railwaystation",@"edu",@"river",@"airport",@"mountain",@"forest"@"waterbody",@"glacier",@"pass",nil];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF IN %@ AND SELF != nil", AllowedTypes];
+              
+              
+            /* we can process all later, but am only interested in the closest wiki entry */
+            for (NSDictionary *item in geosearch) {
+                /*
+                 let us try and get the images if the switch user has set allows us!
+                 */
+                bool typefound = true;
+                
+                if (FilterItems) {
+                    typefound = [predicate evaluateWithObject:[item valueForKey:@"type"]];
+                }
+                
+                if (typefound) {
+                    NearbyPoiNSO *poi = [[NearbyPoiNSO alloc] init];
+                    
+                    poi.wikititle = [NSString stringWithFormat:@"%@~%@",PreferredLanguage,[[item valueForKey:@"title"] stringByReplacingOccurrencesOfString:@" " withString:@"_"]];
+                    poi.title = [item valueForKey:@"title"];
+                    poi.dist = [item valueForKey:@"dist"];
+                    
+                    if ([item objectForKey:@"type"] != [NSNull null]) {
+                        poi.type = [item valueForKey:@"type"];
+                    }
+                    poi.Coordinates = CLLocationCoordinate2DMake([[item valueForKey:@"lat"] doubleValue], [[item valueForKey:@"lon"] doubleValue]);
+                    poi.PageId = [item valueForKey:@"pageid"];
+                    
+                    [self.nearbyitems addObject:poi];
+                }
+            }
+            
+            if (GetImages && self.nearbyitems.count > 0) {
+                [self uploadWikiThumbImage :PreferredLanguage];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^(){
+                    self.LabelTotalItems.text = [NSString stringWithFormat:@"%lu items", (unsigned long)self.nearbyitems.count];
+                    [self.TableViewNearbyPoi reloadData];
+                    [self.TableViewNearbyPoi setNeedsDisplay];
+                    //[self.TableViewNearbyPoi setNeedsLayout];
+                    self.ViewLoading.hidden = true;
+                    [self.LoadingActivityIndictor stopAnimating];
+                });
+            }
+        }];
+    }
 }
 
 
@@ -385,7 +387,7 @@ CGFloat lastNearbyListingFooterFilterHeightConstant;
     
     if (item.Image == nil) {
         [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"command"]];
-        [cell.ImageViewThumbPhoto setTintColor:[UIColor systemBlueColor]];
+        [cell.ImageViewThumbPhoto setTintColor:[UIColor systemBackgroundColor]];
     } else {
         [cell.ImageViewThumbPhoto setImage:[ToolBoxNSO imageWithImage:item.Image scaledToSize:cell.ImageViewThumbPhoto.frame.size]];
     }

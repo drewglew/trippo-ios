@@ -457,7 +457,7 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
                     
                     pngData = [NSData dataWithContentsOfURL:imagefile options:NSDataReadingMappedIfSafe error:&err];
                     if (pngData==nil) {
-                        image = [UIImage imageNamed:@"Poi"];
+                        image = [UIImage systemImageNamed:@"command"];
                     } else {
                         image = [UIImage imageWithData:pngData];
                         

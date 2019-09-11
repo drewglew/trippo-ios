@@ -43,11 +43,9 @@
 
     if (self.ActivityState == [NSNumber numberWithInteger:1]) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-
         self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
     } else {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-
         self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
     }
 
@@ -60,6 +58,12 @@
         NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"startDt" ascending:YES];
         NSArray *sortedChildren = [weakSelf.treeview.rootNode.children sortedArrayUsingDescriptors:[NSArray arrayWithObject:sort]];
         [weakSelf obtainJourney :sortedChildren :nil :weakSelf.treeview.rootNode];
+        
+        if (weakSelf.itin.count > 0) {
+            weakSelf.itinerarycollection = [weakSelf.itin mutableCopy];
+            [weakSelf.itin removeAllObjects];
+        }
+        
         [weakSelf.ItineraryTableView reloadData];
 
     }];
@@ -108,9 +112,6 @@
     
     self.DistanceFromPointTableView.delegate = self;
     self.DistanceFromPointTableView.rowHeight = 75;
-    
-    
-    
 }
 
 /*
@@ -149,8 +150,7 @@ nodeViewForModelNode:(id<JENTreeViewModelNode>)modelNode {
     }
     
     JENDefaultNodeView* view = [[JENDefaultNodeView alloc] initWithParm:self.StepperScale.value :isSelected];
-    
-    
+
     view.nodeName               = modelNode.nodeName;
     view.activity               = modelNode.activity;
     view.activityImage          = modelNode.activityImage;
@@ -791,16 +791,14 @@ remarks:           Used by both the main itinerary listing that loads the map as
     
     double accumDistance = 0.0f;
     double accumExpectedTime = 0;
-
+    self.itin = [self.itinerarycollection mutableCopy];
     for (JourneyRLM *item in self.itinerarycollection) {
         if (item.TransportId != [NSNumber numberWithLong:1] && item.TransportId != [NSNumber numberWithLong:2]) {
             if (item.Distance != nil) {
                 accumDistance += [item.Distance doubleValue];
                 accumExpectedTime += [item.ExpectedTravelTime longValue];
-                
                 item.AccumDistance = [NSNumber numberWithDouble:accumDistance];
                 item.AccumExpectedTravelTime = [NSNumber numberWithDouble:accumExpectedTime];
-                
             }
         }
     }
@@ -988,7 +986,6 @@ remarks:
  remarks:
  */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-   
 }
 
 
@@ -1032,9 +1029,8 @@ remarks:
 }
 
 - (IBAction)UpdateTripStatsPressed:(id)sender {
-    
     [self getTotalsForTrip];
-    
+    [self.ButtonUpdateTripStats setHidden:TRUE];
 }
 
 

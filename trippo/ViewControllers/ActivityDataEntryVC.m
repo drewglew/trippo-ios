@@ -21,7 +21,7 @@ int DocumentListingViewPresentedHeight = 250;
 
 /*
  created date:      01/05/2018
- last modified:     16/08/2019
+ last modified:     10/09/2019
  remarks:
  */
 - (void)viewDidLoad {
@@ -39,19 +39,23 @@ int DocumentListingViewPresentedHeight = 250;
     
     self.TextFieldStartDt.delegate = self;
     self.TextFieldEndDt.delegate = self;
-    /* end of new block */
     
+    [super viewDidLoad];
     
-    [super viewDidLoad];    
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
+    
     if (self.Activity.state == [NSNumber  numberWithInteger:0]) {
-        self.ImagePicture.image = [UIImage imageNamed:@"Planning"];
-        self.ImageViewKeyActivity.image = [UIImage imageNamed:@"Planning"];
+        self.ImagePicture.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImageViewKeyActivity.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
         self.MainImageTrailingConstraint.constant = [UIScreen mainScreen].bounds.size.width;;
     } else {
-        self.ImagePicture.image = [UIImage imageNamed:@"Activity"];
-        self.ImageViewKeyActivity.image = [UIImage imageNamed:@"Activity"];
+        self.ImagePicture.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImageViewKeyActivity.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
     }
-    
+    [self.ImagePicture setTintColor:[UIColor systemBackgroundColor]];
+    [self.ImagePicture setBackgroundColor:[UIColor systemIndigoColor]];
+    [self.ImageViewKeyActivity setTintColor:[UIColor systemBackgroundColor]];
+    [self.ImageViewKeyActivity setBackgroundColor:[UIColor systemIndigoColor]];
     // clean up wiki
     //self.WikiViewHeightConstraint.constant = 0.0f;
     self.ActivityImageDictionary = [[NSMutableDictionary alloc] init];
@@ -129,8 +133,7 @@ int DocumentListingViewPresentedHeight = 250;
             self.ViewCheckInOut.clipsToBounds = YES;
             self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
             self.ViewCheckInOut.hidden = false;
-            // systemPink colour
-            self.ViewCheckInOut.backgroundColor = [UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0];
+            self.ViewCheckInOut.backgroundColor = [UIColor systemOrangeColor];
             self.LabelCheckInOut.text = @"Check\nOut";
             [self.LabelCheckInOut setTextColor:[UIColor whiteColor]];
             
@@ -687,10 +690,10 @@ remarks:            Add wiki document into collection if possible.
             if (pngData!=nil) {
                 self.ImageViewPoi.image = [UIImage imageWithData:pngData];
             } else {
-                self.ImageViewPoi.image = [UIImage imageNamed:@"Poi"];
+                self.ImageViewPoi.image = [UIImage systemImageNamed:@"command"];
             }
         } else {
-            self.ImageViewPoi.image = [UIImage imageNamed:@"Poi"];
+            self.ImageViewPoi.image = [UIImage systemImageNamed:@"command"];
         }
     } else {
         self.ImageViewPoi.image = self.PoiImage;
@@ -705,7 +708,7 @@ remarks:            Add wiki document into collection if possible.
 
 /*
  created date:      14/07/2018
- last modified:     28/03/2019
+ last modified:     10/09/2019
  remarks: this method handles the map circle that is placed as overlay onto map
  */
 - (MKOverlayRenderer *) mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
@@ -713,13 +716,9 @@ remarks:            Add wiki document into collection if possible.
     {
         MKCircleRenderer* aRenderer = [[MKCircleRenderer
                                         alloc]initWithCircle:(MKCircle *)overlay];
-        
-        
-        
-        aRenderer.strokeColor = [UIColor colorNamed:@"TrippoColor"];
-        aRenderer.lineWidth = 2;
-        //TrippoColorAlpha
-        aRenderer.fillColor = [UIColor colorWithRed:49.0f/255.0f green:163.0f/255.0f blue:0.0f/255.0f alpha:0.25];
+
+        aRenderer.fillColor =  [UIColor colorNamed:@"TrippoColor"];
+        [aRenderer setAlpha:0.05];
         return aRenderer;
     }
     else
@@ -1665,7 +1664,7 @@ remarks:
 
 /*
  created date:      19/08/2018
- last modified:     21/10/2018
+ last modified:     09/09/2019
  remarks:
  */
 
@@ -1700,6 +1699,8 @@ remarks:
             
             if (self.Activity.images.count==0) {
                 imgobject.KeyImage = 1;
+                [self.ImagePicture setImage:chosenImage];
+                [self.ImageViewKeyActivity setImage:chosenImage];
             } else {
                 imgobject.KeyImage = 0;
             }
@@ -1760,7 +1761,7 @@ remarks:
 
 /*
  created date:      19/08/2018
- last modified:     01/08/2018
+ last modified:     09/09/2019
  remarks:
  */
 - (void)didAddImages :(NSMutableArray*)ImageCollection {
@@ -1776,6 +1777,8 @@ remarks:
         
         if (self.Activity.images.count==0) {
             imgobject.KeyImage = 1;
+            [self.ImagePicture setImage:img.Image];
+            [self.ImageViewKeyActivity setImage:img.Image];
         } else {
             imgobject.KeyImage = 0;
         }
@@ -1815,9 +1818,9 @@ remarks:
     ActivityImageCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"ActivityImageId" forIndexPath:indexPath];
     NSInteger NumberOfItems = self.Activity.images.count + 1;
     if (indexPath.row == NumberOfItems -1) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
               
-        cell.ImageActivity.image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
+        cell.ImageActivity.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
         [cell.ImageActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
 
     } else {

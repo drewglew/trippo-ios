@@ -25,7 +25,7 @@
                                 </constraints>
                                 <color key="tintColor" name="TrippoColor"/>
                                 <state key="normal" title="Back" image="chevron.left" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                 </state>
                                 <connections>
                                     <action selector="BackButtonPressed:" destination="A3X-0C-Ypb" eventType="touchUpInside" id="Ycj-19-loO"/>
@@ -53,7 +53,7 @@
                                 </constraints>
                                 <color key="tintColor" name="TrippoColor"/>
                                 <state key="normal" title="Update" image="arrow.clockwise" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                 </state>
                                 <connections>
                                     <action selector="ActionButtonPressed:" destination="A3X-0C-Ypb" eventType="touchUpInside" id="g0n-lq-KeO"/>
@@ -192,10 +192,10 @@
                                         <rect key="frame" x="10" y="510.5" width="111.5" height="111.5"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="dial" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="vqZ-EY-vPy">
-                                                <rect key="frame" x="1" y="3.5" width="109.5" height="104.5"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="tintColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                <rect key="frame" x="1" y="2.5" width="109.5" height="105"/>
+                                                <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                             </imageView>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RbQ-t9-Djd" userLabel="ViewWarning">
                                                 <rect key="frame" x="5" y="5" width="50" height="60"/>
@@ -262,9 +262,9 @@
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="XpZ-VC-L2N">
                                                 <rect key="frame" x="1" y="3.5" width="110" height="104.5"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="D34-HR-173" userLabel="PoiButton">
                                                 <rect key="frame" x="1" y="1" width="111" height="109.5"/>
@@ -279,6 +279,7 @@
                                             </button>
                                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="sQo-AZ-jWG">
                                                 <rect key="frame" x="37.5" y="37" width="37" height="37"/>
+                                                <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </activityIndicatorView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -303,9 +304,10 @@
                                         <rect key="frame" x="253.5" y="510.5" width="111.5" height="111.5"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bolt.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ZRR-u7-Erg">
-                                                <rect key="frame" x="1" y="3.5" width="109.5" height="105"/>
-                                                <color key="tintColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                <rect key="frame" x="1" y="3.5" width="109.5" height="105.5"/>
+                                                <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KEM-RO-zIE">
                                                 <rect key="frame" x="0.0" y="0.0" width="111.5" height="111.5"/>
@@ -336,7 +338,7 @@
                                         </constraints>
                                         <color key="tintColor" name="TrippoColor"/>
                                         <size key="titleShadowOffset" width="1" height="1"/>
-                                        <state key="normal" image="info.circle" catalog="system">
+                                        <state key="normal" image="info.circle.fill" catalog="system">
                                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25"/>
                                         </state>
                                         <connections>
@@ -350,11 +352,14 @@
                                                 <rect key="frame" x="1" y="1" width="363" height="155"/>
                                                 <color key="tintColor" red="0.19215686274509802" green="0.63921568627450975" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             </mapView>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Poi" translatesAutoresizingMaskIntoConstraints="NO" id="vGM-FE-6it">
-                                                <rect key="frame" x="261" y="20" width="84" height="84"/>
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="vGM-FE-6it">
+                                                <rect key="frame" x="261" y="22.5" width="84" height="79"/>
+                                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="vGM-FE-6it" secondAttribute="height" multiplier="1:1" id="J1S-gP-0Gi"/>
                                                 </constraints>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                             </imageView>
                                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lcv-fW-p3I">
                                                 <rect key="frame" x="5" y="120" width="355" height="32"/>
@@ -431,7 +436,7 @@
                                             <constraint firstAttribute="height" constant="15" id="NI5-dJ-t5d"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -477,7 +482,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Project" translatesAutoresizingMaskIntoConstraints="NO" id="zqc-Oe-zQG">
-                                                    <rect key="frame" x="40" y="40" width="170.00000000000006" height="170.00000000000006"/>
+                                                    <rect key="frame" x="40" y="40" width="170" height="170"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oap-7N-tYo">
                                                     <rect key="frame" x="18" y="5" width="214" height="24"/>
@@ -582,14 +587,14 @@
                                 </constraints>
                                 <color key="tintColor" name="TrippoColor"/>
                                 <state key="normal" title="Back" image="chevron.left" catalog="system">
-                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                 </state>
                                 <connections>
                                     <action selector="BackPressed:" destination="1WG-sA-iYL" eventType="touchUpInside" id="PEj-mc-hdq"/>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Trippo" translatesAutoresizingMaskIntoConstraints="NO" id="ekb-2j-rYr">
-                                <rect key="frame" x="315" y="607" width="50.000000000000028" height="50"/>
+                                <rect key="frame" x="315" y="607" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="50" id="bwe-f4-fXJ"/>
                                     <constraint firstAttribute="height" constant="50" id="u5i-OM-vir"/>
@@ -781,7 +786,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraint firstAttribute="height" constant="35" id="a6d-lb-FQ4"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="25"/>
-                                                <color key="textColor" name="TrippoColor"/>
+                                                <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -820,7 +825,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud.bolt" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="7ML-V4-oL6">
                                                             <rect key="frame" x="260" y="42" width="50" height="52.5"/>
-                                                            <color key="tintColor" name="TrippoColor"/>
+                                                            <color key="tintColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="50" id="6zy-nG-tA2"/>
                                                                 <constraint firstAttribute="height" constant="50" id="icb-fo-1Ga"/>
@@ -832,6 +837,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                 <constraint firstAttribute="height" constant="21" id="qpJ-wd-ThO"/>
                                                             </constraints>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                                            <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
@@ -1031,7 +1037,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="pin.slash.fill" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ClearAnnotationsOnMapPressed:" destination="5m3-wy-tbn" eventType="touchUpInside" id="eGp-ev-LzC"/>
@@ -1062,7 +1068,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="5m3-wy-tbn" eventType="touchUpInside" id="lHW-io-tW6"/>
@@ -1077,7 +1083,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="forward.end" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="SkipMapDataPressed:" destination="5m3-wy-tbn" eventType="touchUpInside" id="IMa-v5-S8F"/>
@@ -1198,12 +1204,13 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="3f1-q0-u68">
                                                     <rect key="frame" x="0.0" y="2.5" width="100" height="95"/>
-                                                    <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="OQe-DL-nxu"/>
                                                         <constraint firstAttribute="height" constant="100" id="TNA-Ff-Atg"/>
                                                     </constraints>
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H1m-3L-iuR">
                                                     <rect key="frame" x="110" y="79" width="250" height="21"/>
@@ -1296,7 +1303,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="yXg-UB-z1g" eventType="touchUpInside" id="9M8-sh-FNi"/>
@@ -1342,7 +1349,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Expand" image="arrow.up.square" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ButtonPaneResizePressed:" destination="yXg-UB-z1g" eventType="touchUpInside" id="sJT-Zx-MQ6"/>
@@ -1474,11 +1481,12 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="suk-nW-R1z">
                                                     <rect key="frame" x="0.0" y="1" width="380" height="378.5"/>
-                                                    <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
-                                                    <color key="tintColor" name="TrippoColor"/>
+                                                    <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="suk-nW-R1z" secondAttribute="height" multiplier="1:1" id="eit-Qi-4mc"/>
                                                     </constraints>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="regular"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="v84-aG-AuA">
                                                     <rect key="frame" x="10" y="400" width="360" height="30"/>
@@ -1695,7 +1703,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ActionPressed:" destination="C8r-9S-LKq" eventType="touchUpInside" id="y4u-zK-TAL"/>
@@ -1709,7 +1717,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="C8r-9S-LKq" eventType="touchUpInside" id="KbG-6c-RcL"/>
@@ -1807,10 +1815,10 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Bp-HX-V4n" userLabel="ViewMap-2">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
                                 <subviews>
                                     <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="9ai-pr-T2w">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
                                     </mapView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iXF-f2-TAd" userLabel="PickerDistanceView">
                                         <rect key="frame" x="10" y="45" width="50" height="150"/>
@@ -1844,7 +1852,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                         </constraints>
                                     </view>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uL2-iE-GYO" userLabel="Update">
-                                        <rect key="frame" x="290" y="480" width="75" height="35"/>
+                                        <rect key="frame" x="290" y="459" width="75" height="35"/>
                                         <color key="backgroundColor" red="0.19215686269999999" green="0.63921568630000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="75" id="9ZT-bm-tTd"/>
@@ -1858,7 +1866,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                         </connections>
                                     </button>
                                     <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4dc-Y9-AuU" userLabel="Revert">
-                                        <rect key="frame" x="10" y="480" width="75" height="35"/>
+                                        <rect key="frame" x="10" y="459" width="75" height="35"/>
                                         <color key="backgroundColor" red="1" green="0.35686274509999999" blue="0.28627450980000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="35" id="O0o-U1-VUN"/>
@@ -1884,9 +1892,9 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 </constraints>
                             </view>
                             <visualEffectView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mnW-rI-mzm" userLabel="Visual Effect Background">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="514"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="fvT-vs-uuY">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="535"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="514"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </view>
@@ -1894,19 +1902,19 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TYC-Se-fuI" userLabel="ViewPhotos-3">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="514"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" bounces="NO" maximumZoomScale="10" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d2j-zI-SI5" userLabel="ScrollViewImage">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" tag="5" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="NaN-Yg-ddC" userLabel="Photo">
                                                 <rect key="frame" x="359" y="0.0" width="16" height="375"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" secondItem="NaN-Yg-ddC" secondAttribute="height" multiplier="1:1" id="P2D-ja-Cia"/>
                                                 </constraints>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                             </imageView>
                                         </subviews>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -2042,7 +2050,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                         </connections>
                                     </collectionView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Photo Information" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="got-BY-N5k">
-                                        <rect key="frame" x="10" y="487" width="355" height="38"/>
+                                        <rect key="frame" x="10" y="487" width="355" height="17"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
@@ -2067,14 +2075,14 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 </constraints>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GZB-Rb-Cu4" userLabel="ViewNotes-1">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="514"/>
                                 <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7uT-ZF-XhR" userLabel="ViewInfo-4">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="535"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="514"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Created Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vQp-29-mGq">
-                                        <rect key="frame" x="20" y="138" width="157.5" height="24.5"/>
+                                        <rect key="frame" x="20" y="135" width="157.5" height="21.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -2087,77 +2095,77 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WL7-8c-Yu7">
-                                        <rect key="frame" x="20" y="94" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="94" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last Modified Date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i7j-Ow-cNL">
-                                        <rect key="frame" x="20" y="182.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="176.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ckH-JD-8Zq">
-                                        <rect key="frame" x="20" y="226.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="217.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared By" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wWR-T7-kkh">
-                                        <rect key="frame" x="20" y="270.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="258.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date Shared" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HW8-a9-NZH">
-                                        <rect key="frame" x="20" y="314.5" width="157.5" height="24.5"/>
+                                        <rect key="frame" x="20" y="299.5" width="157.5" height="21.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shared Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Fu-by-OHk">
-                                        <rect key="frame" x="20" y="359" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="341" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Count/Last Visited" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2i-V6-P8F">
-                                        <rect key="frame" x="20" y="403" width="157.5" height="24"/>
+                                        <rect key="frame" x="20" y="382" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tintagel Castle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jQ5-sf-LhA">
-                                        <rect key="frame" x="197.5" y="94" width="157.5" height="24"/>
+                                        <rect key="frame" x="197.5" y="94" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 Sept, 2018 20:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qrj-Te-S3f">
-                                        <rect key="frame" x="197.5" y="138" width="157.5" height="24.5"/>
+                                        <rect key="frame" x="197.5" y="135" width="157.5" height="21.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12 Oct, 2018 10:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ly-wf-08W">
-                                        <rect key="frame" x="197.5" y="182.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="197.5" y="176.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Andy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Pd-qL-B7O">
-                                        <rect key="frame" x="197.5" y="226.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="197.5" y="217.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cristina" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HMf-uU-4xS">
-                                        <rect key="frame" x="197.5" y="270.5" width="157.5" height="24"/>
+                                        <rect key="frame" x="197.5" y="258.5" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="19 Feb, 2019 08:30" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vkp-7h-qzw">
-                                        <rect key="frame" x="197.5" y="314.5" width="157.5" height="24.5"/>
+                                        <rect key="frame" x="197.5" y="299.5" width="157.5" height="21.5"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cristina's iPhone X" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RH9-sh-0FC">
-                                        <rect key="frame" x="197.5" y="359" width="157.5" height="24"/>
+                                        <rect key="frame" x="197.5" y="341" width="157.5" height="21"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not found in any activities" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zfH-Ep-DL9">
-                                        <rect key="frame" x="197.5" y="403" width="157.5" height="50"/>
+                                        <rect key="frame" x="197.5" y="382" width="157.5" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="QsZ-9e-dwP"/>
                                         </constraints>
@@ -2165,7 +2173,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YKG-RL-Xvo" customClass="HCSStarRatingView">
-                                        <rect key="frame" x="10" y="483" width="355" height="27"/>
+                                        <rect key="frame" x="10" y="462" width="355" height="27"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
@@ -2256,21 +2264,22 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2RI-9s-Khn" userLabel="ViewMain-0">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
                                 <subviews>
                                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jcO-wo-0qg">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="646"/>
                                         <subviews>
                                             <view contentMode="top" translatesAutoresizingMaskIntoConstraints="NO" id="Lla-Tu-VuP">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="1500"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Qlf-7s-aY9">
                                                         <rect key="frame" x="0.0" y="2.5" width="375" height="370"/>
-                                                        <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="Qlf-7s-aY9" secondAttribute="height" multiplier="1:1" id="SdU-7Z-S63"/>
                                                         </constraints>
-                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                                     </imageView>
                                                     <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FX4-BQ-XEo">
                                                         <rect key="frame" x="0.0" y="275" width="375" height="100"/>
@@ -2475,7 +2484,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 </constraints>
                             </view>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iFf-0T-4aB" userLabel="Visual Effect FOOTER Panel">
-                                <rect key="frame" x="0.0" y="535" width="375" height="132"/>
+                                <rect key="frame" x="0.0" y="514" width="375" height="132"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="VGF-rF-MRO">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="132"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2489,7 +2498,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="bOx-je-jBC"/>
@@ -2504,7 +2513,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Scan" image="doc.text.viewfinder" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ScanImagePressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="d12-FO-sUq"/>
@@ -2520,7 +2529,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="No GEO" image="location.slash" catalog="system">
                                                 <color key="titleColor" red="0.19241309170000001" green="0.63756340739999995" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="GeoButtonPressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="c0d-jh-FJp"/>
@@ -2548,7 +2557,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ActionButtonPressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="gox-Kp-bgw"/>
@@ -2565,7 +2574,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Wiki" image="doc.richtext" catalog="system">
                                                 <color key="titleColor" name="TrippoColor"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ButtonWikiPressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="b3p-dl-nYF"/>
@@ -2597,7 +2606,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Share" image="square.and.arrow.up" catalog="system">
                                                 <color key="titleColor" name="TrippoColor"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="SharePressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="0kh-kD-xmP"/>
@@ -2612,7 +2621,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Adjust">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="5m3-wy-tbn" kind="show" identifier="ShowPoiCoordAdjust" id="8wb-u9-bJi"/>
@@ -2626,7 +2635,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Directions" image="map" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ButtonRoutePressed:" destination="8lT-sr-xUS" eventType="touchUpInside" id="ep3-2Z-9ub"/>
@@ -2884,7 +2893,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="9um-0h-1TE" eventType="touchUpInside" id="SSb-fz-Ie2"/>
@@ -2900,7 +2909,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Cancel" image="stop.circle" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="StopSearchingPressed:" destination="9um-0h-1TE" eventType="touchUpInside" id="0Om-wH-CLJ"/>
@@ -2923,7 +2932,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Select" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="AddSelectionPressed:" destination="9um-0h-1TE" eventType="touchUpInside" id="KpD-nB-5CO"/>
@@ -3077,7 +3086,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     </constraints>
                                                     <color key="tintColor" name="TrippoColor"/>
                                                     <state key="normal" title="Update" image="arrow.clockwise" catalog="system">
-                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="ActionPressed:" destination="hdP-V9-5JR" eventType="touchUpInside" id="U0f-7q-8ab"/>
@@ -3177,7 +3186,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             </constraints>
                                                             <color key="tintColor" name="TrippoColor"/>
                                                             <state key="normal" title="Request rate" image="bolt.fill" catalog="system">
-                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                                             </state>
                                                             <connections>
                                                                 <action selector="RequestExchangeRatePressed:" destination="hdP-V9-5JR" eventType="touchUpInside" id="7TU-4j-5lH"/>
@@ -3191,7 +3200,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             </constraints>
                                                             <color key="tintColor" name="TrippoColor"/>
                                                             <state key="normal" title="Use last rate" image="gobackward" catalog="system">
-                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                                             </state>
                                                             <connections>
                                                                 <action selector="UseLastFoundPressed:" destination="hdP-V9-5JR" eventType="touchUpInside" id="IGI-Lr-zAK"/>
@@ -3374,7 +3383,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="GBL-qb-FXE" eventType="touchUpInside" id="PRK-HW-KqN"/>
@@ -3389,7 +3398,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Location" image="location" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="UpdateWikiPagePressed:" destination="GBL-qb-FXE" eventType="touchUpInside" id="QmD-hh-PtE"/>
@@ -3404,7 +3413,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Title" image="tag" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="UpdateWikiPageByTitlePressed:" destination="GBL-qb-FXE" eventType="touchUpInside" id="Uuj-ni-abh"/>
@@ -3675,7 +3684,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="IY3-lE-B7S" eventType="touchUpInside" id="StB-bI-yQX"/>
@@ -3691,7 +3700,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Add Expense" image="plus.circle" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="hdP-V9-5JR" kind="show" identifier="ShowNewExpense" id="89D-rB-WfA"/>
@@ -3714,7 +3723,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                 <blurEffect style="systemChromeMaterial"/>
                             </visualEffectView>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Project" translatesAutoresizingMaskIntoConstraints="NO" id="gBw-Sa-O8o">
-                                <rect key="frame" x="0.0" y="0.0" width="100.00000000000006" height="100.00000000000006"/>
+                                <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="100" id="8Ya-db-8NS"/>
@@ -3839,14 +3848,14 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xmK-KS-vGU" userLabel="ViewFrame">
                                                     <rect key="frame" x="0.5" y="0.5" width="149" height="149"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plus.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Czk-iu-3Hc">
-                                                            <rect key="frame" x="0.0" y="0.5" width="149" height="147.5"/>
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plus.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="Czk-iu-3Hc">
+                                                            <rect key="frame" x="0.0" y="0.5" width="149" height="148.5"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <color key="tintColor" name="TrippoColor"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="Czk-iu-3Hc" secondAttribute="height" multiplier="1:1" id="xjc-0p-OZ1"/>
                                                             </constraints>
-                                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="ultraLight"/>
+                                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="regular"/>
                                                         </imageView>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VzL-aQ-mIA" userLabel="OptionsView">
                                                             <rect key="frame" x="0.0" y="0.0" width="149" height="149"/>
@@ -3882,9 +3891,9 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                         <constraint firstAttribute="width" constant="30" id="8Ey-Vb-FlE"/>
                                                                         <constraint firstAttribute="height" constant="30" id="d67-tu-USI"/>
                                                                     </constraints>
-                                                                    <color key="tintColor" red="0.70196078429999997" green="0.098039215690000001" blue="0.19215686269999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="trash.fill" catalog="system">
-                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25"/>
+                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="regular"/>
                                                                     </state>
                                                                     <connections>
                                                                         <segue destination="Zbt-l0-Qeq" kind="show" identifier="ShowDeleteProject" id="3DY-I8-tb9"/>
@@ -3897,9 +3906,9 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                         <constraint firstAttribute="height" constant="30" id="7nk-rX-pzR"/>
                                                                         <constraint firstAttribute="width" constant="30" id="KEt-kw-9Bb"/>
                                                                     </constraints>
-                                                                    <color key="tintColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
+                                                                    <color key="tintColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="ellipsis.circle.fill" catalog="system">
-                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25"/>
+                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25" weight="regular"/>
                                                                     </state>
                                                                     <connections>
                                                                         <segue destination="Zbt-l0-Qeq" kind="show" identifier="ShowUpdateProject" id="0ng-Sg-LI3"/>
@@ -4073,7 +4082,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="ySu-A3-tYm" eventType="touchUpInside" id="ZoK-7x-ywn"/>
@@ -4587,7 +4596,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Update" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ProjectActionPressed:" destination="Zbt-l0-Qeq" eventType="touchUpInside" id="BjQ-Vs-UxC"/>
@@ -4602,7 +4611,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="Zbt-l0-Qeq" eventType="touchUpInside" id="GPR-6D-rdg"/>
@@ -4639,7 +4648,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Expenses" image="creditcard" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="IY3-lE-B7S" kind="show" identifier="ShowTripPaymentList" id="aYa-qf-lxc"/>
@@ -4905,9 +4914,9 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                         <constraint firstAttribute="height" constant="35" id="CG4-Ry-VE0"/>
                                                                         <constraint firstAttribute="width" constant="35" id="POy-pL-1Az"/>
                                                                     </constraints>
-                                                                    <color key="tintColor" red="0.70196078431372544" green="0.098039215686274508" blue="0.19215686274509802" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <state key="normal" image="trash.fill" catalog="system">
-                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="20"/>
+                                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="25"/>
                                                                     </state>
                                                                     <connections>
                                                                         <segue destination="KMV-wg-dT0" kind="show" identifier="ShowDeleteActivity" id="Faj-gF-8wP"/>
@@ -4921,15 +4930,16 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="T7W-IL-SdQ">
                                                                                 <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                                                <color key="backgroundColor" name="TrippoColor"/>
+                                                                                <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             </view>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                            <blurEffect style="systemThinMaterial"/>
+                                                                            <blurEffect style="systemUltraThinMaterial"/>
                                                                         </visualEffectView>
                                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cloud.bolt" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="IUm-D4-XQ6" userLabel="ImageWeatherNow">
-                                                                            <rect key="frame" x="50" y="50.5" width="50" height="52.5"/>
+                                                                            <rect key="frame" x="60" y="62" width="40" height="38"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                                            <color key="tintColor" name="TrippoColor"/>
+                                                                            <color key="tintColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                                                         </imageView>
                                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ct7-PO-r6P" userLabel="ButtonShowWeather">
                                                                             <rect key="frame" x="50" y="25" width="50" height="75"/>
@@ -4941,33 +4951,33 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                                 <segue destination="aeQ-t6-cYf" kind="show" identifier="ShowWeatherForecastView" id="oFM-S3-yMe"/>
                                                                             </connections>
                                                                         </button>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rPA-gC-rxY" userLabel="LabelTempNow">
-                                                                            <rect key="frame" x="50" y="40.5" width="50" height="19.5"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="35" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rPA-gC-rxY" userLabel="LabelTempNow">
+                                                                            <rect key="frame" x="45" y="42" width="50" height="18"/>
                                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                             <constraints>
                                                                                 <constraint firstAttribute="width" constant="50" id="119-ht-Yaj"/>
-                                                                                <constraint firstAttribute="height" constant="19.5" id="khx-lB-Unp"/>
+                                                                                <constraint firstAttribute="height" constant="18" id="khx-lB-Unp"/>
                                                                             </constraints>
-                                                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                                            <color key="textColor" name="TrippoColor"/>
+                                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                                                            <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
                                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                     <constraints>
-                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="height" secondItem="vKd-yK-MTy" secondAttribute="height" multiplier="0.5" id="3Ma-1g-XR0"/>
+                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="height" secondItem="vKd-yK-MTy" secondAttribute="height" multiplier="0.4" id="3Ma-1g-XR0"/>
                                                                         <constraint firstItem="anp-fS-AKU" firstAttribute="width" secondItem="vKd-yK-MTy" secondAttribute="width" id="6eb-gl-VMM"/>
                                                                         <constraint firstAttribute="trailing" secondItem="anp-fS-AKU" secondAttribute="trailing" id="8OX-oU-HHt"/>
                                                                         <constraint firstAttribute="bottom" secondItem="Ct7-PO-r6P" secondAttribute="bottom" id="EN0-8h-Mij"/>
                                                                         <constraint firstAttribute="trailing" secondItem="IUm-D4-XQ6" secondAttribute="trailing" id="Ht1-Lj-gQf"/>
-                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="width" secondItem="vKd-yK-MTy" secondAttribute="width" multiplier="0.5" id="LoX-bT-Yps"/>
-                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="top" secondItem="rPA-gC-rxY" secondAttribute="bottom" constant="-10" id="Zjj-bO-QDd"/>
+                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="width" secondItem="vKd-yK-MTy" secondAttribute="width" multiplier="0.4" id="LoX-bT-Yps"/>
+                                                                        <constraint firstItem="IUm-D4-XQ6" firstAttribute="top" secondItem="rPA-gC-rxY" secondAttribute="bottom" id="Zjj-bO-QDd"/>
                                                                         <constraint firstAttribute="bottom" secondItem="IUm-D4-XQ6" secondAttribute="bottom" id="a92-iH-6AQ"/>
                                                                         <constraint firstItem="anp-fS-AKU" firstAttribute="top" secondItem="vKd-yK-MTy" secondAttribute="top" id="dWH-MH-aRo"/>
                                                                         <constraint firstAttribute="width" constant="100" id="fBY-5F-gkY"/>
                                                                         <constraint firstAttribute="height" constant="100" id="g0E-Qn-21m"/>
                                                                         <constraint firstAttribute="bottom" secondItem="anp-fS-AKU" secondAttribute="bottom" id="idc-RH-3ag"/>
-                                                                        <constraint firstAttribute="trailing" secondItem="rPA-gC-rxY" secondAttribute="trailing" id="pQ8-RO-2gz"/>
+                                                                        <constraint firstAttribute="trailing" secondItem="rPA-gC-rxY" secondAttribute="trailing" constant="5" id="pQ8-RO-2gz"/>
                                                                         <constraint firstAttribute="trailing" secondItem="Ct7-PO-r6P" secondAttribute="trailing" id="sAB-VV-W7W"/>
                                                                     </constraints>
                                                                 </view>
@@ -5017,7 +5027,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
                                                                     </subviews>
-                                                                    <color key="backgroundColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                    <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                     <constraints>
                                                                         <constraint firstItem="bQL-AJ-GYJ" firstAttribute="centerX" secondItem="TAK-n2-jEv" secondAttribute="centerX" id="Czt-ns-O4B"/>
                                                                         <constraint firstItem="bQL-AJ-GYJ" firstAttribute="centerY" secondItem="TAK-n2-jEv" secondAttribute="centerY" id="QPv-0Z-oag"/>
@@ -5226,6 +5236,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="New">
                                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="qc5-Kk-QiN" kind="show" identifier="ShowNewActivity" id="45R-Pm-Hbo"/>
@@ -5248,7 +5259,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="arrow.up.right.diamond" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="NhF-ow-uxE" kind="show" identifier="ShowTravelPlan" id="nev-xC-Tfr"/>
@@ -5263,7 +5274,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="hvs-bf-wxX" eventType="touchUpInside" id="c9G-pE-SJY"/>
@@ -5278,7 +5289,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="calendar" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="SwapMainViewPressed:" destination="hvs-bf-wxX" eventType="touchUpInside" id="MFH-AA-6Mk"/>
@@ -5293,7 +5304,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="New">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="qc5-Kk-QiN" kind="show" identifier="ShowNewActivityFromDiary" id="5z7-qs-WAd"/>
@@ -5307,7 +5318,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="cloud.sun" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="WeatherRequestPressed:" destination="hvs-bf-wxX" eventType="touchUpInside" id="wWw-Ml-Iux"/>
@@ -5322,7 +5333,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="square.and.arrow.up" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="shareButtonPressed:" destination="hvs-bf-wxX" eventType="touchUpInside" id="llW-6a-oqH"/>
@@ -5373,7 +5384,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="a.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ed2-M7-tP4">
                                                     <rect key="frame" x="0.0" y="0.5" width="40" height="39.5"/>
-                                                    <color key="tintColor" red="0.99937099220000003" green="0.14531728629999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="42" weight="bold"/>
                                                 </imageView>
                                             </subviews>
@@ -5427,7 +5438,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <subviews>
                                                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="abQ-LN-q5f">
                                                     <rect key="frame" x="81.5" y="83" width="37" height="37"/>
-                                                    <color key="color" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <color key="color" name="TrippoColor"/>
                                                 </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Waiting to download weather data from the internet" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="yEi-Cg-toB">
                                                     <rect key="frame" x="10" y="20" width="180" height="43"/>
@@ -5448,13 +5459,13 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                         </view>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="v2Z-ah-ncS" firstAttribute="centerY" secondItem="LcF-2e-UiI" secondAttribute="centerY" id="g0Q-bV-aY0"/>
                                         <constraint firstItem="v2Z-ah-ncS" firstAttribute="centerX" secondItem="LcF-2e-UiI" secondAttribute="centerX" id="ghR-hu-vjW"/>
                                     </constraints>
                                 </view>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <blurEffect style="systemUltraThinMaterial"/>
                             </visualEffectView>
                         </subviews>
@@ -5544,7 +5555,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="smallcircle.circle" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="yXg-UB-z1g" kind="show" identifier="ShowNearbyMe" id="aey-Xk-tuw"/>
@@ -5592,13 +5603,13 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="0K9-zY-2Zc">
                                                     <rect key="frame" x="35" y="2.5" width="100" height="95"/>
-                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <color key="tintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="100" id="2SE-98-PbZ"/>
                                                         <constraint firstAttribute="width" constant="100" id="Wiw-Cg-5LT"/>
                                                     </constraints>
-                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="thin"/>
+                                                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DWO-6S-smE">
                                                     <rect key="frame" x="155" y="10" width="160" height="65"/>
@@ -5625,7 +5636,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     </constraints>
                                                     <color key="tintColor" name="TrippoColor"/>
                                                     <state key="normal" image="smallcircle.circle" catalog="system">
-                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                                     </state>
                                                     <connections>
                                                         <segue destination="yXg-UB-z1g" kind="show" identifier="ShowNearby" id="XaH-Wj-sbi"/>
@@ -5653,7 +5664,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                     </subviews>
-                                                    <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="backgroundColor" name="TrippoColor"/>
                                                     <constraints>
                                                         <constraint firstItem="jE7-S2-uqv" firstAttribute="centerX" secondItem="4eF-Yb-Amj" secondAttribute="centerX" id="5DM-mD-e2R"/>
                                                         <constraint firstAttribute="width" constant="35" id="NS8-4b-PDr"/>
@@ -5724,7 +5735,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="qc5-Kk-QiN" eventType="touchUpInside" id="0cs-K6-2pF"/>
@@ -5739,7 +5750,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="NewPoi" image="plus.circle" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="5m3-wy-tbn" kind="show" identifier="ShowPoiLocator" id="twy-MJ-tG7"/>
@@ -5778,7 +5789,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Expand" image="arrow.up.square" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="FilterPressed:" destination="qc5-Kk-QiN" eventType="touchUpInside" id="HZB-94-RxQ"/>
@@ -5880,7 +5891,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Clear" image="clear" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="FilterResetPressed:" destination="qc5-Kk-QiN" eventType="touchUpInside" id="rJb-N4-rRy"/>
@@ -6278,7 +6289,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="a.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="oZy-A7-txV">
                                                     <rect key="frame" x="-3" y="-3" width="45" height="44.5"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <color key="tintColor" red="0.99937099220000003" green="0.14531728629999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="42" weight="bold"/>
                                                 </imageView>
                                                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="A" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TqR-jb-g1L">
@@ -6336,7 +6347,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="NhF-ow-uxE" eventType="touchUpInside" id="C0I-rV-hPK"/>
@@ -6351,7 +6362,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="arrow.2.circlepath" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" scale="medium" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" scale="medium" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ResetPressed:" destination="NhF-ow-uxE" eventType="touchUpInside" id="4N5-p7-5yY"/>
@@ -6375,7 +6386,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" title="Update" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="UpdateTripStatsPressed:" destination="NhF-ow-uxE" eventType="touchUpInside" id="x1b-z6-EL6"/>
@@ -6603,12 +6614,14 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Pj-pA-TeP">
                                 <rect key="frame" x="18.5" y="80" width="338" height="507"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Planning" translatesAutoresizingMaskIntoConstraints="NO" id="pPt-jP-b1O">
-                                        <rect key="frame" x="0.0" y="0.0" width="338" height="338"/>
-                                        <color key="backgroundColor" cocoaTouchSystemColor="lightTextColor"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="a.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="pPt-jP-b1O">
+                                        <rect key="frame" x="0.0" y="2.5" width="338" height="334"/>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="tintColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="pPt-jP-b1O" secondAttribute="height" multiplier="1:1" id="1at-Wf-75x"/>
                                         </constraints>
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="small" weight="regular"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="27G-Uv-txX">
                                         <rect key="frame" x="10" y="358" width="318" height="30"/>
@@ -7296,7 +7309,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
-                                                        <color key="backgroundColor" red="0.99942404029999998" green="0.98555368190000003" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="backgroundColor" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="bottom" secondItem="19s-SI-7EB" secondAttribute="bottom" constant="10" id="1OD-4F-wnn"/>
                                                             <constraint firstAttribute="bottom" secondItem="Gey-9K-ZMY" secondAttribute="bottom" id="1X6-C9-zSO"/>
@@ -7361,7 +7374,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                                         </label>
                                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="a.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="lxa-xO-WGL">
                                                                             <rect key="frame" x="0.0" y="0.5" width="45" height="44.5"/>
-                                                                            <color key="tintColor" red="0.99937099220000003" green="0.14531728629999999" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                                            <color key="tintColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="42" weight="bold"/>
                                                                         </imageView>
                                                                     </subviews>
@@ -7488,12 +7501,14 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             <constraint firstAttribute="width" secondItem="kRR-2v-NW1" secondAttribute="height" multiplier="1:1" id="zhh-9q-vIR"/>
                                                         </constraints>
                                                     </mapView>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="wSw-PK-GT0">
-                                                        <rect key="frame" x="187.5" y="795" width="187.5" height="187.5"/>
-                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="command" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="wSw-PK-GT0">
+                                                        <rect key="frame" x="187.5" y="796" width="187.5" height="186"/>
+                                                        <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                        <color key="tintColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" secondItem="wSw-PK-GT0" secondAttribute="height" multiplier="1:1" id="LMa-1J-u8i"/>
                                                         </constraints>
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" weight="regular"/>
                                                     </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iu3-Tx-JGc" userLabel="PoiActionButton">
                                                         <rect key="frame" x="187.5" y="795" width="187.5" height="187.5"/>
@@ -7601,7 +7616,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="arrow.clockwise" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ActionButtonPressed:" destination="KMV-wg-dT0" eventType="touchUpInside" id="DJG-ke-E7T"/>
@@ -7629,7 +7644,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="chevron.left" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="BackPressed:" destination="KMV-wg-dT0" eventType="touchUpInside" id="x5g-uv-bh7"/>
@@ -7644,7 +7659,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="square.and.arrow.up" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="UploadImagePressed:" destination="KMV-wg-dT0" eventType="touchUpInside" id="WJu-XP-icU"/>
@@ -7667,7 +7682,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="doc.text.viewfinder" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ScanButtonPressed:" destination="KMV-wg-dT0" eventType="touchUpInside" id="j4d-aR-BcW"/>
@@ -7682,7 +7697,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="arrow.up.right.diamond" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <action selector="ShowDirectionsPressed:" destination="KMV-wg-dT0" eventType="touchUpInside" id="PD8-ac-F3K"/>
@@ -7697,7 +7712,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                             </constraints>
                                             <color key="tintColor" name="TrippoColor"/>
                                             <state key="normal" image="creditcard" catalog="system">
-                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="thin"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                             </state>
                                             <connections>
                                                 <segue destination="IY3-lE-B7S" kind="show" identifier="ShowPayments" id="ZIc-mm-OQy"/>
@@ -7828,8 +7843,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="Continue" width="50" height="50"/>
         <image name="Globe" width="300" height="300"/>
         <image name="Planning" width="333" height="333"/>
-        <image name="Poi" width="500" height="500"/>
-        <image name="Project" width="322" height="322"/>
+        <image name="Project" width="325" height="325"/>
         <image name="Trippo" width="98" height="98"/>
         <image name="Upload" width="48" height="48"/>
         <image name="Warning" width="48" height="48"/>
@@ -7858,7 +7872,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="ellipsis.circle.fill" catalog="system" width="64" height="62"/>
         <image name="forward.end" catalog="system" width="64" height="60"/>
         <image name="gobackward" catalog="system" width="58" height="64"/>
-        <image name="info.circle" catalog="system" width="64" height="62"/>
+        <image name="info.circle.fill" catalog="system" width="64" height="62"/>
         <image name="location" catalog="system" width="64" height="60"/>
         <image name="location.slash" catalog="system" width="64" height="60"/>
         <image name="map" catalog="system" width="64" height="58"/>
@@ -7866,6 +7880,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="pin.slash.fill" catalog="system" width="54" height="64"/>
         <image name="plus" width="16" height="16"/>
         <image name="plus.circle" catalog="system" width="64" height="62"/>
+        <image name="plus.circle.fill" catalog="system" width="64" height="62"/>
         <image name="smallcircle.circle" catalog="system" width="64" height="62"/>
         <image name="square.and.arrow.down" catalog="system" width="58" height="64"/>
         <image name="square.and.arrow.up" catalog="system" width="56" height="64"/>
@@ -7886,8 +7901,8 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <segue reference="5z7-qs-WAd"/>
         <segue reference="0ng-Sg-LI3"/>
         <segue reference="ZIc-mm-OQy"/>
-        <segue reference="7bR-Ra-xXP"/>
+        <segue reference="C4j-D2-C1t"/>
         <segue reference="XaH-Wj-sbi"/>
-        <segue reference="8wb-u9-bJi"/>
+        <segue reference="twy-MJ-tG7"/>
     </inferredMetricsTieBreakers>
 </document>

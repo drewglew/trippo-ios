@@ -807,7 +807,7 @@ remarks:
 
 /*
  created date:      14/07/2018
- last modified:     28/03/2019
+ last modified:     10/09/2019
  remarks: this method handles the map circle that is placed as overlay onto map
  */
 - (MKOverlayRenderer *) mapView:(MKMapView *)mapView rendererForOverlay:(id)overlay {
@@ -815,15 +815,10 @@ remarks:
     {
         MKCircleRenderer* aRenderer = [[MKCircleRenderer
                                         alloc]initWithCircle:(MKCircle *)overlay];
-        
-        
-        
-        aRenderer.strokeColor = [UIColor colorNamed:@"TrippoColor"];
-        aRenderer.lineWidth = 2;
-        
-        //TrippoColorAlpha
-        aRenderer.fillColor =  [UIColor colorWithRed:49.0f/255.0f green:163.0f/255.0f blue:0.0f/255.0f alpha:0.25];
-                               // colorWithAlphaComponent:0.25]
+
+        aRenderer.fillColor =  [UIColor colorNamed:@"TrippoColor"];
+        [aRenderer setAlpha:0.05];
+                               
         return aRenderer;
     }
     else
@@ -898,9 +893,9 @@ remarks:
         NSInteger NumberOfItems = self.PointOfInterest.images.count + 1;
         if (indexPath.row == NumberOfItems -1) {
        
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
                                  
-            cell.ImagePoi.image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
+            cell.ImagePoi.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
             [cell.ImagePoi setTintColor: [UIColor colorNamed:@"TrippoColor"]];
        
         } else {
@@ -1230,7 +1225,7 @@ remarks:
 
 /*
  created date:      28/04/2018
- last modified:     26/09/2018
+ last modified:     09/09/2019
  remarks:
  */
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
@@ -1263,6 +1258,8 @@ remarks:
             
             if (self.PointOfInterest.images.count==0) {
                 imgobject.KeyImage = 1;
+                [self.ImageViewKey setImage:chosenImage];
+                [self.ImagePicture setImage:chosenImage];
             } else {
                 imgobject.KeyImage = 0;
             }
@@ -1272,7 +1269,7 @@ remarks:
             [self.realm commitWriteTransaction];
             
             [self.PoiImageDictionary setObject:chosenImage forKey:imgobject.key];
-            
+
         } else if (self.imagestate == 2) {
             ImageCollectionRLM *imgobject = [self.PointOfInterest.images objectAtIndex:[self.SelectedImageIndex longValue]];
             
@@ -1762,7 +1759,7 @@ remarks:
 
 /*
  created date:      11/06/2018
- last modified:     01/09/2018
+ last modified:     09/09/2019
  remarks:
  */
 - (void)didAddImages :(NSMutableArray*)ImageCollection {
@@ -1775,6 +1772,8 @@ remarks:
         
         if (self.PointOfInterest.images.count==0) {
             imgobject.KeyImage = 1;
+            [self.ImageViewKey setImage:img.Image];
+            [self.ImagePicture setImage:img.Image];
         } else {
             imgobject.KeyImage = 0;
         }
@@ -2032,12 +2031,12 @@ remarks:
 
 /*
  created date:      28/04/2018
- last modified:     06/02/2019
- remarks:           BUG WHEN USER CANCELS AFTER ADDING IMAGE IN NEARBY
+ last modified:     09/09/2019
+ remarks:
  */
 - (IBAction)BackPressed:(id)sender {
 
-    if (self.newitem) {
+    if (self.newitem || self.fromnearby) {
         /* remove any wiki document that might be orphaned afterwards */
         NSFileManager *fileManager = [NSFileManager defaultManager];
         
@@ -2050,12 +2049,9 @@ remarks:
         [fileManager removeItemAtPath:wikiDataFilePath error:&error];
         
         /* manage the images if any exist */
-        /*if (self.PointOfInterest.images.count>0) {
-         
-            [self.realm transactionWithBlock:^{
-               [self.realm deleteObjects:self.PointOfInterest.images];
-            }];
-        }*/
+        if (self.PointOfInterest.images.count>0) {
+            [self.PointOfInterest.images removeAllObjects];
+        }
     
     } else {
         
@@ -2159,7 +2155,7 @@ remarks:
 }
 /*
  created date:      08/09/2018
- last modified:     19/02/2019
+ last modified:     09/09/2019
  remarks:           Turn this into more like structure used in RLM objects.
  */
 - (IBAction)SharePressed:(id)sender {
@@ -2181,7 +2177,11 @@ remarks:
                  ImageString = [ImageData base64EncodedStringWithOptions:0];
                  ImageObject.key = imageitem.key;
                  ImageObject.ImageFileReference = imageitem.ImageFileReference;
-                 if (imageitem.info.length>0) ImageObject.info=imageitem.info;
+                 if (imageitem.info.length>0) {
+                     ImageObject.info=imageitem.info;
+                 } else {
+                     ImageObject.info=@"no info available";
+                 }
                  break;
             }
         }
@@ -2316,8 +2316,6 @@ remarks:
 -(NSString*)FormatPrettyDate :(NSDate*)Dt {
     NSDateFormatter *dateformatter = [[NSDateFormatter alloc] init];
     [dateformatter setDateFormat:@"EEE, dd MMM yyyy"];
-   // NSDateFormatter *timeformatter = [[NSDateFormatter alloc] init];
-   // [timeformatter setDateFormat:@"HH:mm"];
     return [NSString stringWithFormat:@"%@",[dateformatter stringFromDate:Dt]];
 }
 

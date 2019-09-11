@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic) NSMutableArray *activitycollection;
 @property (strong, nonatomic) NSMutableArray *excludedlisting;
 @property (strong, nonatomic) NSMutableArray *itinerarycollection;
+
 @property (strong, nonatomic) NSMutableArray *itin;
 
 @property (strong, nonatomic) NSMutableDictionary *ActivityImageDictionary;

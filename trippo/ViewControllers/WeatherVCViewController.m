@@ -192,14 +192,16 @@
     }
 
     if (doHighlight) {
-        [cell.contentView setBackgroundColor:[UIColor labelColor]];
+        [cell.contentView setBackgroundColor:[UIColor systemPinkColor]];
+        [cell.ImageIcon setTintColor:[UIColor systemBackgroundColor]];
         [cell.LabelTemp setTextColor:[UIColor systemBackgroundColor]];
         [cell.LabelSummary setTextColor:[UIColor systemBackgroundColor]];
         [cell.LabelTime setTextColor:[UIColor secondarySystemBackgroundColor]];
         
     } else {
         [cell.contentView setBackgroundColor:[UIColor clearColor]];
-        [cell.LabelTemp setTextColor:[UIColor labelColor]];
+        [cell.ImageIcon setTintColor:[UIColor systemPinkColor]];
+        [cell.LabelTemp setTextColor:[UIColor systemPinkColor]];
         [cell.LabelSummary setTextColor:[UIColor labelColor]];
         [cell.LabelTime setTextColor:[UIColor secondaryLabelColor]];
     }

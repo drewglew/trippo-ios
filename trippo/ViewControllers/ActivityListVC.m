@@ -588,21 +588,24 @@ CGFloat Scale = 4.14f;
             imgobject = [filteredResults firstObject];
         }
     }
+    
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
     NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
     NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
     if (pngData==nil) {
         if (activity.state == [NSNumber numberWithInteger:0]) {
             @autoreleasepool {
-                UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Planning"] toFitInSize:CellSize];
-                [self.ActivityImageDictionary setObject:image forKey:activity.compondkey];
-                image = nil;
+                //UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Planning"] toFitInSize:CellSize];
+                
+                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"i.circle" withConfiguration:config] forKey:activity.compondkey];
+                //image = nil;
             }
         } else {
             @autoreleasepool {
-                UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Activity"] toFitInSize:CellSize];
-                [self.ActivityImageDictionary setObject:image  forKey:activity.compondkey];
-                image = nil;
+                //UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Activity"] toFitInSize:CellSize];
+                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config]  forKey:activity.compondkey];
+                //image = nil;
             }
         }
     } else {
@@ -636,10 +639,11 @@ CGFloat Scale = 4.14f;
 
 /*
  created date:      30/04/2018
- last modified:     17/08/2019
+ last modified:     10/09/2019
  remarks:  [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text]   df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+
     
     ActivityListCell *cell= [collectionView dequeueReusableCellWithReuseIdentifier:@"ActivityCellId" forIndexPath:indexPath];
     
@@ -656,11 +660,11 @@ CGFloat Scale = 4.14f;
         if (self.tweetview) {
             cell.contentView.hidden = true;
         }
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
 
-        cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
+        cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
         [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
-
+        [cell.ImageViewActivity setBackgroundColor: [UIColor clearColor]];
         cell.VisualViewBlur.hidden = true;
         cell.ViewOverlay.hidden = true;
         cell.ImageBlurBackground.hidden = true;
@@ -668,13 +672,13 @@ CGFloat Scale = 4.14f;
         cell.ViewActiveBadge.hidden = true;
         cell.ViewActiveItem.backgroundColor = [UIColor clearColor];
     } else {
-        
+        [cell.ImageViewActivity setBackgroundColor: [UIColor systemIndigoColor]];
+        [cell.ImageViewActivity setTintColor: [UIColor systemBackgroundColor]];
         if (!self.editmode) {
             cell.ViewOverlay.hidden = false;
         } else {
             cell.ViewOverlay.hidden = true;
         }
-        
         cell.activity = [self.activitycollection objectAtIndex:indexPath.row];
         
         NSTimeZone *tz = [NSTimeZone timeZoneWithName:self.Trip.defaulttimezonename];
@@ -757,6 +761,7 @@ CGFloat Scale = 4.14f;
                     //cell.LabelActive.bounds.size.height = cell.ViewActiveBadge.layer.cornerRadius;
                     [cell.LabelActive setNeedsDisplay];
                     cell.ViewActiveBadge.hidden = false;
+                   // cell.ViewWeather.hidden = true;
                 } else  {
                     cell.ViewActiveBadge.hidden = true;
                 }
@@ -813,7 +818,7 @@ CGFloat Scale = 4.14f;
         } else {
             cell.ImageBlurBackground.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
             cell.ImageBlurBackgroundBottomHalf.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
-            cell.ViewPoiType.backgroundColor = [UIColor colorWithRed:5.0f/255.0f green:102.0f/255.0f blue:141.0f/255.0f alpha:1.0];
+            cell.ViewPoiType.backgroundColor = [UIColor systemBlueColor];
         }
         
         
@@ -844,7 +849,9 @@ CGFloat Scale = 4.14f;
                 
                 if ([cell.ViewActiveBadge isHidden]) {
                     if (cell.activity.weather.count == 0) {
-                        [cell.ImageWeatherIcon setImage:[UIImage imageNamed:@"NotAvailable"]];
+                        [cell.ImageWeatherIcon setImage:[UIImage systemImageNamed:@"questionmark.diamond"]];
+                        [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor clearColor]];
+                        [cell.ImageWeatherIcon setTintColor:[UIColor systemBackgroundColor]];
                         cell.LabelWeatherTemp.text = @"";
                         [cell.ButtonShowWeather setEnabled:FALSE];
                     } else {
@@ -860,9 +867,12 @@ CGFloat Scale = 4.14f;
                     }
                 }
                 if (HasForecast) {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:51.0f/255.0f alpha:1.0]];
+                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor systemPinkColor]];
+                    [cell.LabelWeatherTemp setTextColor:[UIColor whiteColor]];
+                    [cell.ImageWeatherIcon setTintColor:[UIColor whiteColor]];
                 } else if (![self.ButtonWeatherRequest isEnabled]) {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
+                    [cell.LabelWeatherTemp setTextColor:[UIColor systemPinkColor]];
+                    [cell.ImageWeatherIcon setTintColor:[UIColor systemPinkColor]];
                 }
                 
             } else { // Activity can only be planned (placeholder for actual too).
@@ -920,9 +930,16 @@ CGFloat Scale = 4.14f;
                 }
                 [cell.ButtonShowWeather setEnabled:TRUE];
                 if (HasForecast) {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:51.0f/255.0f alpha:1.0]];
+                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor systemPinkColor]];
+                    
+                    [cell.LabelWeatherTemp setTextColor:[UIColor whiteColor]];
+                    [cell.ImageWeatherIcon setTintColor:[UIColor whiteColor]];
+                    
                 } else {
                     [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor clearColor]];
+                    
+                    [cell.LabelWeatherTemp setTextColor:[UIColor systemPinkColor]];
+                    [cell.ImageWeatherIcon setTintColor:[UIColor systemPinkColor]];
                 }
             }
            
@@ -973,6 +990,15 @@ CGFloat Scale = 4.14f;
             }
         }
 
+        
+        if ([cell.activity.startdt compare: cell.activity.enddt] == NSOrderedSame && cell.activity.startdt!=nil) {
+           // only show badge when activity is Actual.
+           if (cell.activity.state == [NSNumber numberWithInteger:1]) {
+               cell.ViewWeather.hidden = true;
+           }
+        }
+        
+        
         NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor colorWithRed:35.0f/255.0f green:35.0f/255.0f blue:35.0f/255.0f alpha:1.0], NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName:font};
         NSAttributedString *string = [[NSAttributedString alloc] initWithString:cell.activity.name attributes:attributes];
         cell.LabelName.attributedText = string;
@@ -1116,7 +1142,7 @@ remarks:
     button.tag = section;
     
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-    [button setImage:[UIImage systemImageNamed:@"plus.circle" withConfiguration:config] forState:UIControlStateNormal];
+    [button setImage:[UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config] forState:UIControlStateNormal];
 
     [button setTintColor: [UIColor labelColor]];
     
@@ -1358,12 +1384,12 @@ remarks:           table view with sections.
         NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
         NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
         if (pngData==nil) {
-            image = [UIImage imageNamed:@"Poi"];
+            image = [UIImage systemImageNamed:@"command"];
         } else {
             image = [UIImage imageWithData:pngData];
         }
     } else {
-        image = [UIImage imageNamed:@"Poi"];
+        image = [UIImage systemImageNamed:@"command"];
     }
     return image;
 }
@@ -1695,65 +1721,50 @@ remarks:           table view with sections.
     UIAlertAction* tweetAction = [UIAlertAction actionWithTitle:@"Tweet" style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * action) {
                                                               
-                                                            
-        
-        
-                                                              dispatch_async(dispatch_get_main_queue(), ^{
-                                                                  
-                                                                  self.tweetview = true;
-                                                                   [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
-                                                                   [self.CollectionViewActivities reloadDataWithCompletion:^{
-                                                                       
-                                                                       [self.CollectionViewActivities layoutIfNeeded];
-                                                                       
-                                                                       UIImage *image;
-                                                                       image = [self imageWithCollectionView];
-                                                                       
-                                                                       TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
-                                                                       cropViewController.delegate = self;
-                                                                       
-                                                                      
-                                                                       [cropViewController setTitle:@"Tweet - Set Picture size"];
-                                                                       
-                                                                       [self presentViewController:cropViewController animated:YES completion:nil];
-                                                                       
-                                                                   }];
-                                                                  
-                                                                  
-                                                                  
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+
+                                                                        self.tweetview = true;
+                                                                        [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
+                                                                        [self.CollectionViewActivities reloadDataWithCompletion:^{
+
+                                                                        [self.CollectionViewActivities layoutIfNeeded];
+
+                                                                        UIImage *image;
+                                                                        image = [self imageWithCollectionView];
+
+                                                                        TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+                                                                        cropViewController.delegate = self;
+
+
+                                                                        [cropViewController setTitle:@"Tweet - Set Picture size"];
+
+                                                                        [self presentViewController:cropViewController animated:YES completion:nil];
+
+                                                                    }];
                                                               });
                                                           }];
     
     UIAlertAction* emailAction = [UIAlertAction actionWithTitle:@"ePostcard" style:UIAlertActionStyleDefault
                                                            handler:^(UIAlertAction * action) {
                                                                
-
                                                                 if ([MFMailComposeViewController canSendMail])
                                                                 {
-
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        
+
                                                                         self.tweetview = true;
-                                                                         [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
-                                                                         [self.CollectionViewActivities reloadDataWithCompletion:^{
-                                                                             
-                                                                             [self.CollectionViewActivities layoutIfNeeded];
-                                                                             
-                                                                             UIImage *image;
-                                                                             image = [self imageWithCollectionView];
-                                                                             
-                                                                             
-                                                                             TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
-                                                                             cropViewController.delegate = self;
-                                                                             
-                                                                              [cropViewController setTitle:@"ePostcard - Set Picture size"];
-                                                                             
-                                                                             [self presentViewController:cropViewController animated:YES completion:nil];
-                                                                             
-                                                                         }];
-                                                                        
+                                                                        [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
+                                                                        [self.CollectionViewActivities reloadDataWithCompletion:^{
+
+                                                                            [self.CollectionViewActivities layoutIfNeeded];
+                                                                            UIImage *image;
+                                                                            image = [self imageWithCollectionView];
+
+                                                                            TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+                                                                            cropViewController.delegate = self;
+                                                                            [cropViewController setTitle:@"ePostcard - Set Picture size"];
+                                                                            [self presentViewController:cropViewController animated:YES completion:nil];
+                                                                        }];
                                                                     });
-                                                                    
                                                                 }
                                                                 else
                                                                 {
@@ -1812,6 +1823,24 @@ remarks:            Response from mail Composer.  Handles with a reload of colle
 
 
 /*
+created date:      11/09/2019
+last modified:     11/09/2019
+remarks:           User dismisses action to send ePostcard or Tweet.
+*/
+- (void)cropViewController:(TOCropViewController *)cropViewController didFinishCancelled:(BOOL)cancelled  {
+   
+    [cropViewController dismissViewControllerAnimated:YES completion:NULL];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.tweetview = false;
+        [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
+        [self.CollectionViewActivities reloadData];
+    });
+}
+
+
+
+/*
  created date:      22/08/2019
  last modified:     22/08/2019
  remarks:           User manually resizes image of collectionview made by system.  This method handles
@@ -1819,9 +1848,8 @@ remarks:            Response from mail Composer.  Handles with a reload of colle
  */
 - (void)cropViewController:(TOCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
+
     bool isTweet = false;
-    
-    
     if ([cropViewController.titleLabel.text isEqualToString:@"Tweet - Set Picture size"]) {
         isTweet = true;
     }

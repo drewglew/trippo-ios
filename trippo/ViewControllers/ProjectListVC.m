@@ -196,9 +196,9 @@ CGFloat TripScale = 4.14f;
    
     if (indexPath.row == NumberOfItems -1) {
             
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
            
-        cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus.circle" withConfiguration:config];
+        cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
         [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TrippoColor"]];
         
         cell.isNewAccessor = true;
