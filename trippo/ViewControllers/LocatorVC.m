@@ -24,7 +24,7 @@ MKLocalSearchResponse *results;
 
 /*
  created date:      27/04/2018
- last modified:     28/08/2019
+ last modified:     13/09/2019
  remarks:
  */
 - (void)viewDidLoad {
@@ -65,7 +65,7 @@ MKLocalSearchResponse *results;
 
     self.TableViewSearchResult.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.SegmentMapType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
-    
+    [self.SegmentMapType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 }
 
 -(void) viewDidDisappear:(BOOL)animated {

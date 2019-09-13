@@ -21,7 +21,7 @@ int DocumentListingViewPresentedHeight = 250;
 
 /*
  created date:      01/05/2018
- last modified:     10/09/2019
+ last modified:     13/09/2019
  remarks:
  */
 - (void)viewDidLoad {
@@ -260,12 +260,6 @@ int DocumentListingViewPresentedHeight = 250;
     self.TextFieldReference.delegate = self;
     self.TableViewAttachments.delegate = self;
     
-    //self.ViewStateIndicator.layer.cornerRadius = (self.ViewStateIndicator.bounds.size.width / 2);
-    //self.ViewStateIndicator.clipsToBounds = YES;
-    
-    //self.ViewSettingsStateIndicator.layer.cornerRadius = (self.ViewStateIndicator.bounds.size.width / 2);
-    //self.ViewSettingsStateIndicator.clipsToBounds = YES;
-    
     if (self.Activity.state==[NSNumber numberWithInteger:1]) {
         //self.ImageViewIdeaWidthConstraint.constant = 0;
         BlurredMainViewPresentedHeight = 420;
@@ -373,6 +367,7 @@ int DocumentListingViewPresentedHeight = 250;
     
     self.ActivityScrollView.delegate = self;
     self.SegmentPresenter.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentPresenter setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 
     NSInteger anIndex=[self.timezones indexOfObject:self.StartDtTimeZoneNameTextField.text];
     [self.StartDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];

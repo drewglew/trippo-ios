@@ -50,8 +50,11 @@ bool runOnce = true;
     self.ViewLoading.layer.borderWidth = 1.0f;
     self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
     self.SegmentFilterType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentFilterType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     self.SegmentImageEnabler.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentImageEnabler setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     self.SegmentWikiLanguageOption.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentWikiLanguageOption setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 }
 
 

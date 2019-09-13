@@ -192,14 +192,18 @@
 }
 
 
-
+/*
+created date:      09/06/2018
+last modified:     13/09/2019
+remarks:           
+*/
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UILabel *headerTitle = [[UILabel alloc] init];
     headerTitle.frame = CGRectMake(0, 0, tableView.frame.size.width , 20);
     headerTitle.backgroundColor = [UIColor labelColor];
     headerTitle.textColor = [UIColor systemBackgroundColor];
-    headerTitle.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:17];
+    headerTitle.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     headerTitle.text = [self tableView:tableView titleForHeaderInSection:section];
     UIView *headerView = [[UIView alloc] init];
     [headerView addSubview:headerTitle];
@@ -249,7 +253,7 @@
     actualSummaryLabel.frame = CGRectMake(10, 5, tableView.frame.size.width - 200, 20);
     actualSummaryLabel.backgroundColor = [UIColor clearColor];
     actualSummaryLabel.textColor = [UIColor secondaryLabelColor];
-    actualSummaryLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:17];
+    actualSummaryLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     actualSummaryLabel.text = @"Actual Total";
     actualSummaryLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -267,7 +271,7 @@
     actualSummaryAmtLabel.frame = CGRectMake(tableView.frame.size.width - 160, 5, 150, 20);
     actualSummaryAmtLabel.backgroundColor = [UIColor clearColor];
     actualSummaryAmtLabel.textColor = [UIColor labelColor];
-    actualSummaryAmtLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:17];
+    actualSummaryAmtLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     actualSummaryAmtLabel.text = [numberHomeFormatter stringFromNumber:[NSNumber numberWithDouble:actamt]];
     actualSummaryAmtLabel.textAlignment = NSTextAlignmentRight;
     
@@ -277,7 +281,7 @@
     plannedSummaryLabel.frame = CGRectMake(10, 26, tableView.frame.size.width - 200, 20);
     plannedSummaryLabel.backgroundColor = [UIColor clearColor];
     plannedSummaryLabel.textColor = [UIColor secondaryLabelColor];
-    plannedSummaryLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:17];
+    plannedSummaryLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     plannedSummaryLabel.text = @"Planned Total";
     plannedSummaryLabel.textAlignment = NSTextAlignmentLeft;
     [footerView addSubview:plannedSummaryLabel];
@@ -286,7 +290,7 @@
     plannedSummaryAmtLabel.frame = CGRectMake(tableView.frame.size.width - 160, 26, 150, 20);
     plannedSummaryAmtLabel.backgroundColor = [UIColor clearColor];
     plannedSummaryAmtLabel.textColor = [UIColor labelColor];
-    plannedSummaryAmtLabel.font = [UIFont fontWithName:@"CourierNewPS-BoldMT" size:17];
+    plannedSummaryAmtLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     plannedSummaryAmtLabel.text = [numberHomeFormatter stringFromNumber:[NSNumber numberWithDouble:plannedamt]];
     plannedSummaryAmtLabel.textAlignment = NSTextAlignmentRight;
     [footerView addSubview:plannedSummaryAmtLabel];

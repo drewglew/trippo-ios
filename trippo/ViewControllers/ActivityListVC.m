@@ -193,6 +193,7 @@ CGFloat Scale = 4.14f;
     }
     
     self.SegmentState.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentState setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     NumberOfCellsInRow = [settings[0].ActivityCellColumns floatValue];

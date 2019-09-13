@@ -3062,10 +3062,10 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J6n-jm-mEk">
-                                            <rect key="frame" x="25" y="25" width="325" height="617"/>
+                                            <rect key="frame" x="25" y="80.5" width="325" height="506.5"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tDr-np-XUg">
-                                                    <rect key="frame" x="10" y="572" width="35" height="35"/>
+                                                    <rect key="frame" x="10" y="461.5" width="35" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="35" id="prW-EW-cGJ"/>
                                                         <constraint firstAttribute="width" constant="35" id="w7z-Ok-Suk"/>
@@ -3079,7 +3079,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5K1-V6-n4f">
-                                                    <rect key="frame" x="215" y="572" width="100" height="35"/>
+                                                    <rect key="frame" x="215" y="461.5" width="100" height="35"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="Xmd-hV-Ibg"/>
                                                         <constraint firstAttribute="height" constant="35" id="noq-ew-M6z"/>
@@ -3093,30 +3093,30 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     </connections>
                                                 </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Expense Description" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Tho-0P-NZ6">
-                                                    <rect key="frame" x="10" y="70" width="305" height="30"/>
+                                                    <rect key="frame" x="10" y="56.5" width="305" height="30"/>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="jKa-CD-y0M"/>
                                                     </constraints>
                                                     <color key="textColor" name="TrippoColor"/>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Expense Amount" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="NPh-xh-AQQ">
-                                                    <rect key="frame" x="10" y="120" width="305" height="30"/>
+                                                    <rect key="frame" x="10" y="106.5" width="305" height="30"/>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="lPN-ZM-Zoi"/>
                                                     </constraints>
                                                     <color key="textColor" name="TrippoColor"/>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                     <connections>
                                                         <action selector="AmountEditingEnded:" destination="hdP-V9-5JR" eventType="editingDidEnd" id="bbD-Td-Fr5"/>
                                                     </connections>
                                                 </textField>
                                                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="AfN-PP-NVE">
-                                                    <rect key="frame" x="10" y="472" width="305" height="29"/>
+                                                    <rect key="frame" x="10" y="361.5" width="305" height="29"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="28" id="ez4-zf-pPr"/>
                                                     </constraints>
@@ -3128,38 +3128,10 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <color key="tintColor" name="TrippoColor"/>
                                                 </segmentedControl>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pXl-9h-kp5">
-                                                    <rect key="frame" x="10" y="170" width="305" height="292"/>
+                                                    <rect key="frame" x="10" y="156.5" width="305" height="195"/>
                                                     <subviews>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CVP-3Z-J0X" userLabel="ViewSpacer1">
-                                                            <rect key="frame" x="127.5" y="0.0" width="50" height="32.5"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="EI7-6w-ub8"/>
-                                                            </constraints>
-                                                        </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vb0-nH-Y2k" userLabel="ViewSpacer3">
-                                                            <rect key="frame" x="127.5" y="130" width="50" height="32"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="CCs-XC-IT3"/>
-                                                            </constraints>
-                                                        </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wVP-ar-sAH" userLabel="ViewSpacer4">
-                                                            <rect key="frame" x="127.5" y="192" width="50" height="32.5"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="YgJ-Sm-8dM"/>
-                                                            </constraints>
-                                                        </view>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BWH-lO-G2J" userLabel="ViewSpacer2">
-                                                            <rect key="frame" x="127.5" y="62.5" width="50" height="32.5"/>
-                                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="width" constant="50" id="UwE-q9-fOl"/>
-                                                            </constraints>
-                                                        </view>
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Exchange Rate Date" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="OCR-Yd-uid" customClass="TextFieldDatePicker">
-                                                            <rect key="frame" x="10" y="162" width="285" height="30"/>
+                                                            <rect key="frame" x="10" y="70" width="285" height="30"/>
                                                             <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="knP-uj-duw"/>
@@ -3169,7 +3141,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textField>
                                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Currency" textAlignment="center" adjustsFontForContentSizeCategory="YES" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="at4-qF-GyN" customClass="TextFieldDatePicker">
-                                                            <rect key="frame" x="10" y="32.5" width="285" height="30"/>
+                                                            <rect key="frame" x="10" y="20" width="285" height="30"/>
                                                             <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="9mo-sC-up3"/>
@@ -3178,28 +3150,13 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <textInputTraits key="textInputTraits"/>
                                                         </textField>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTD-AO-Hcf">
-                                                            <rect key="frame" x="77.5" y="95" width="150" height="35"/>
-                                                            <constraints>
-                                                                <constraint firstAttribute="height" constant="35" id="7Ch-rP-OIH"/>
-                                                                <constraint firstAttribute="width" constant="150" id="Tad-0J-7IR"/>
-                                                            </constraints>
-                                                            <color key="tintColor" name="TrippoColor"/>
-                                                            <state key="normal" title="Request rate" image="bolt.fill" catalog="system">
-                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
-                                                            </state>
-                                                            <connections>
-                                                                <action selector="RequestExchangeRatePressed:" destination="hdP-V9-5JR" eventType="touchUpInside" id="7TU-4j-5lH"/>
-                                                            </connections>
-                                                        </button>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bWm-hp-NE7">
-                                                            <rect key="frame" x="77.5" y="224.5" width="150" height="35"/>
+                                                            <rect key="frame" x="157.5" y="140" width="127.5" height="35"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="150" id="045-9l-QMj"/>
                                                                 <constraint firstAttribute="height" constant="35" id="nR9-zE-eil"/>
                                                             </constraints>
                                                             <color key="tintColor" name="TrippoColor"/>
-                                                            <state key="normal" title="Use last rate" image="gobackward" catalog="system">
+                                                            <state key="normal" title="Use last rate" image="arrowshape.turn.up.left" catalog="system">
                                                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
                                                             </state>
                                                             <connections>
@@ -3207,45 +3164,48 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                             </connections>
                                                         </button>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="icM-wv-Pyj" userLabel="ViewSpacer5">
-                                                            <rect key="frame" x="127.5" y="259.5" width="50" height="32.5"/>
+                                                            <rect key="frame" x="127.5" y="175" width="50" height="20"/>
                                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" constant="50" id="wf6-fp-DFF"/>
                                                             </constraints>
                                                         </view>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTD-AO-Hcf">
+                                                            <rect key="frame" x="10" y="140" width="127.5" height="35"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="height" constant="35" id="7Ch-rP-OIH"/>
+                                                            </constraints>
+                                                            <color key="tintColor" name="TrippoColor"/>
+                                                            <state key="normal" title="Request rate" image="coloncurrencysign.circle" catalog="system">
+                                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="30" weight="light"/>
+                                                            </state>
+                                                            <connections>
+                                                                <action selector="RequestExchangeRatePressed:" destination="hdP-V9-5JR" eventType="touchUpInside" id="7TU-4j-5lH"/>
+                                                            </connections>
+                                                        </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
-                                                        <constraint firstItem="vb0-nH-Y2k" firstAttribute="height" secondItem="CVP-3Z-J0X" secondAttribute="height" id="0Nf-CG-swW"/>
                                                         <constraint firstItem="icM-wv-Pyj" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="1ha-MT-FTc"/>
                                                         <constraint firstItem="OCR-Yd-uid" firstAttribute="leading" secondItem="pXl-9h-kp5" secondAttribute="leading" constant="10" id="3Ti-Xn-Avo"/>
-                                                        <constraint firstItem="BWH-lO-G2J" firstAttribute="top" secondItem="at4-qF-GyN" secondAttribute="bottom" id="4Fe-WU-lIj"/>
-                                                        <constraint firstItem="PTD-AO-Hcf" firstAttribute="top" secondItem="BWH-lO-G2J" secondAttribute="bottom" id="4IA-fQ-bQJ"/>
+                                                        <constraint firstItem="OCR-Yd-uid" firstAttribute="top" secondItem="at4-qF-GyN" secondAttribute="bottom" constant="20" id="3cp-nh-n92"/>
                                                         <constraint firstAttribute="trailing" secondItem="at4-qF-GyN" secondAttribute="trailing" constant="10" id="6ea-Hf-dib"/>
-                                                        <constraint firstItem="PTD-AO-Hcf" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="8Nv-JQ-egR"/>
-                                                        <constraint firstItem="icM-wv-Pyj" firstAttribute="height" secondItem="CVP-3Z-J0X" secondAttribute="height" id="8Rf-id-X0C"/>
-                                                        <constraint firstItem="BWH-lO-G2J" firstAttribute="height" secondItem="CVP-3Z-J0X" secondAttribute="height" id="8TX-RO-vzg"/>
-                                                        <constraint firstItem="BWH-lO-G2J" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="94T-rF-NuP"/>
                                                         <constraint firstItem="icM-wv-Pyj" firstAttribute="top" secondItem="bWm-hp-NE7" secondAttribute="bottom" id="9YH-Qw-g2e"/>
-                                                        <constraint firstItem="wVP-ar-sAH" firstAttribute="height" secondItem="CVP-3Z-J0X" secondAttribute="height" id="Bju-J1-UFG"/>
-                                                        <constraint firstItem="CVP-3Z-J0X" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="FiD-xN-e3i"/>
-                                                        <constraint firstItem="bWm-hp-NE7" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="Okj-5j-x4x"/>
+                                                        <constraint firstAttribute="bottom" secondItem="PTD-AO-Hcf" secondAttribute="bottom" constant="20" id="DbC-Rl-x6I"/>
+                                                        <constraint firstItem="PTD-AO-Hcf" firstAttribute="top" secondItem="OCR-Yd-uid" secondAttribute="bottom" constant="40" id="FOP-bc-Ugp"/>
                                                         <constraint firstAttribute="trailing" secondItem="OCR-Yd-uid" secondAttribute="trailing" constant="10" id="RTI-XB-BIw"/>
                                                         <constraint firstAttribute="bottom" secondItem="icM-wv-Pyj" secondAttribute="bottom" id="Szl-In-hDf"/>
-                                                        <constraint firstItem="vb0-nH-Y2k" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="VhU-OP-tqB"/>
-                                                        <constraint firstItem="bWm-hp-NE7" firstAttribute="top" secondItem="wVP-ar-sAH" secondAttribute="bottom" id="XeR-w7-14P"/>
-                                                        <constraint firstItem="wVP-ar-sAH" firstAttribute="top" secondItem="OCR-Yd-uid" secondAttribute="bottom" id="YeC-RV-RZs"/>
-                                                        <constraint firstItem="wVP-ar-sAH" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="a0z-af-Slc"/>
-                                                        <constraint firstItem="vb0-nH-Y2k" firstAttribute="top" secondItem="PTD-AO-Hcf" secondAttribute="bottom" id="hWv-GG-zAn"/>
-                                                        <constraint firstItem="at4-qF-GyN" firstAttribute="top" secondItem="CVP-3Z-J0X" secondAttribute="bottom" id="iCW-DO-VGO"/>
-                                                        <constraint firstItem="OCR-Yd-uid" firstAttribute="centerX" secondItem="pXl-9h-kp5" secondAttribute="centerX" id="iHo-Ye-ABi"/>
-                                                        <constraint firstItem="CVP-3Z-J0X" firstAttribute="top" secondItem="pXl-9h-kp5" secondAttribute="top" id="pYO-qY-D89"/>
-                                                        <constraint firstItem="OCR-Yd-uid" firstAttribute="top" secondItem="vb0-nH-Y2k" secondAttribute="bottom" id="qDm-in-hDK"/>
+                                                        <constraint firstItem="PTD-AO-Hcf" firstAttribute="leading" secondItem="pXl-9h-kp5" secondAttribute="leading" constant="10" id="dUc-zQ-sZa"/>
+                                                        <constraint firstAttribute="bottom" secondItem="bWm-hp-NE7" secondAttribute="bottom" constant="20" id="gIn-4i-vLg"/>
+                                                        <constraint firstItem="bWm-hp-NE7" firstAttribute="leading" secondItem="PTD-AO-Hcf" secondAttribute="trailing" constant="20" id="nJz-Ch-wWC"/>
+                                                        <constraint firstItem="at4-qF-GyN" firstAttribute="top" secondItem="pXl-9h-kp5" secondAttribute="top" constant="20" id="tha-zp-EtS"/>
+                                                        <constraint firstAttribute="trailing" secondItem="bWm-hp-NE7" secondAttribute="trailing" constant="20" id="tyG-JU-VW4"/>
                                                         <constraint firstItem="at4-qF-GyN" firstAttribute="leading" secondItem="pXl-9h-kp5" secondAttribute="leading" constant="10" id="wHT-VD-UgC"/>
+                                                        <constraint firstItem="bWm-hp-NE7" firstAttribute="width" secondItem="PTD-AO-Hcf" secondAttribute="width" id="zr0-kV-iEN"/>
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home Curr. Amt:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tA5-xj-RYa">
-                                                    <rect key="frame" x="10" y="530" width="170" height="22"/>
+                                                    <rect key="frame" x="10" y="419.5" width="170" height="22"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="kAe-WX-QV3"/>
                                                     </constraints>
@@ -3253,17 +3213,17 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00 GBP" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OIB-oD-NfG">
-                                                    <rect key="frame" x="190" y="530" width="125" height="22"/>
+                                                    <rect key="frame" x="190" y="419.5" width="125" height="22"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="2aX-gI-ubB"/>
                                                         <constraint firstAttribute="width" constant="125" id="WmI-S7-R6g"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Home = Selected" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="92O-Ky-f1T">
-                                                    <rect key="frame" x="115" y="552" width="200" height="12"/>
+                                                    <rect key="frame" x="115" y="441.5" width="200" height="12"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="200" id="dpO-H9-vKR"/>
                                                         <constraint firstAttribute="height" constant="12" id="fe1-1G-Ypa"/>
@@ -3271,11 +3231,8 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expense" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="8" translatesAutoresizingMaskIntoConstraints="NO" id="OZQ-Yq-hdE">
-                                                    <rect key="frame" x="10" y="10" width="305" height="40"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="40" id="KSO-hx-pcz"/>
-                                                    </constraints>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expense" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="OZQ-Yq-hdE">
+                                                    <rect key="frame" x="10" y="10" width="305" height="26.5"/>
                                                     <fontDescription key="fontDescription" type="system" weight="black" pointSize="22"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3314,14 +3271,13 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="J6n-jm-mEk" firstAttribute="top" secondItem="vFn-9z-ZF9" secondAttribute="top" constant="25" id="2dg-50-q2K"/>
                                         <constraint firstItem="J6n-jm-mEk" firstAttribute="leading" secondItem="vFn-9z-ZF9" secondAttribute="leading" constant="25" id="Agu-Gf-FBz"/>
                                         <constraint firstAttribute="trailing" secondItem="J6n-jm-mEk" secondAttribute="trailing" constant="25" id="Rub-ms-AFN"/>
-                                        <constraint firstAttribute="bottom" secondItem="J6n-jm-mEk" secondAttribute="bottom" constant="25" id="TB1-Mw-hTH"/>
+                                        <constraint firstItem="J6n-jm-mEk" firstAttribute="centerY" secondItem="vFn-9z-ZF9" secondAttribute="centerY" id="j5W-kd-OVY"/>
                                     </constraints>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <blurEffect style="systemMaterial"/>
+                                <blurEffect style="systemUltraThinMaterial"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -3350,7 +3306,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Nb-0p-msf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3729" y="866"/>
+            <point key="canvasLocation" x="3728.8000000000002" y="865.81709145427294"/>
         </scene>
         <!--WikiVC-->
         <scene sceneID="ASA-Z5-cB1">
@@ -3547,7 +3503,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="gkj-qP-rJf"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" name="TrippoColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3556,7 +3512,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="7nt-Mb-5Yh"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="37e-Vp-u3c">
@@ -3564,7 +3520,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="iG8-qf-6XD"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="xKB-YW-MMN">
@@ -3572,7 +3528,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="0Q0-gl-H6u"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="W3l-kP-G3A">
@@ -3580,7 +3536,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="22" id="K7B-es-yGR"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fNK-BW-3bK">
@@ -3597,7 +3553,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                         <constraint firstAttribute="height" constant="22" id="bi6-Q2-QNU"/>
                                                         <constraint firstAttribute="width" constant="100" id="nE2-Ok-cQ8"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3607,7 +3563,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                                         <constraint firstAttribute="height" constant="22" id="KeC-w1-0Ix"/>
                                                         <constraint firstAttribute="width" constant="100" id="y3L-Ew-VDW"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                     <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -3744,7 +3700,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0.00 GBP" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SFW-AM-plt">
                                         <rect key="frame" x="0.0" y="50" width="100" height="40"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <fontDescription key="fontDescription" name="CourierNewPS-BoldMT" family="Courier New" pointSize="20"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -7852,8 +7808,8 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="arrow.clockwise" catalog="system" width="56" height="64"/>
         <image name="arrow.up.right.diamond" catalog="system" width="64" height="60"/>
         <image name="arrow.up.square" catalog="system" width="64" height="56"/>
+        <image name="arrowshape.turn.up.left" catalog="system" width="64" height="52"/>
         <image name="bolt.circle" catalog="system" width="64" height="62"/>
-        <image name="bolt.fill" catalog="system" width="44" height="64"/>
         <image name="bookmark.fill" catalog="system" width="54" height="64"/>
         <image name="calendar" catalog="system" width="64" height="54"/>
         <image name="checkmark.circle.fill" catalog="system" width="64" height="62"/>
@@ -7863,6 +7819,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="clear" catalog="system" width="64" height="56"/>
         <image name="cloud.bolt" catalog="system" width="62" height="64"/>
         <image name="cloud.sun" catalog="system" width="64" height="44"/>
+        <image name="coloncurrencysign.circle" catalog="system" width="64" height="62"/>
         <image name="command" catalog="system" width="64" height="58"/>
         <image name="creditcard" catalog="system" width="64" height="46"/>
         <image name="dial" catalog="system" width="64" height="54"/>
@@ -7871,7 +7828,6 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="doc.text.viewfinder" catalog="system" width="64" height="58"/>
         <image name="ellipsis.circle.fill" catalog="system" width="64" height="62"/>
         <image name="forward.end" catalog="system" width="64" height="60"/>
-        <image name="gobackward" catalog="system" width="58" height="64"/>
         <image name="info.circle.fill" catalog="system" width="64" height="62"/>
         <image name="location" catalog="system" width="64" height="60"/>
         <image name="location.slash" catalog="system" width="64" height="60"/>
@@ -7893,7 +7849,7 @@ Wikipedia  Superb API providing access to a massive set of useful data.   �
         <image name="weather-partly-cloudy-day" width="64" height="64"/>
         <image name="xmark.circle.fill" catalog="system" width="64" height="62"/>
         <namedColor name="TrippoColor">
-            <color red="0.19599999487400055" green="0.84299999475479126" blue="0.29399999976158142" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.10588235294117647" green="0.59999999999999998" blue="0.54509803921568623" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
     <inferredMetricsTieBreakers>

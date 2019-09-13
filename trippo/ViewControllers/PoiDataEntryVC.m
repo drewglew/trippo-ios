@@ -219,6 +219,7 @@ bool CenterSelectedType;
     self.LabelInfoLastModified.text = [dateFormatter  stringFromDate:self.PointOfInterest.modifieddt];
     [self registerForKeyboardNotifications];
     self.SegmentDetailOption.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentDetailOption setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     
 }
 
@@ -288,7 +289,9 @@ bool CenterSelectedType;
         
     }
     
-    self.SegmentDetailOption.selectedSegmentTintColor = [UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:51.0f/255.0f alpha:1.0];
+    self.SegmentDetailOption.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    
+    [self.SegmentDetailOption setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 
 }
 

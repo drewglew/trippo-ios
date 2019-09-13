@@ -22,7 +22,7 @@ CGFloat TripScale = 4.14f;
 
 /*
  created date:      29/04/2018
- last modified:     11/08/2019
+ last modified:     13/09/2019
  remarks:
  */
 - (void)viewDidLoad {
@@ -48,6 +48,8 @@ CGFloat TripScale = 4.14f;
     [self.CollectionViewProjects addGestureRecognizer:pinch];
     
     self.SegmentFilterProjects.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentFilterProjects setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
     
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     TripNumberOfCellsInRow = [settings[0].TripCellColumns floatValue];

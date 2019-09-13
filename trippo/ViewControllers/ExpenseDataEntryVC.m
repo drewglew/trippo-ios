@@ -183,6 +183,7 @@
         [self SetControls];
     }   
     self.SegmentExpenseType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentExpenseType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 }
 
 /*

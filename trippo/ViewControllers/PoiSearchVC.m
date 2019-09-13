@@ -22,7 +22,7 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
 
 /*
  created date:      30/04/2018
- last modified:     28/08/2019
+ last modified:     13/09/2019
  remarks:
  */
 - (void)viewDidLoad {
@@ -153,8 +153,11 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     [self.CollectionViewTypes addGestureRecognizer:lpgr];
     
     self.SegmentPoiFilterList.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentPoiFilterList setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
     self.SegmentCountries.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
-
+    [self.SegmentCountries setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
     self.SearchBarPoi.searchBarStyle = UISearchBarStyleMinimal;
     self.SearchBarPoi.searchTextField.backgroundColor = [UIColor tertiarySystemBackgroundColor];
     self.SearchBarPoi.searchTextField.textColor = [UIColor colorNamed:@"TrippoColor"];

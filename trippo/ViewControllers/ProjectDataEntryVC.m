@@ -200,7 +200,7 @@ BOOL loadedPlannedWeatherData = false;
     
    
     self.SegmentAnnotations.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
-    
+    [self.SegmentAnnotations setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 }
 
 -(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
