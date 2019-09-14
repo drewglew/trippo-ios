@@ -191,6 +191,8 @@ int DocumentListingViewPresentedHeight = 250;
         
     } else if (self.newitem) {
 
+        NSLog(@"%@",self.Trip.defaulttimezonename);
+        
         self.StartDtTimeZoneNameTextField.text = self.Trip.defaulttimezonename;
         self.EndDtTimeZoneNameTextField.text = self.Trip.defaulttimezonename;
         

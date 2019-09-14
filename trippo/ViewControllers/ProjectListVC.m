@@ -284,7 +284,6 @@ CGFloat TripScale = 4.14f;
         [controller setModalPresentationStyle:UIModalPresentationFullScreen];
         [self presentViewController:controller animated:YES completion:nil];
         [cell.ActivityIndicatorView stopAnimating];
-
     }
 }
 

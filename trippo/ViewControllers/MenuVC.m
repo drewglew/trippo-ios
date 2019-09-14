@@ -105,7 +105,7 @@ bool FirstLoad;
 
 /*
  created date:      15/08/2018
- last modified:     08/09/2019
+ last modified:     14/09/2019
  remarks:
  */
 -(void)LocateTripContent {
@@ -135,6 +135,7 @@ bool FirstLoad;
         lasttrip.itemgrouping = [NSNumber numberWithInt:1];
         lasttrip.key = trip.key;
         lasttrip.name = trip.name;
+        lasttrip.defaulttimezonename = trip.defaulttimezonename;
         lasttrip.startdt = trip.startdt;
         lasttrip.enddt = trip.enddt;
     }
@@ -154,6 +155,7 @@ bool FirstLoad;
         TripRLM* tripobject = [[TripRLM alloc] init];
         tripobject.key = trip.key;
         tripobject.name = trip.name;
+        tripobject.defaulttimezonename = trip.defaulttimezonename;
         tripobject.startdt = trip.startdt;
         tripobject.enddt = trip.enddt;
         tripobject.itemgrouping = [NSNumber numberWithInt:2];
@@ -188,6 +190,7 @@ bool FirstLoad;
         TripRLM* trip = [futureTrips firstObject];
         nexttrip.key = trip.key;
         nexttrip.name = trip.name;
+        nexttrip.defaulttimezonename = trip.defaulttimezonename;
         nexttrip.startdt = trip.startdt;
         nexttrip.enddt = trip.enddt;
         nexttrip.itemgrouping = [NSNumber numberWithInt:4];
@@ -421,7 +424,7 @@ remarks:
 
 /*
  created date:      15/08/2018
- last modified:     08/09/2019
+ last modified:     14/09/2019
  remarks:
  */
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -442,11 +445,18 @@ remarks:
             ActivityListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityListViewController"];
             controller.delegate = self;
             controller.realm = self.realm;
-            
             controller.Trip = trip;
             controller.TripImage = [self.TripImageDictionary objectForKey:trip.key];
+
+            /*
+             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+             ActivityListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityListViewController"];
+             controller.delegate = self;
+             controller.realm = self.realm;
+             controller.TripImage = cell.ImageViewProject.image;
+             controller.Trip = [self.tripcollection objectAtIndex:indexPath.row];
+            */
             
-            //NSLog(@"startdt = %@",controller.Trip.startdt);
             [controller setModalPresentationStyle:UIModalPresentationFullScreen];
             [self presentViewController:controller animated:YES completion:nil];
         }
