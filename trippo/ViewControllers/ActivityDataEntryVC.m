@@ -21,7 +21,7 @@ int DocumentListingViewPresentedHeight = 250;
 
 /*
  created date:      01/05/2018
- last modified:     13/09/2019
+ last modified:     12/01/2020
  remarks:
  */
 - (void)viewDidLoad {
@@ -52,10 +52,10 @@ int DocumentListingViewPresentedHeight = 250;
         self.ImagePicture.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
         self.ImageViewKeyActivity.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
     }
-    [self.ImagePicture setTintColor:[UIColor systemBackgroundColor]];
-    [self.ImagePicture setBackgroundColor:[UIColor systemIndigoColor]];
-    [self.ImageViewKeyActivity setTintColor:[UIColor systemBackgroundColor]];
-    [self.ImageViewKeyActivity setBackgroundColor:[UIColor systemIndigoColor]];
+    [self.ImagePicture setTintColor:[UIColor colorNamed:@"ActivityFGColor"]];
+    [self.ImagePicture setBackgroundColor:[UIColor colorNamed:@"ActivityBGColor"]];
+    [self.ImageViewKeyActivity setTintColor:[UIColor colorNamed:@"ActivityFGColor"]];
+    [self.ImageViewKeyActivity setBackgroundColor:[UIColor colorNamed:@"ActivityBGColor"]];
     // clean up wiki
     //self.WikiViewHeightConstraint.constant = 0.0f;
     self.ActivityImageDictionary = [[NSMutableDictionary alloc] init];
@@ -129,14 +129,6 @@ int DocumentListingViewPresentedHeight = 250;
             self.GeoWarningLabelHeightConstraint.constant = 75.0f;
             [self.ButtonArriving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
 
-            self.ViewCheckInOut.layer.cornerRadius = 100;
-            self.ViewCheckInOut.clipsToBounds = YES;
-            self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
-            self.ViewCheckInOut.hidden = false;
-            self.ViewCheckInOut.backgroundColor = [UIColor systemOrangeColor];
-            self.LabelCheckInOut.text = @"Check\nOut";
-            [self.LabelCheckInOut setTextColor:[UIColor whiteColor]];
-            
             self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
             [self.ViewUpdateActualWeather setHidden:TRUE];
            
@@ -161,11 +153,7 @@ int DocumentListingViewPresentedHeight = 250;
         self.toggleNotifyLeavingFlag = [self.Activity.geonotifycheckout intValue];
 
     } else if (self.transformed) {
-        self.ViewCheckInOut.layer.cornerRadius = 100;
-        self.ViewCheckInOut.clipsToBounds = YES;
-        self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
-        self.ViewCheckInOut.hidden = false;
-        self.LabelCheckInOut.text = @"Check\nIn";
+
         [self.ButtonAction setTitle:@"Update" forState:UIControlStateNormal];
         [self LoadActivityData];
         [self LoadDocuments];
@@ -378,13 +366,160 @@ int DocumentListingViewPresentedHeight = 250;
     [self.EndDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
     [self registerForKeyboardNotifications];
+    
+    /* new block 20200111 */
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    NSString *ViewName = [NSString stringWithFormat:@"%@~%@",@"ActivityDataEntryVC",self.Activity.state];
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@", ViewName] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 475)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        if ([self.Activity.state integerValue] == 0) {
+            title.text = @"Activity Idea";
+        } else {
+            title.text = @"Actual Activity";
+        }
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, 10, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 375);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        if ([self.Activity.state integerValue] == 0) {
+            helpText.text = @"This screen allows entries that are just ideas.  The start and end dates entered here may adjust the main Trip timeframe if they are outside the original boundary & will differ depending on how you landed on this screen.  Notes and Reference as well as Activity Idea name can be entered here.  If you have a travel guide and wish to copy some text you may scan content using OCR technology - the source must be in clear font and it is recommended the page is placed very flat using quality lighting. \n\nThe Photos page allows multiple photos to be added.  These photos might be from leaflets, books or your own photo collection.\n\nThe Documents page by default includes any Wikipedia document that was attached to the Point Of Interest.  Other documents can also be added manually, such as PDF received on email or directly from a website address.";
+        } else {
+             helpText.text = @"The Settings page firstly allows the App to send a notification when the phone enters or leaves the proximity of the Point of Interest location. This is useful when travelling as the notification itself is able to generate an Actual activity with the logged time of arrival when it is convenient to update the App. It is important to make sure Location settings for trHippo are enabled. Next on the Settings page is a switch to determine if activity is shared via Tweet or E-Postcard as  you might not wish to place every activity into the shared highlights.\n\nThe Road Sign icon in the option bar allows us to evaluate how we expect to travel by road to this activity location from either our current location or another activity using either Google Maps or Apple Maps. (depends on what is installed on the device).\n\nThere is also a Credit Card icon which provides an option to view, insert or edit any costs associated to this activity.";
+        }
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        UIButton *buttonNext = [UIButton buttonWithType:UIButtonTypeSystem];
+        buttonNext.frame = CGRectMake(helperView.bounds.size.width - 40.0, helperView.bounds.size.height - 40, 35.0, 35.0); // x,y,width,height
+        [buttonNext setImage:[UIImage systemImageNamed:@"chevron.right.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [buttonNext setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [buttonNext addTarget:self action:@selector(helperViewNextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:buttonNext];
+        [self.view addSubview:helperView];
+    }
+}
+
+/*
+ created date:      12/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    NSString *ViewName = [NSString stringWithFormat:@"%@~%@",@"ActivityDataEntryVC",self.Activity.state];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@", ViewName] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
+}
+   
+/*
+ created date:      12/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewNextButtonPressed :(id)sender {
+    
+    UIView *parentView = [(UIView *)sender superview];
+
+    for(UIView *v in parentView.subviews)
+    {
+         if([v isKindOfClass:[UILabel class]])
+         {
+             if (((UILabel*)v).bounds.size.height != 24) {
+                 if ([self.Activity.state integerValue] == 0) {
+                 ((UILabel*)v).text=@"This is the actual activity screen. When creating a new Activity depending on how you arrived - you may have varying start and end dates.  The existing entries here are of activities that have either begun or have already happened.\n\nIf you selected an idea activity from the actual activity grid you will have an additional Check-In button that will allow you to automatically check-in using the current time.  Once an activity is with Checked In status, when reopening the activity the button now facilitates instant Check-Out.\n\nAs per the activity ideas screen, the Main page contains Notes, Point of interest detail and reference.  Additionally there is a Key Photo and Star ratings (1 to 5) that are averaged out inside the Point Of Interest.\n\nYou may also scan documents using OCR technology loading the text into the Notes as well as adding multiple photos and PDF documents.";
+                 } else {
+                 ((UILabel*)v).text=@"The Road Sign icon in the option bar allows us to evaluate how we expect to travel by road to this activity location from either our current location or a previous activity using Google Maps TM or Apple Maps. (depends on what is installed on the device).\n\nThere is also a Credit Card icon which provides an option to view, insert or edit any costs associated to this activity.\n\nThe Settings page allows the App to send a notification when the phone leaves the proximity of the Point of Interest location. As the actual activity exists already there is no requirement for Arrival notifications here.  Also upon the Settings page is a switch to determine if this activity is shared via Tweet or E-Postcard.\n\nIf the activity is using a Point of Interest that has the weather report enabled and the activity is finalised you may request the actual weather report while this activity began.";
+                 }
+             }
+         }
+    }
+    [sender setHidden:true];
 }
 
 
+
+/*
+created date:       15/08/2019
+last modified:      11/01/2020
+remarks:
+*/
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
-    
+
+    if (self.deleteitem) {
+        // do nothing
+    } else if (!self.newitem && !self.transformed) {
+        BOOL datesAreEqual = [[NSCalendar currentCalendar] isDate:self.Activity.startdt
+                                                      equalToDate:self.Activity.enddt toUnitGranularity:NSCalendarUnitMinute];
+        
+        if (datesAreEqual && self.Activity.state==[NSNumber numberWithInteger:1]) {
+            
+            self.ViewCheckInOut.layer.cornerRadius = 100;
+            self.ViewCheckInOut.clipsToBounds = YES;
+            self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
+            self.ViewCheckInOut.hidden = false;
+            self.ViewCheckInOut.backgroundColor = [UIColor systemRedColor];
+            self.LabelCheckInOut.text = @"Check\nOut";
+            [self.LabelCheckInOut setTextColor:[UIColor whiteColor]];
+
+        }
+       
+    } else if (self.transformed) {
+        
+        
+        self.ViewCheckInOut.layer.cornerRadius = (self.ImageViewKeyActivity.bounds.size.width / 2) / 2;
+        self.ViewCheckInOut.clipsToBounds = YES;
+        self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
+        self.ViewCheckInOut.hidden = false;
+        self.LabelCheckInOut.text = @"Check\nIn";
+     
+    } else if (self.newitem) {
+        // do nothing
+    }
     self.ActivityScrollView.contentSize = CGSizeMake(self.ActivityScrollView.frame.size.width, self.ActivityScrollViewContent.frame.size.height);
 }
 
@@ -2487,7 +2622,7 @@ remarks:
 -(void) InitGeoNotification :(NSString *) CategoryIdentifier :(bool) NotifyOnEntry :(NSString *) Body {
     
     UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    content.title = [NSString stringWithFormat: @"Trippo Activity - %@\nOn Trip %@", self.Activity.name, self.Trip.name];
+    content.title = [NSString stringWithFormat: @"trHippo activity - %@\non trip %@", self.Activity.name, self.Trip.name];
     if (NotifyOnEntry) {
         content.subtitle = @"Check In";
     } else {

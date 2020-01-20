@@ -13,16 +13,18 @@
 #import "ProjectDataEntryVC.h"
 #import "ActivityListVC.h"
 #import "PoiNSO.h"
+#import "LocatorVC.h"
 #import "PoiDataEntryVC.h"
 #import "SettingsRLM.h"
 #import "SettingsVC.h"
+#import "AssistantRLM.h"
 
 #include <stdlib.h>
 
 @protocol MenuDelegate <NSObject>
 @end
 
-@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectDataEntryDelegate, ActivityListDelegate, PoiDataEntryDelegate, SettingsDelegate, MKMapViewDelegate>
+@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectDataEntryDelegate, ActivityListDelegate, LocatorDelegate, PoiDataEntryDelegate, SettingsDelegate, MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *ButtonProject;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPoi;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonInfo;
@@ -46,7 +48,7 @@
 @property (weak, nonatomic) IBOutlet UIView *MainSurface;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonFeaturedPoi;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonAllTrips;
-
+@property (strong, nonatomic) IBOutlet UIView *AssistantView;
 
 
 

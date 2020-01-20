@@ -17,6 +17,8 @@
 #import "PoiImageNSO.h"
 #import "PaymentRLM.h"
 #import "TripRLM.h"
+#import "SettingsRLM.h"
+#import "AssistantRLM.h"
 
 @protocol PaymentListingDelegate <NSObject>
 @end

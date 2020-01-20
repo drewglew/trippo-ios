@@ -20,7 +20,7 @@
     
     self.LabelVersion.text = [NSString stringWithFormat: @"%@ build %@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"], [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]];
     
-    UIColor *color = [UIColor labelColor];
+    UIColor *color = [UIColor secondaryLabelColor];
     UIColor *secondaryColor = [UIColor secondaryLabelColor];
 
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:self.TextViewContent.text];
@@ -36,14 +36,7 @@
 
 
      [attrString addAttribute:NSForegroundColorAttributeName value:secondaryColor range:NSMakeRange(0, self.TextViewContent.text.length)];
-    
-    
-    // Trippo - Travel Planning App
-    [attrString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:24 weight: UIFontWeightHeavy] range:NSMakeRange(0, 28)];
-    
-    [attrString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(0, 28)];
-    
-    // Credits
+
     NSRange range = [self.TextViewContent.text rangeOfString:@"Credits"];
     
     if(range.location != NSNotFound)
@@ -51,31 +44,10 @@
          [attrString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:24 weight: UIFontWeightHeavy] range:NSMakeRange(range.location, 7)];
          [attrString addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(range.location, 7)];
     }
-    
-
     [attrString endEditing];
 
     self.TextViewContent.attributedText = attrString;
-    
-    
-    
-    
-    
-   /*
-    self.TextViewContent.attributedText = [[NSAttributedString alloc] initWithString: self.TextViewContent.text attributes:@{NSForegroundColorAttributeName: color}];
-    */
-    
-    
-    
-    
-    
-    
     self.TextViewContent.linkTextAttributes = @{NSForegroundColorAttributeName:[UIColor colorNamed:@"TrippoColor"]};
-    
-    
-    
-    
-   
 }
 
 - (void)didReceiveMemoryWarning {

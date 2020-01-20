@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3A374EE020936A9200E5A652"
-               BuildableName = "trippo.app"
+               BuildableName = "trHippo.app"
                BlueprintName = "trippo"
                ReferencedContainer = "container:trippo.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A374EE020936A9200E5A652"
-            BuildableName = "trippo.app"
+            BuildableName = "trHippo.app"
             BlueprintName = "trippo"
             ReferencedContainer = "container:trippo.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3A374EE020936A9200E5A652"
-            BuildableName = "trippo.app"
+            BuildableName = "trHippo.app"
             BlueprintName = "trippo"
             ReferencedContainer = "container:trippo.xcodeproj">
          </BuildableReference>

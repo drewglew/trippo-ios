@@ -22,7 +22,7 @@ CGFloat TripScale = 4.14f;
 
 /*
  created date:      29/04/2018
- last modified:     13/09/2019
+ last modified:     11/01/2020
  remarks:
  */
 - (void)viewDidLoad {
@@ -58,18 +58,90 @@ CGFloat TripScale = 4.14f;
     CGFloat width = [UIScreen mainScreen].bounds.size.width;
     CGFloat cellWidth = width / TripNumberOfCellsInRow;
     TripScale = cellWidth / 50;
+    
+    /* new block 20200111 */
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectListVC"] firstObject];
 
+    if ([assist.State integerValue] == 1) {
+
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 350)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Trips Log";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 250);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+        helpText.numberOfLines = 0;
+        helpText.text = @"To create a new trip press the (+) symbol.\n\nOnce Trips have been created this is where they will all displayed and where they can be selected. The More button (...) presents the Trip detail where you may set the photo, time zones and dates; selecting a Trip by tapping on the item itself expands the Activity content within.\n\nPinching and zooming the whole Trips Log allows you to increase/decrease the size of the trip items.  Using the options at the bottom you may also hide/show the detail as well as filtering the selection.  If the options disappear just scroll the list up and they will reappear.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        [self.view addSubview:helperView];
+    }
 }
 
 
+
+
+/*
+ created date:      11/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectListVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
+}
+
 /*
  created date:      29/04/2018
- last modified:     15/06/2019
+ last modified:     06/01/2020
  remarks:
  */
 -(void) LoadSupportingData {
 
     self.tripcollection = [TripRLM allObjects];
+    
+    RLMSortDescriptor *sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
+    self.tripcollection = [self.tripcollection sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
+
+    
     self.TripImageDictionary = [[NSMutableDictionary alloc] init];
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -187,7 +259,7 @@ CGFloat TripScale = 4.14f;
 
 /*
  created date:      29/04/2018
- last modified:     21/06/2019
+ last modified:     06/01/2020
  remarks:
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -201,7 +273,7 @@ CGFloat TripScale = 4.14f;
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
            
         cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
-        [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TrippoColor"]];
+        [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TripFGColor"]];
         
         cell.isNewAccessor = true;
         cell.VisualEffectsViewBlur.hidden = true;
@@ -406,7 +478,7 @@ CGFloat TripScale = 4.14f;
 
 /*
  created date:      24/06/2018
- last modified:     15/06/2019
+ last modified:     06/01/2020
  remarks:
  */
 -(void)FilterProjectCollectionView {
@@ -429,6 +501,10 @@ CGFloat TripScale = 4.14f;
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"startdt <= %@ AND enddt >= %@", currentDate,currentDate];
         self.tripcollection = [self.tripcollection objectsWithPredicate:predicate];
     }
+    
+    RLMSortDescriptor *sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
+    self.tripcollection = [self.tripcollection sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
+
     
     [self.CollectionViewProjects reloadData];
 }

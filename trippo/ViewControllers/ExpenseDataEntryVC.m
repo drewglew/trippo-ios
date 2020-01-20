@@ -16,7 +16,7 @@
 
 /*
  created date:      07/04/2019
- last modified:     09/04/2019
+ last modified:     19/01/2020
  remarks:
  */
 - (void)viewDidLoad {
@@ -29,7 +29,7 @@
     self.ViewExpensePopup.layer.borderWidth = 1.0f;
     self.ViewExpensePopup.layer.borderColor = [[UIColor colorNamed:@"TrippoColor"]CGColor];
     
-
+    self.HomeCurrencyCode = [AppDelegateDef HomeCurrencyCode];
     
     NSDate *PresetDate = [NSDate date];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -109,6 +109,8 @@
         NSLog(@"No POI so we cannot add a local currency to the list.");
         [self.currencies addObject:[NSString stringWithFormat:@"%@ - %@ %@", code, @"Local currency", currencysymbol]];
         self.SelectedCurrencyCode = code;
+    } else {
+        self.SelectedCurrencyCode = self.HomeCurrencyCode;
     }
     
     
@@ -157,7 +159,9 @@
 
     /* add toolbar control for 'Done' option */
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-    [toolBar setTintColor:[UIColor grayColor]];
+    toolBar.barStyle = UIBarStyleDefault;
+    [toolBar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    
     UIBarButtonItem *doneBtn=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(HideDatePicker)];
     UIBarButtonItem *space=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [toolBar setItems:[NSArray arrayWithObjects:space,doneBtn, nil]];
@@ -184,11 +188,78 @@
     }   
     self.SegmentExpenseType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentExpenseType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
+    
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ExpenseDataEntryVC"] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 400)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Expenses";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 300);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = @"This view allows you to add/view Planned costs, Advanced costs or Actual.  (Advanced cost simply adds both Planned and Actual) You can by default use your home currency that is set to your devices default setting or you may choose another currency - for example the country you are traveling to.\n\nWhen the currency is different to your own - request an exchange rate to get the latest, you can also revert to a previous dates currency too.  Once called upon, you are able to reuse that rate for all other expenses.\n\nIt is helpful to give a breif payment explanation, so the payment can be easily located. i.e. 'Entrance Ticket' or '2 nights stay'\n\nThe expenses can be reopened and edited on both activity and overall trip payments.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        [self.view addSubview:helperView];
+    }
+}
+
+/*
+ created date:      19/01/2020
+ last modified:     19/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ExpenseDataEntryVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
 }
 
 /*
  created date:      07/04/2019
- last modified:     08/04/2019
+ last modified:     05/10/2019
  remarks:           Used to enable controls depending on the data in exchange rates.
  */
 -(void)SetControls {
@@ -227,11 +298,24 @@
             }
         }
     } else {
-        self.LabelExrate.text = @"Unknown";
-        self.ButtonUseLastFoundrate.enabled = false;
-        if ([self checkInternet]) {
-            self.ButtonRequestLatest.enabled = true;
-            self.TextFieldRateDate.enabled = true;
+        
+        if (!self.newitem || self.ActivityItem.key != nil) {
+            self.LabelExrate.text = @"Unknown";
+            self.ButtonUseLastFoundrate.enabled = false;
+            if ([self checkInternet]) {
+                self.ButtonRequestLatest.enabled = true;
+                self.TextFieldRateDate.enabled = true;
+            }
+        } else {
+            if (self.ActivityItem.key==nil) {
+                 if ([self.SelectedCurrencyCode isEqualToString:self.HomeCurrencyCode]) {
+                     self.LabelExrate.text = @"Home = Selected";
+                     self.TextFieldRateDate.enabled = false;
+                     self.ButtonRequestLatest.enabled = false;
+                     self.ButtonUseLastFoundrate.enabled = false;
+                     self.ActiveExchangeRate = self.DuplicateCurrenciesExchangeRate;
+                 }
+            }
         }
     }
 }
@@ -288,7 +372,7 @@
 
 /*
  created date:      07/04/2019
- last modified:     07/04/2019
+ last modified:     05/10/2019
  remarks:
  */
 - (void)pickerView:(UIPickerView *)thePickerView
@@ -302,10 +386,11 @@
         self.TextFieldRateDate.enabled = false;
         self.ButtonRequestLatest.enabled = false;
         self.ButtonUseLastFoundrate.enabled = false;
+        
     } else {
         [self SetControls];
-        [self UpdateAmounts];
     }
+    [self UpdateAmounts];
 }
 
 - (IBAction)AmountEditingEnded:(id)sender {
@@ -314,20 +399,25 @@
 
 /*
  created date:      07/04/2019
- last modified:     08/04/2019
+ last modified:     05/10/2019
  remarks:
  */
 -(void)UpdateAmounts {
     double amount = [self.TextFieldExpenseAmount.text doubleValue];
-    
+
     if (amount != 0) {
         amount = (round(amount*100)) / 100.0;
         self.TextFieldExpenseAmount.text = [NSString stringWithFormat:@"%.2f",amount];
-        [self DisplayHomeAmount :self.ActiveExchangeRate :[NSNumber numberWithDouble:amount]];
     } else {
         self.LabelHomeAmount.text = [NSString stringWithFormat:@"%.2f %@", 0.0, self.HomeCurrencyCode];
-        [self DisplayHomeAmount :self.ActiveExchangeRate :0];
     }
+    
+    if ([self.SelectedCurrencyCode isEqualToString:self.HomeCurrencyCode]) {
+        [self DisplayHomeAmount :nil :[NSNumber numberWithDouble:amount]];
+    } else {
+        [self DisplayHomeAmount :self.ActiveExchangeRate :[NSNumber numberWithDouble:amount]];
+    }
+    
 }
 
 
@@ -339,6 +429,10 @@
 -(void)DisplayHomeAmount: (ExchangeRateRLM *) exrate :(NSNumber*) amt {
 
     double homeamt = 0.0;
+    
+    NSLog(@"%@ = %@",self.SelectedCurrencyCode,self.HomeCurrencyCode );
+    
+    
     if (exrate != nil) {
         double rate = [exrate.rate doubleValue] / 10000;
         homeamt = [amt doubleValue] * rate;

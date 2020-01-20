@@ -26,7 +26,8 @@
 #import "OptionButton.h"
 #import "AttachmentCell.h"
 #import "AttachmentRLM.h"
-
+#import "SettingsVC.h"
+#import "AssistantRLM.h"
 #import "DocumentsVC.h"
 #import "PoiPreviewVC.h"
 #import <WebKit/WebKit.h>

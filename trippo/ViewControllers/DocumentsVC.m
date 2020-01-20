@@ -168,26 +168,28 @@ CGFloat DocumentFooterFilterHeightConstant;
     return edit;
 }
 
-
-
 /*
- created date:      27/02/2019
- last modified:     27/02/2019
- remarks:
- */
--(NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+created date:      14/09/2019
+last modified:     14/09/2019
+remarks:
+*/
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+ 
+    UIContextualAction *deleteAction = [[UIContextualAction alloc] init];
     
-    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleNormal title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath *indexPath)
-                                          {
-                                              [self tableView:tableView deleteDocument:indexPath];
-                                              self.TableViewDocuments.editing = NO;
-                                              
-                                          }];
+    deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        [self tableView:tableView deleteDocument:indexPath];
+        self.TableViewDocuments.editing = NO;
+    }];
     
-    deleteAction.backgroundColor = [UIColor redColor];
-    return @[deleteAction];
-    
+    deleteAction.backgroundColor = [UIColor systemRedColor];
+    deleteAction.image = [UIImage systemImageNamed:@"trash"];
+
+    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
+    config.performsFirstActionWithFullSwipe = NO;
+    return config;
 }
+
 /*
  created date:      27/02/2019
  last modified:     27/02/2019

@@ -13,6 +13,6 @@
     return @"compondkey";
 }
 + (NSArray *)ignoredProperties {
-    return @[@"identitystartdate",@"identityenddate"];
+    return @[@"identitystartdate",@"identityenddate",@"hasestpayment",@"hasactpayment"];
 }
 @end

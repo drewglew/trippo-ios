@@ -102,7 +102,7 @@
      Migration block - to use if we change the model..
     */
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-    config.schemaVersion = 12;
+    config.schemaVersion = 13;
     config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) { };
     [RLMRealmConfiguration setDefaultConfiguration:config];
     
@@ -209,24 +209,30 @@
         return [[Twitter sharedInstance] application:app openURL:url options:options];
     } else if (url) {
         NSURLSession *session = [NSURLSession sharedSession];
+        
         [[session dataTaskWithURL:url
                 completionHandler:^(NSData *data,
                                     NSURLResponse *response,
                                     NSError *error) {
                     
-                    NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-                    
-                    NSString *ext = [[url lastPathComponent] pathExtension];
-                    if ([[ext uppercaseString] isEqualToString:@"PDF"]) {
+                    if(!error) {
+                
+                        NSURL *documentsURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
                         
-                        [self ProcessPdfFile :data :url];
-                        
+                        NSString *ext = [[url lastPathComponent] pathExtension];
+                        if ([[ext uppercaseString] isEqualToString:@"PDF"]) {
+                            
+                            [self ProcessPdfFile :data :url];
+                            
+                        } else {
+                            documentsURL = [documentsURL URLByAppendingPathComponent:@"ImportedPoi.trippo"];
+                            [data writeToURL:documentsURL atomically:YES];
+                            [self ProcessImportFile];
+                        }
+                
                     } else {
-                        documentsURL = [documentsURL URLByAppendingPathComponent:@"ImportedPoi.trippo"];
-                        [data writeToURL:documentsURL atomically:YES];
-                        [self ProcessImportFile];
+                        NSLog(@"%@",error.userInfo);
                     }
-                    
                 }] resume];
     }
     return YES;
@@ -311,7 +317,7 @@
             [alertController addAction:ok];
     });
     
-    UIViewController *viewController = [self topViewController];
+    UIViewController *viewController = [self currentTopViewController];
 
 
     NSLayoutConstraint *constraint = [NSLayoutConstraint
@@ -514,7 +520,7 @@
             UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
             [alertController addAction:ok];
             
-            UIViewController *viewController = [self topViewController];
+            UIViewController *viewController = [self currentTopViewController];
             
             NSLayoutConstraint *constraint = [NSLayoutConstraint
                                               constraintWithItem:alertController.view
@@ -534,10 +540,20 @@
     return ImportedFile;
 }
 
+- (UIViewController *)currentTopViewController {
+    UIViewController *topVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+    while (topVC.presentedViewController) {
+        topVC = topVC.presentedViewController;
+    }
+    return topVC;
+}
+
+/*
 - (UIViewController *)topViewController{
   return [self topViewController:[UIApplication sharedApplication].keyWindow.rootViewController];
 }
-
+*/
+/*
 - (UIViewController *)topViewController:(UIViewController *)rootViewController
 {
   if (rootViewController.presentedViewController == nil) {
@@ -547,13 +563,13 @@
   if ([rootViewController.presentedViewController isKindOfClass:[UINavigationController class]]) {
     UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
     UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
-    return [self topViewController:lastViewController];
+    return [self currentTopViewController:lastViewController];
   }
 
   UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
-  return [self topViewController:presentedViewController];
+  return [self currentTopViewController:presentedViewController];
 }
-
+*/
 
 -(void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler{
     

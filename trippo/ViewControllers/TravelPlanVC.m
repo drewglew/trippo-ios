@@ -24,7 +24,7 @@
 
 /*
  created date:      19/07/2019
- last modified:     22/07/2019
+ last modified:     19/01/2020
  remarks:           Constructs the root node and calls the method in same class to load tree.
  */
 - (void)viewDidLoad {
@@ -81,14 +81,14 @@
     UILabel *lbl= [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.ButtonJourneySideButton.frame.size.width,self.ButtonJourneySideButton.frame.size.height)];
     lbl.transform = CGAffineTransformMakeRotation(M_PI / 2);
     lbl.text = @"journey";
-    lbl.textColor =[UIColor whiteColor];
+    lbl.textColor =[UIColor colorNamed:@"PoiType-BGColor"];
     lbl.backgroundColor =[UIColor clearColor];
     [self.ButtonJourneySideButton addSubview:lbl];
     
     lbl= [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.ButtonMapSideButton.frame.size.width,self.ButtonMapSideButton.frame.size.height)];
     lbl.transform = CGAffineTransformMakeRotation(M_PI / 2);
     lbl.text = @"map";
-    lbl.textColor =[UIColor whiteColor];
+    lbl.textColor = [UIColor colorNamed:@"PoiType-FGColor"];
     lbl.backgroundColor =[UIColor clearColor];
     [self.ButtonMapSideButton addSubview:lbl];
     
@@ -112,6 +112,74 @@
     
     self.DistanceFromPointTableView.delegate = self;
     self.DistanceFromPointTableView.rowHeight = 75;
+    
+    
+    /* new block 20200111 */
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"TravelPlanVC"] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 450)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Trip Travel Tree";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, 10, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 350);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = @"This screen provides another prospective of the Trip.  You may zoom in and out using the +/- selectors.  Pressing on a node provides further options.  The (...) button expands the detail of the activity; (o) allows us to calculate all trip activity distances from this activities location; (+) to insert an activity that will fit within the date range of the selected and finally the arrow pointing diagonally informs the journey calculator the intension is to return to its parent node instead of travelling directly to a sibling.\n\nThere are 2 tabbed pages that flow in & out of view when either of the tabs are pressed - The 'Journey' tab uses the Travel Tree to generate an itinerary.  You can select form of transport by tapping through the vehicle icon on each row. Pressing the Calculate button generates distances between each activity leg for road journeys.  Selecting the 'Map' tab presents projected route with total distance and travel time in hours if Trip has been calculated already.  The summary in turn can be saved to the Cost & Milage detail shown on the Trip detail.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        [self.view addSubview:helperView];
+    }
+    
+}
+
+/*
+ created date:      12/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"TravelPlanVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
 }
 
 /*

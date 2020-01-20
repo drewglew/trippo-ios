@@ -13,6 +13,7 @@
 #import "ExchangeRateRLM.h"
 #import "PaymentRLM.h"
 #import "ActivityRLM.h"
+#import "SettingsVC.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

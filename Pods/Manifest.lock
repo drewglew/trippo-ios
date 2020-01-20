@@ -1,8 +1,8 @@
 PODS:
-  - Realm (3.17.3):
-    - Realm/Headers (= 3.17.3)
-  - Realm/Headers (3.17.3)
-  - TesseractOCRiOS (4.0.0)
+  - Realm (3.19.0):
+    - Realm/Headers (= 3.19.0)
+  - Realm/Headers (3.19.0)
+  - TesseractOCRiOS (5.0.1)
   - TOCropViewController (2.5.1)
   - TwitterCore (3.2.0)
   - TwitterKit (3.3.0):
@@ -10,7 +10,7 @@ PODS:
 
 DEPENDENCIES:
   - Realm
-  - TesseractOCRiOS (= 4.0.0)
+  - TesseractOCRiOS
   - TOCropViewController
   - TwitterKit (= 3.3.0)
 
@@ -23,12 +23,12 @@ SPEC REPOS:
     - TwitterKit
 
 SPEC CHECKSUMS:
-  Realm: 5a1d9d47bfc101dd597668b1a8af4288a2557f6d
-  TesseractOCRiOS: 90638afbe43d082433f2e76b384c7901d23956df
+  Realm: 995d585bcf699aaff226715886c849a29dd3d07f
+  TesseractOCRiOS: 2c189465f86abb030d0c5141c90da9705b647854
   TOCropViewController: 00dc36c4e4a0f4a45efa91adbf22df8a4fae01d3
   TwitterCore: 8cbc9ad34d91c63a0035ea05bfbfc0d7ca72a28c
   TwitterKit: a2e60ddcedbf54091eac6f27685ca7a87681e1d7
 
-PODFILE CHECKSUM: 38d0e88df855e7cbb4c11cd39c39ccb688e87001
+PODFILE CHECKSUM: e7a8432c68584a8b2f72b4c3ddc9d821caddafdc
 
 COCOAPODS: 1.7.5

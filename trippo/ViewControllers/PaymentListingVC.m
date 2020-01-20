@@ -16,16 +16,81 @@
 
 /*
  created date:      09/05/2018
- last modified:     12/08/2019
+ last modified:     15/01/2020
  remarks:
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
   
+     NSString *Title = [NSString stringWithFormat:@"Expenses\n%@", self.ActivityItem.name];
     
     /* going to receive an array of existing payments and what category */
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
-    NSString *Title = [NSString stringWithFormat:@"Expenses\n%@", self.ActivityItem.name];
+    NSString *ViewName;
+    if (self.TripItem == nil) {
+        ViewName = @"PaymentListingVC~Activity";
+    } else {
+        ViewName = @"PaymentListingVC~Trip";
+    }
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",ViewName] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 250)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        if (self.TripItem == nil) {
+            title.text = @"Activity Expenses";
+        } else {
+            title.text = @"Trip Expenses";
+        }
+        
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 150);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        
+        if (self.TripItem == nil) {
+            helpText.text = @"Activity expenses are only concerned with the single activity that is selected.";
+        } else {
+            helpText.text = @"Trip Expenses are mainly for reference, some expenses do not fit directly into an activity so costs that are spread over the trip can be placed at a trip level.  All items are split by exchange rate used with summaries at end of each section.";
+        }
+        
+        
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        [self.view addSubview:helperView];
+    }
+
     if (self.TripItem == nil) {
         self.ViewTripAmount.hidden = true;
     } else {
@@ -37,7 +102,7 @@
     self.ImageView.image = self.headerImage;
     
     self.ImageView.layer.borderColor = [[UIColor whiteColor]CGColor];
-    self.ImageView.layer.borderWidth = 2.0f;
+    self.ImageView.layer.borderWidth = 1.0f;
     
     
     self.TableViewPayment.rowHeight = 100;
@@ -63,6 +128,29 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self LoadPaymentData];
+}
+
+/*
+ created date:      15/01/2020
+ last modified:     15/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    NSString *ViewName;
+    if (self.TripItem == nil) {
+           ViewName = @"PaymentListingVC~Activity";
+       } else {
+           ViewName = @"PaymentListingVC~Trip";
+       }
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",ViewName] firstObject];
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
 }
 
 
@@ -201,7 +289,7 @@ remarks:
 {
     UILabel *headerTitle = [[UILabel alloc] init];
     headerTitle.frame = CGRectMake(0, 0, tableView.frame.size.width , 20);
-    headerTitle.backgroundColor = [UIColor labelColor];
+    headerTitle.backgroundColor = [UIColor colorNamed:@"DiaryHeaderBGColor"];
     headerTitle.textColor = [UIColor systemBackgroundColor];
     headerTitle.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
     headerTitle.text = [self tableView:tableView titleForHeaderInSection:section];

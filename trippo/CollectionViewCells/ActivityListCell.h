@@ -45,6 +45,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *BadgeHeightConstraint;
 @property (weak, nonatomic) IBOutlet UILabel *LabelActive;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *BadgeLabelHeightConstraint;
+@property (weak, nonatomic) IBOutlet UIView *ViewExpenseFlag;
 
 
 @end

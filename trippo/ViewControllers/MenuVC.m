@@ -24,7 +24,7 @@ bool FirstLoad;
 
 /*
  created date:      27/04/2018
- last modified:     19/02/2019
+ last modified:     11/01/2020
  remarks:           Simple delete action that initially can be triggered by user on a button.
  */
 - (void)viewDidLoad {
@@ -49,16 +49,68 @@ bool FirstLoad;
         [weakSelf LocateTripContent];
         [weakSelf.CollectionViewPreviewPanel reloadData];
     }];
+    
+    
 }
+
+-(void)PresentAssistantView {
+    /* new block 20200111 */
+    if (self.AssistantView == nil || [self.AssistantView isHidden]) {
+        self.AssistantView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 400)];
+        
+        self.AssistantView.backgroundColor = [UIColor labelColor];
+                
+        self.AssistantView.layer.cornerRadius=8.0f;
+        self.AssistantView.layer.masksToBounds=YES;
+
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18,  self.AssistantView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Introduction";
+        title.textAlignment = NSTextAlignmentCenter;
+        [self.AssistantView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, self.AssistantView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [self.AssistantView  addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50,  self.AssistantView.bounds.size.width - 20, 300);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.text = @"Ciao, नमस्कार, Hallo, 你好, Hola, Здравствуйте, Welcome, Hej, Bonjour - I am your friendly travel assistant! I will appear the first time you experience each new view.  Inside Settings you can choose to see me again, if you missed details the first time round!\n\nBefore you can add content - you must goto 'Settings' to enter some basic details. Once this is added, returning to this menu you will be able to begin adding your own content such as your own Points of Interest as well as creating Trips.\n\nWhen trips exist - past, present or up and coming - they can be browsed here by swiping the circular trip items left or right.\n\nAll data is stored on your phone, no supporting backups are available in this first version.  As this is sensitive data it is important you know & trust where your data is.";
+         
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [self.AssistantView  addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(self.AssistantView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.AssistantView addSubview:button];
+        [self.view addSubview:self.AssistantView];
+    }
+}
+
 
 /*
  created date:      18/08/2018
- last modified:     13/09/2019
+ last modified:     12/01/2020
  remarks:
  */
 -(void)viewDidAppear:(BOOL)animated {
+
     [super viewDidAppear:animated];
 
+    self.ButtonFeaturedPoi.enabled = true;
+    
     [self.ActivityView stopAnimating];
     [self LoadFeaturedPoi];
     
@@ -67,11 +119,11 @@ bool FirstLoad;
     FirstLoad = false;
     
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    NSLog(@"%@", settings);
     
     if (settings.count==0) {
         
-       //self.CollectionViewPreviewPanel.enabled = false;
+        [self PresentAssistantView];
+        
         self.ButtonFeaturedPoi.enabled = false;
         self.ButtonAllTrips.enabled = false;
         self.ButtonProject.enabled = false;
@@ -92,20 +144,42 @@ bool FirstLoad;
     } else {
         self.Settings = settings[0];
         
-       // self.CollectionViewPreviewPanel.enabled = true;
-        self.ButtonFeaturedPoi.enabled = true;
+        AssistantRLM *assist = [[self.Settings.AssistantCollection objectsWhere:@"ViewControllerName=%@",@"MenuVC"] firstObject];
+
+        if ([assist.State integerValue] == 1) {
+            [self PresentAssistantView];
+        }
+
+        
         self.ButtonAllTrips.enabled = true;
         self.ButtonProject.enabled = true;
         self.ButtonPoi.enabled = true;
-        
         self.ViewRegisterWarning.hidden = true;
     }
     
 }
 
+
+/*
+ created date:      11/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    [self.AssistantView setHidden:TRUE];
+    AssistantRLM *assist = [[self.Settings.AssistantCollection objectsWhere:@"ViewControllerName=%@",@"MenuVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    [self.ActivityView setHidden:TRUE];
+}
+
 /*
  created date:      15/08/2018
- last modified:     14/09/2019
+ last modified:     10/01/2020
  remarks:
  */
 -(void)LocateTripContent {
@@ -181,7 +255,7 @@ bool FirstLoad;
     NSPredicate *predicateFuture = [NSPredicate predicateWithFormat:@"startdt > %@", currentDate];
     RLMResults <TripRLM*> *futureTrips = [self.alltripitems objectsWithPredicate:predicateFuture];
        
-    sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
+    sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:YES];
     futureTrips = [futureTrips sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
 
     TripRLM* nexttrip = [[TripRLM alloc] init];
@@ -237,18 +311,25 @@ bool FirstLoad;
 
 /*
  created date:      18/08/2018
- last modified:     28/02/2019
+ last modified:     14/01/2020
  remarks:
  */
 -(void) LoadFeaturedPoi {
     
-    NSArray *types = [NSArray arrayWithObjects: @2,@3,@7,@8,@9,@10,@12,@13,@15,@16,@17,@18,@19,@20,@21,@23,@24,@25,@26,@28,@30,@31,@33,@35,@36,nil];
+    NSArray *types = [NSArray arrayWithObjects: @10,@11,@13,@14,@15,@17,@21,@23,@25,@26,@27,@30,@31,@32,@35,@37,@39,@40,@44,@49,@50,@52,@54,@55,@56,@57,nil];
     
+  
     NSSet *typeset = [[NSSet alloc] initWithArray:types];
     
     RLMResults *poicollection = [[PoiRLM allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"categoryid IN %@",typeset]];
     
-    if (poicollection.count==0) { return; }
+    if (poicollection.count==0) {
+        self.FeaturedPoi = nil;
+        self.LabelFeaturedPoi.text = @"Blurry... Not enough Point of Interest items";
+        [self.ButtonFeaturedPoi setEnabled:false];
+        return;
+        
+    }
     int featuredIndex = arc4random_uniform((int)poicollection.count);
     self.FeaturedPoi = [poicollection objectAtIndex:featuredIndex];
     
@@ -303,8 +384,6 @@ bool FirstLoad;
     //[self.PoiMapView setRegion:adjustedRegion animated:YES];
     [self.FeaturedPoiMap addAnnotation:anno];
     [self.FeaturedPoiMap selectAnnotation:anno animated:YES];
-    
-    
 }
 
 /*
@@ -328,7 +407,7 @@ remarks:
 
 /*
  created date:      27/04/2018
- last modified:     18/08/2018
+ last modified:     13/01/2020
  remarks:           segue controls .
  */
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -383,7 +462,7 @@ remarks:
 
 /*
  created date:      14/08/2018
- last modified:     03/09/2018
+ last modified:     06/01/2020
  remarks:
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -413,7 +492,7 @@ remarks:
     cell.LabelDateRange.text = reference;
     
     //TODO
-    cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 100) / 2;
+    cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 120) / 2;
     
     //cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.bounds.size.height / 2;
     cell.ImageViewProject.layer.masksToBounds = true;
@@ -549,4 +628,10 @@ remarks:
 
 - (IBAction)SwitchImageEnabler:(id)sender {
 }
+
+- (void)didCreatePoiFromProjectPassThru :(PoiRLM*)Object {
+    
+}
+
+
 @end

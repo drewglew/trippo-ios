@@ -47,8 +47,8 @@
        
         [self.activityImageView setImage:self.activityImage];
         
-        [self.activityImageView setTintColor:[UIColor systemIndigoColor]];
-        [self.activityImageView setBackgroundColor:[UIColor systemBackgroundColor]];
+        [self.activityImageView setTintColor:[UIColor colorNamed:@"TrippoColor"]];
+        [self.activityImageView setBackgroundColor:[UIColor colorNamed:@"DiaryHeaderBGColor"]];
         [self.activityView addSubview:self.activityImageView];
 
         if (NodeSize >= 40.0f) {

@@ -125,5 +125,5 @@
 @property (weak, nonatomic) IBOutlet UIScrollView *PoiScrollView;
 @property (weak, nonatomic) IBOutlet UIView *PoiScrollViewContent;
 @property (weak, nonatomic) IBOutlet UILabel *LabelImageOptions;
-
+@property (strong, nonatomic) UISelectionFeedbackGenerator *feedback;
 @end

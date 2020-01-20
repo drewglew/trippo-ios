@@ -39,7 +39,6 @@
 		3A374EE620936A9300E5A652 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A374EE520936A9300E5A652 /* AppDelegate.m */; };
 		3A374EEC20936A9300E5A652 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A374EEA20936A9300E5A652 /* Main.storyboard */; };
 		3A374EEE20936A9600E5A652 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A374EED20936A9600E5A652 /* Assets.xcassets */; };
-		3A374EF120936A9600E5A652 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A374EEF20936A9600E5A652 /* LaunchScreen.storyboard */; };
 		3A374EF420936A9600E5A652 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A374EF320936A9600E5A652 /* main.m */; };
 		3A374EFC209372CC00E5A652 /* MenuVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A374EFB209372CC00E5A652 /* MenuVC.m */; };
 		3A374F032093735300E5A652 /* ProjectListVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A374F022093735300E5A652 /* ProjectListVC.m */; };
@@ -66,17 +65,21 @@
 		3A79F213222D912500C68D77 /* MultiplierConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A79F212222D912500C68D77 /* MultiplierConstraint.m */; };
 		3A7A95D62324E4DF00DE5082 /* trippoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A95D52324E4DF00DE5082 /* trippoTests.m */; };
 		3A7A95E22325363100DE5082 /* PaymentListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A95E02325363000DE5082 /* PaymentListCell.m */; };
-		3A7A95E623258CC500DE5082 /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A7A95E523258CC500DE5082 /* country.json */; };
+		3A7D4C9823CB02A500843833 /* AssistantRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7D4C9723CB02A500843833 /* AssistantRLM.m */; };
+		3A7D4C9A23CD0C7000843833 /* trHippoLaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A7D4C9923CD0C6D00843833 /* trHippoLaunchScreen.storyboard */; };
 		3A7D8ABB22B82B7A002DC657 /* WeatherRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7D8ABA22B82B7A002DC657 /* WeatherRLM.m */; };
 		3A81B509209D80B8005CABDA /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A81B508209D80B8005CABDA /* Photos.framework */; };
 		3A81B50C209D90CA005CABDA /* AlphaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A81B50B209D90CA005CABDA /* AlphaView.m */; };
 		3A85AD7A22BFBC15007965D8 /* WeatherVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A85AD7922BFBC15007965D8 /* WeatherVCViewController.m */; };
 		3A85AD7D22BFE36E007965D8 /* WeatherCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A85AD7C22BFE36E007965D8 /* WeatherCell.m */; };
+		3A93FC88232D88A000CC1F5F /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A93FC87232D889F00CC1F5F /* country.json */; };
 		3A97DCA62250A66100B64D7C /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A97DCA52250A66100B64D7C /* CustomCollectionView.m */; };
 		3A97DCA92250FBE400B64D7C /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A97DCA72250FBE400B64D7C /* TTTAttributedLabel.m */; };
 		3A9CE745221C879700A4CB98 /* SettingsRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9CE744221C879700A4CB98 /* SettingsRLM.m */; };
 		3A9F73A920A2444A00D61666 /* PaymentListingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F73A820A2444A00D61666 /* PaymentListingVC.m */; };
 		3A9F73AF20A3747300D61666 /* PaymentNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A9F73AE20A3747300D61666 /* PaymentNSO.m */; };
+		3AA4B98423CE3DBD00D2849F /* NotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4B98323CE3DBC00D2849F /* NotificationCell.m */; };
+		3AA4B98723CE4A8F00D2849F /* NotificationNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4B98623CE4A8F00D2849F /* NotificationNSO.m */; };
 		3AA4DA6821267FE900F7CAC9 /* CirclePart.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4DA6721267FE900F7CAC9 /* CirclePart.m */; };
 		3AA4DA6B2126807400F7CAC9 /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4DA6A2126807400F7CAC9 /* GraphView.m */; };
 		3AAB60BF20FCF8C300A22047 /* NearbyListingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB60BE20FCF8C300A22047 /* NearbyListingVC.m */; };
@@ -182,12 +185,11 @@
 		3A2D8D7B215AA4DD009CDB32 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = SOURCE_ROOT; };
 		3A3075DC21220445007D53C9 /* HCSStarRatingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HCSStarRatingView.m; sourceTree = "<group>"; };
 		3A3075DD21220445007D53C9 /* HCSStarRatingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HCSStarRatingView.h; sourceTree = "<group>"; };
-		3A374EE120936A9300E5A652 /* trippo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = trippo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A374EE120936A9300E5A652 /* trHippo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = trHippo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A374EE420936A9300E5A652 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3A374EE520936A9300E5A652 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		3A374EEB20936A9300E5A652 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3A374EED20936A9600E5A652 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		3A374EF020936A9600E5A652 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A374EF220936A9600E5A652 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A374EF320936A9600E5A652 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		3A374EFA209372CC00E5A652 /* MenuVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuVC.h; sourceTree = "<group>"; };
@@ -245,7 +247,9 @@
 		3A7A95D72324E4DF00DE5082 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A7A95E02325363000DE5082 /* PaymentListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PaymentListCell.m; sourceTree = "<group>"; };
 		3A7A95E12325363100DE5082 /* PaymentListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PaymentListCell.h; sourceTree = "<group>"; };
-		3A7A95E523258CC500DE5082 /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = country.json; path = ../../../../../../.Trash/country.json; sourceTree = "<group>"; };
+		3A7D4C9623CB02A500843833 /* AssistantRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssistantRLM.h; sourceTree = "<group>"; };
+		3A7D4C9723CB02A500843833 /* AssistantRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssistantRLM.m; sourceTree = "<group>"; };
+		3A7D4C9923CD0C6D00843833 /* trHippoLaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = trHippoLaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A7D8AB922B82B7A002DC657 /* WeatherRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherRLM.h; sourceTree = "<group>"; };
 		3A7D8ABA22B82B7A002DC657 /* WeatherRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherRLM.m; sourceTree = "<group>"; };
 		3A81B508209D80B8005CABDA /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
@@ -255,6 +259,7 @@
 		3A85AD7922BFBC15007965D8 /* WeatherVCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherVCViewController.m; sourceTree = "<group>"; };
 		3A85AD7B22BFE36E007965D8 /* WeatherCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherCell.h; sourceTree = "<group>"; };
 		3A85AD7C22BFE36E007965D8 /* WeatherCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherCell.m; sourceTree = "<group>"; };
+		3A93FC87232D889F00CC1F5F /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = country.json; path = ../../country.json; sourceTree = "<group>"; };
 		3A97DCA42250A66100B64D7C /* CustomCollectionView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomCollectionView.h; sourceTree = "<group>"; };
 		3A97DCA52250A66100B64D7C /* CustomCollectionView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomCollectionView.m; sourceTree = "<group>"; };
 		3A97DCA72250FBE400B64D7C /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
@@ -268,6 +273,10 @@
 		3A9F73A820A2444A00D61666 /* PaymentListingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentListingVC.m; sourceTree = "<group>"; };
 		3A9F73AD20A3747300D61666 /* PaymentNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PaymentNSO.h; sourceTree = "<group>"; };
 		3A9F73AE20A3747300D61666 /* PaymentNSO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PaymentNSO.m; sourceTree = "<group>"; };
+		3AA4B98223CE3DBC00D2849F /* NotificationCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationCell.h; sourceTree = "<group>"; };
+		3AA4B98323CE3DBC00D2849F /* NotificationCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationCell.m; sourceTree = "<group>"; };
+		3AA4B98523CE4A8F00D2849F /* NotificationNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationNSO.h; sourceTree = "<group>"; };
+		3AA4B98623CE4A8F00D2849F /* NotificationNSO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationNSO.m; sourceTree = "<group>"; };
 		3AA4DA6621267FE900F7CAC9 /* CirclePart.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CirclePart.h; sourceTree = "<group>"; };
 		3AA4DA6721267FE900F7CAC9 /* CirclePart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CirclePart.m; sourceTree = "<group>"; };
 		3AA4DA692126807300F7CAC9 /* GraphView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
@@ -364,6 +373,8 @@
 				3AB52F6322E96BBC000E9ED8 /* ItineraryListCell.m */,
 				3A377FB82311987B00FD2B65 /* DistanceFromPointCell.h */,
 				3A377FB92311987B00FD2B65 /* DistanceFromPointCell.m */,
+				3AA4B98223CE3DBC00D2849F /* NotificationCell.h */,
+				3AA4B98323CE3DBC00D2849F /* NotificationCell.m */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -399,7 +410,7 @@
 		3A374EE220936A9300E5A652 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A374EE120936A9300E5A652 /* trippo.app */,
+				3A374EE120936A9300E5A652 /* trHippo.app */,
 				3A7A95D32324E4DF00DE5082 /* trippoTests.xctest */,
 			);
 			name = Products;
@@ -408,8 +419,9 @@
 		3A374EE320936A9300E5A652 /* trippo */ = {
 			isa = PBXGroup;
 			children = (
-				3A7A95E523258CC500DE5082 /* country.json */,
 				3AF2404C2180EC1D007B280F /* trippo.entitlements */,
+				3A7D4C9923CD0C6D00843833 /* trHippoLaunchScreen.storyboard */,
+				3A93FC87232D889F00CC1F5F /* country.json */,
 				3A2D8D7B215AA4DD009CDB32 /* tessdata */,
 				3AF785D3213129A600DD5A5B /* Realm */,
 				3A224CB12095917300075457 /* CollectionViewCells */,
@@ -421,7 +433,6 @@
 				3A374EE520936A9300E5A652 /* AppDelegate.m */,
 				3A374EEA20936A9300E5A652 /* Main.storyboard */,
 				3A374EED20936A9600E5A652 /* Assets.xcassets */,
-				3A374EEF20936A9600E5A652 /* LaunchScreen.storyboard */,
 				3A374EF220936A9600E5A652 /* Info.plist */,
 				3A374EF320936A9600E5A652 /* main.m */,
 				3A20ABA2223D489000661666 /* Twitter.plist */,
@@ -531,6 +542,8 @@
 				3A13556122E36CF700449604 /* NodeNSO.m */,
 				3AB52F5F22E966F6000E9ED8 /* JourneyItemNSO.h */,
 				3AB52F6022E966F6000E9ED8 /* JourneyItemNSO.m */,
+				3AA4B98523CE4A8F00D2849F /* NotificationNSO.h */,
+				3AA4B98623CE4A8F00D2849F /* NotificationNSO.m */,
 			);
 			path = GenericObjects;
 			sourceTree = "<group>";
@@ -611,6 +624,8 @@
 				3A44DEE4230893DE00756AD2 /* ItineraryRLM.m */,
 				3A44DEE62308940000756AD2 /* JourneyRLM.h */,
 				3A44DEE72308940000756AD2 /* JourneyRLM.m */,
+				3A7D4C9623CB02A500843833 /* AssistantRLM.h */,
+				3A7D4C9723CB02A500843833 /* AssistantRLM.m */,
 			);
 			path = Realm;
 			sourceTree = "<group>";
@@ -645,7 +660,7 @@
 			);
 			name = trippo;
 			productName = travelme;
-			productReference = 3A374EE120936A9300E5A652 /* trippo.app */;
+			productReference = 3A374EE120936A9300E5A652 /* trHippo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		3A7A95D22324E4DF00DE5082 /* trippoTests */ = {
@@ -717,9 +732,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3A20ABA3223D489000661666 /* Twitter.plist in Resources */,
-				3A374EF120936A9600E5A652 /* LaunchScreen.storyboard in Resources */,
-				3A7A95E623258CC500DE5082 /* country.json in Resources */,
+				3A93FC88232D88A000CC1F5F /* country.json in Resources */,
 				3A374EEE20936A9600E5A652 /* Assets.xcassets in Resources */,
+				3A7D4C9A23CD0C7000843833 /* trHippoLaunchScreen.storyboard in Resources */,
 				3A374EEC20936A9300E5A652 /* Main.storyboard in Resources */,
 				3A2D8D7C215AA4DD009CDB32 /* tessdata in Resources */,
 			);
@@ -826,6 +841,7 @@
 				3A374F152093877F00E5A652 /* PoiNSO.m in Sources */,
 				3AF785C721308FFE00DD5A5B /* LoginVC.m in Sources */,
 				3A44DEE5230893DE00756AD2 /* ItineraryRLM.m in Sources */,
+				3AA4B98423CE3DBD00D2849F /* NotificationCell.m in Sources */,
 				3A046D4B222303DA00EA26A9 /* AttachmentRLM.m in Sources */,
 				3AF785E221319D2200DD5A5B /* ImageCollectionRLM.m in Sources */,
 				3A6571DC22E243EB0071E166 /* JENTreeView.m in Sources */,
@@ -863,6 +879,7 @@
 				3A374F12209386F700E5A652 /* PoiListCell.m in Sources */,
 				3A291BD5213D917500FDFDFB /* ExchangeRateRLM.m in Sources */,
 				3A224CAF2094946800075457 /* PoiImageNSO.m in Sources */,
+				3AA4B98723CE4A8F00D2849F /* NotificationNSO.m in Sources */,
 				3A79F213222D912500C68D77 /* MultiplierConstraint.m in Sources */,
 				3A377FBA2311987B00FD2B65 /* DistanceFromPointCell.m in Sources */,
 				3A12B8DD21010BF4006B621D /* Reachability.m in Sources */,
@@ -878,6 +895,7 @@
 				3A523F622242CAD60073305D /* PoiPreviewVC.m in Sources */,
 				3A0BDE37217E4EDD006A746E /* OptionButton.m in Sources */,
 				3A7397B0225A183800781004 /* ExpenseDataEntryVC.m in Sources */,
+				3A7D4C9823CB02A500843833 /* AssistantRLM.m in Sources */,
 				3A374EE620936A9300E5A652 /* AppDelegate.m in Sources */,
 				3A81B50C209D90CA005CABDA /* AlphaView.m in Sources */,
 			);
@@ -908,14 +926,6 @@
 				3A374EEB20936A9300E5A652 /* Base */,
 			);
 			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		3A374EEF20936A9600E5A652 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3A374EF020936A9600E5A652 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1028,6 +1038,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1041,6 +1052,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_ENTITLEMENTS = trippo/trippo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 6QW2ZP6GTA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1052,7 +1064,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1065,7 +1077,6 @@
 					"-l\"lept\"",
 					"-l\"realmcore-ios\"",
 					"-l\"stdc++\"",
-					"-l\"tesseract_all\"",
 					"-l\"z\"",
 					"-framework",
 					"\"Foundation\"",
@@ -1074,8 +1085,8 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "DREW.trippo-app";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.trhippo2020;
+				PRODUCT_NAME = trHippo;
 				SWIFT_VERSION = 3.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1089,6 +1100,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_ENTITLEMENTS = trippo/trippo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 6QW2ZP6GTA;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1100,7 +1112,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.8.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1113,7 +1125,6 @@
 					"-l\"lept\"",
 					"-l\"realmcore-ios\"",
 					"-l\"stdc++\"",
-					"-l\"tesseract_all\"",
 					"-l\"z\"",
 					"-framework",
 					"\"Foundation\"",
@@ -1122,8 +1133,8 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "DREW.trippo-app";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.trhippo2020;
+				PRODUCT_NAME = trHippo;
 				SWIFT_VERSION = 3.2;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

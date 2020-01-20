@@ -8,6 +8,7 @@
 
 #import "RLMObject.h"
 #import <Realm/Realm.h>
+#import "AssistantRLM.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSNumber<RLMInt> *TripCellColumns; // 1 to 5 default 3 ProjectListVC
 @property NSNumber<RLMInt> *ActivityCellColumns; // 1 to 5 default 3 ActivityListVC
 @property NSNumber<RLMInt> *NodeScale;  //20 to 200 default 60 / TravelPlanVC
+@property RLMArray<AssistantRLM *><AssistantRLM> *AssistantCollection;
 @end
 
 /* more to add */

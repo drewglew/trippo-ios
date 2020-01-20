@@ -5,27 +5,27 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Trippo</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
 				<string></string>
 			</array>
-			<key>CFBundleTypeName</key>
-			<string>Trippo Point Of Interest</string>
-			<key>LSHandlerRank</key>
-			<string>Owner</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string></string>
 			</array>
+			<key>CFBundleTypeName</key>
+			<string>trHippo Point Of Interest</string>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.drewbysoft.poi.trippo</string>
+				<string>com.poi.trhippo</string>
 			</array>
 		</dict>
 		<dict>
@@ -50,7 +50,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.7.3</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -61,7 +61,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<array>
 		<dict>
@@ -83,17 +83,17 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Trippo would like to access your camera so it can store photos against your Point Of Interests and Trips</string>
+	<string>trHippo would like to access your camera so it can store photos you might take while at a new Point Of Interest and Activity.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Trippo would like to access your current location so it can provide helpful directions.</string>
+	<string>trHippo would like to access your current location so it can provide helpful directions, check Points of Interest nearby and send Notifications.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>To obtain distance from current location to Point Of Interest Trippo requires access to your current location</string>
+	<string>trHippo would like to access your current location so it knows which Points of Interest may be close to you as well as sending notifications on specific activities you select within the Aop.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Trippo would like to access your photo collectilon so it can present your Point Of Interests and Trips with your own photos.</string>
+	<string>trHippo would like to access your photo collectilon so it can provide a visual presentation of your Points Of Interests, Activities and Trips with your own photos.</string>
 	<key>UIFileSharingEnabled</key>
 	<false/>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>trHippoLaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -125,13 +125,13 @@
 				<string>public.data</string>
 			</array>
 			<key>UTTypeIdentifier</key>
-			<string>com.drewbysoft.poi.trippo</string>
+			<string>com.poi.trhippo</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<string>trippo</string>
 				<key>public.mine-type</key>
-				<string>application/trippo</string>
+				<string>application/trhippo</string>
 			</dict>
 		</dict>
 	</array>

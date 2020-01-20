@@ -22,7 +22,7 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
 
 /*
  created date:      30/04/2018
- last modified:     13/09/2019
+ last modified:     11/01/2020
  remarks:
  */
 - (void)viewDidLoad {
@@ -135,6 +135,7 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
                        @"Cat-Trek",
                        @"Cat-Venue",
                        @"Cat-Village",
+                       @"Cat-Vineyard",
                        @"Cat-Windmill",
                        @"Cat-Zoo"
                        ];
@@ -161,8 +162,79 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     self.SearchBarPoi.searchBarStyle = UISearchBarStyleMinimal;
     self.SearchBarPoi.searchTextField.backgroundColor = [UIColor tertiarySystemBackgroundColor];
     self.SearchBarPoi.searchTextField.textColor = [UIColor colorNamed:@"TrippoColor"];
+    
+    [self addDoneToolBarForTextFieldToKeyboard:self.SearchBarPoi.searchTextField];
+    
+    /* new block 20200111 */
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiSearchVC"] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 550)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Points Of Interest";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, 10, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 450);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = @"Here we can search, filter, select, add and view any Points Of Interest that are saved within the App.  By default if you arrived directly from the menu, you will be presented with all Points Of Interest that have been unused, otherwise it will default to the countries you have inside your active Trip.  The filtered selection can be changed from the 'Expand' button that opens the filter options.\n\nEach point of interest can be categorised, such as City, Historic, Zoo, Restaurant etc. There are over 50 to choose from when creating a Point of Interest.  All categories within the current filtered selection are shown across the bottom.  Long pressing a single one will select only that item, tapping will toggle selection.\n\ntrHippo is integrated using Wikipedia's GeoSearch, the circle button to left side of 'Search nearby me' and each Point of Interest item allows us to search interesting places within range.\n\nDeleting Points of Interest can only be done when Unused filter option is selected.  To delete swipe left to right.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        [self.view addSubview:helperView];
+    }
+    
 }
 
+
+/*
+ created date:      11/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    
+   RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiSearchVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+}
 
 /*
  created date:      11/08/2018
@@ -198,7 +270,33 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     }
 }
 
+/*
+created date:      14/09/2019
+last modified:     14/09/2019
+remarks:
+*/
+-(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
+{
+    UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
+    doneToolbar.barStyle = UIBarStyleDefault;
+    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.items = [NSArray arrayWithObjects:
+                         [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                         [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
+                         nil];
+    [doneToolbar sizeToFit];
+    textField.inputAccessoryView = doneToolbar;
+}
 
+/*
+created date:      14/09/2019
+last modified:     14/09/2019
+remarks:
+*/
+-(void)doneButtonClickedDismissKeyboard
+{
+    [self.SearchBarPoi.searchTextField resignFirstResponder];
+}
 
 /*
  created date:      11/06/2018
@@ -976,8 +1074,6 @@ remarks:
         
     }
     lastPoiSearchFooterFilterHeightConstant = self.FilterOptionHeightConstraint.constant;
-
-    
 }
 
 /*

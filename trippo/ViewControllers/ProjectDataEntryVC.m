@@ -136,10 +136,80 @@ BOOL loadedPlannedWeatherData = false;
      [self.EndDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
     anIndex=[self.timezones indexOfObject:self.DefaultTimeZoneNameTextField.text];
-    [self.DefaultDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
+    /* set map annotations by default to planned */
+    [self constructWeatherMapPointData :false];
     
     [self registerForKeyboardNotifications];
+    
+    /* new block 20200111 */
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectDataEntryVC"] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 350)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Trip Details";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 250);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = @"From the Trip Details you are able to provide Title, Photo to be used in Trip Log and Duration.\n\nTime Zone settings are only relevant when travelling far away from home.\n\nHere you are also able to view specific details about the trip including costs and milage as well as locations of the activities contained on a map of the region.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        [self.view addSubview:helperView];
+    }
+    
+}
+
+/*
+ created date:      12/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectDataEntryVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
@@ -314,6 +384,7 @@ BOOL loadedPlannedWeatherData = false;
  last modified:     14/06/2019
  remarks:           This procedure handles the call to the web service and returns a dictionary back to GetExchangeRates method.
  */
+/*
 -(void)fetchFromDarkSkyApi:(NSString *)url withDictionary:(void (^)(NSDictionary* data))dictionary{
     
     NSMutableURLRequest *request = [NSMutableURLRequest  requestWithURL:[NSURL URLWithString:url]];
@@ -332,11 +403,13 @@ BOOL loadedPlannedWeatherData = false;
                                   }];
     [task resume];
 }
-
+*/
+ 
 /*
  created date:      14/06/2019
  last modified:     14/06/2019
  */
+/*
 - (bool)checkInternet
 {
     if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus] == NotReachable)
@@ -350,10 +423,11 @@ BOOL loadedPlannedWeatherData = false;
     }
     
 }
+*/
 
 /*
 created date:      14/06/2019
-last modified:     25/08/2019
+last modified:     11/01/2020
 remarks:
 */
 - (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>) annotation {
@@ -370,9 +444,9 @@ remarks:
     }
     
     if ([myAnnotation.Type isEqualToString:@"marker-actual"]) {
-        pinView.markerTintColor = [UIColor colorNamed:@"TrippoColor"];
+        pinView.markerTintColor = [UIColor colorNamed:@"UtilityColor"];
     } else if ([myAnnotation.Type isEqualToString:@"marker-planned"]) {
-        pinView.markerTintColor = [UIColor systemIndigoColor];
+        pinView.markerTintColor = [UIColor colorNamed:@"UtilityColor"];
         
     } else {
         UIImageView *Weather = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,30,30)];
@@ -381,7 +455,7 @@ remarks:
         Weather.image = [UIImage systemImageNamed:myAnnotation.Type withConfiguration:config];
         
         pinView.rightCalloutAccessoryView = Weather;
-        [pinView.rightCalloutAccessoryView setTintColor:[UIColor colorNamed:@"TrippoColor"]];
+        [pinView.rightCalloutAccessoryView setTintColor:[UIColor colorNamed:@"UtilityColor"]];
         
     }
     
@@ -1211,11 +1285,11 @@ remarks:
 
 /*
  created date:      12/06/2019
- last modified:     27/08/2019
+ last modified:     11/01/2020
  remarks:           Loads weather data from API and distributes across the annotations on the map.
  */
 -(void) constructWeatherMapPointData :(bool)IsActual {
-
+    
     [self.MapView removeAnnotations:self.MapView.annotations];
 
     NSArray *keypaths  = [[NSArray alloc] initWithObjects:@"poikey", nil];
@@ -1233,177 +1307,27 @@ remarks:
     __block int PoiCounter = 0;
     for (ActivityRLM *activity in ActivitiesByState) {
 
-        if ([activity.poi.IncludeWeather intValue] == 1) {
-            
-            /* we only want to update the forecast if it is older than 1 hour */
-            RLMResults <WeatherRLM*> *weatherresult = [activity.poi.weather objectsWhere:@"timedefition='currently'"];
-            NSNumber *maxtime = [weatherresult maxOfProperty:@"time"];
-            
-            updatedTime = [NSDate dateWithTimeIntervalSince1970: [maxtime doubleValue]];
-            
-            NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-            NSNumber *now = [NSNumber numberWithDouble: timestamp];
-            
-            if ([self checkInternet]) {
-            
-                //NSLog(@"number of seconds past=%0.2f", [now doubleValue] - [maxtime doubleValue]);
-                
-                if (([maxtime doubleValue] + 3600 < [now doubleValue]) || maxtime == nil) {
-                    
-                    /* clean up previous data */
-                    if (maxtime != nil) {
-                        [self.realm transactionWithBlock:^{
-                            [self.realm deleteObjects:activity.poi.weather];
-                        }];
-                    }
-                    
-                    NSString *url = [NSString stringWithFormat:@"https://api.darksky.net/forecast/d339db567160bdd560169ea4eef3ee5a/%@,%@?exclude=minutely,flags,alerts&units=uk2", activity.poi.lat, activity.poi.lon];
-                    
-                    [self fetchFromDarkSkyApi:url withDictionary:^(NSDictionary *data) {
-                        
-                        dispatch_sync(dispatch_get_main_queue(), ^(void){
-                            
-                            WeatherRLM *weather = [[WeatherRLM alloc] init];
-                            NSDictionary *JSONdata = [data objectForKey:@"currently"];
-                            weather.icon = [NSString stringWithFormat:@"weather-%@",[JSONdata valueForKey:@"icon"]];
-                            weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[JSONdata valueForKey:@"icon"]];
-                            weather.summary = [JSONdata valueForKey:@"summary"];
-                            double myDouble = [[JSONdata valueForKey:@"temperature"] doubleValue];
-                            NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                            [fmt setPositiveFormat:@"0.#"];
-                            weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-                            weather.timedefition = @"currently";
-                            weather.time = [JSONdata valueForKey:@"time"];
-                            updatedTime = [NSDate dateWithTimeIntervalSince1970: [weather.time doubleValue]];
-                            
-                            /* Annotation for map  - begin */
-                            
-                            CLLocationCoordinate2D Coord = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
-
-                            AnnotationMK *annotation = [[AnnotationMK alloc] init];
-                            annotation.coordinate = Coord;
-                            annotation.title = [NSString stringWithFormat:@"%@", activity.name];
-                            annotation.subtitle = [NSString stringWithFormat:@"%@ °C (%@)",weather.temperature, weather.summary];
-                            annotation.Type = weather.systemicon;
-
-                            [self.MapView addAnnotation:annotation];
-                            /* Annotation for map  - end */
-
-                            
-                            [self.realm transactionWithBlock:^{
-                                [activity.poi.weather addObject:weather];
-                            }];
-                            
-                            NSDictionary *JSONHourlyData = [data objectForKey:@"hourly"];
-                            NSArray *dataHourly = [JSONHourlyData valueForKey:@"data"];
-                            
-                            for (NSMutableDictionary *item in dataHourly) {
-                                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                                weather.summary = [item valueForKey:@"summary"];
-                                double myDouble = [[item valueForKey:@"temperature"] doubleValue];
-                                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                                [fmt setPositiveFormat:@"0.#"];
-                                weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-                                weather.timedefition = @"hourly";
-                                weather.time = [item valueForKey:@"time"];
-                                
-                                [self.realm transactionWithBlock:^{
-                                    [activity.poi.weather addObject:weather];
-                                }];
-                            }
-                            NSDictionary *JSONDailyData = [data objectForKey:@"daily"];
-                            NSArray *dataDaily = [JSONDailyData valueForKey:@"data"];
-                            
-                            for (NSMutableDictionary *item in dataDaily) {
-                                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                                weather.summary = [item valueForKey:@"summary"];
-                                double tempLow = [[item valueForKey:@"temperatureLow"] doubleValue];
-                                double tempHigh = [[item valueForKey:@"temperatureHigh"] doubleValue];
-                                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                                [fmt setPositiveFormat:@"0.#"];
-                                weather.temperature = [NSString stringWithFormat:@"Lowest %@ °C, Highest %@ °C",[fmt stringFromNumber:[NSNumber numberWithFloat:tempLow]], [fmt stringFromNumber:[NSNumber numberWithFloat:tempHigh]]];
-                                weather.timedefition = @"daily";
-                                weather.time = [item valueForKey:@"time"];
-                                
-                                [self.realm transactionWithBlock:^{
-                                    [activity.poi.weather addObject:weather];
-                                }];
-                            }
-                            PoiCounter ++;
-                        });
-                    }];
-                } else {
-                    
-                    /* we have weather that is already available without calling the API */
-                    CLLocationCoordinate2D Coord = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
-                    
-                    WeatherRLM *weather = [weatherresult firstObject];
-                    
-                    AnnotationMK *annotation = [[AnnotationMK alloc] init];
-                    annotation.coordinate = Coord;
-                    annotation.title = [NSString stringWithFormat:@"%@", activity.name];
-                    annotation.subtitle = [NSString stringWithFormat:@"%@ °C (%@)",weather.temperature, weather.summary];
-                    annotation.Type = weather.systemicon;
-                    
-                    [self.MapView addAnnotation:annotation];
-                    PoiCounter ++;
-                }
-            } else {
-                /* without internet: */
-                CLLocationCoordinate2D Coord = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
-                
-                AnnotationMK *annotation = [[AnnotationMK alloc] init];
-                annotation.coordinate = Coord;
-                annotation.title = activity.name;
-
-                if (weatherresult.count > 0) {
-                    WeatherRLM *weather = [weatherresult firstObject];
-
-                    if (([maxtime doubleValue] + 3600 < [now doubleValue]) || maxtime == nil) {
-                        annotation.subtitle = [NSString stringWithFormat:@"Offline %@ °C (%@)",weather.temperature, weather.summary];
-                    } else {
-                        annotation.subtitle = [NSString stringWithFormat:@"%@ °C (%@)",weather.temperature, weather.summary];
-                    }
-                    annotation.Type = weather.systemicon;
-                } else {
-                    annotation.PoiKey = activity.poi.key;
-                    if (IsActual) {
-                        annotation.subtitle = @"Actual";
-                        annotation.Type = @"marker-actual";
-                    } else {
-                        annotation.subtitle = @"Planned";
-                        annotation.Type = @"marker-planned";
-                    }
-                }
-                [self.MapView addAnnotation:annotation];
-                PoiCounter ++;
-            }
+        /* an item without weather option */
+        AnnotationMK *annotation = [[AnnotationMK alloc] init];
+        annotation.coordinate = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
+        annotation.title = activity.name;
+        annotation.PoiKey = activity.poi.key;
+        if (IsActual) {
+            annotation.subtitle = @"Actual";
+            annotation.Type = @"marker-actual";
         } else {
-            /* an item without weather option */
-            AnnotationMK *annotation = [[AnnotationMK alloc] init];
-            annotation.coordinate = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
-            annotation.title = activity.name;
-            annotation.PoiKey = activity.poi.key;
-            if (IsActual) {
-                annotation.subtitle = @"Actual";
-                annotation.Type = @"marker-actual";
-            } else {
-                annotation.subtitle = @"Planned";
-                annotation.Type = @"marker-planned";
-            }
-            
-            [self.MapView addAnnotation:annotation];
-            PoiCounter ++;
+            annotation.subtitle = @"Planned";
+            annotation.Type = @"marker-planned";
         }
+        
+        [self.MapView addAnnotation:annotation];
+        PoiCounter ++;
+   
         if (PoiCounter == ActivitiesByState.count) {
             
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-            [dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm"];
-            self.LabelWeatherLastUpdatedAt.text = [NSString stringWithFormat:@"Weather data from DarkSky last updated at\n %@",[dateFormatter stringFromDate:updatedTime]];
+            //NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
+            //[dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm"];
+            //self.LabelWeatherLastUpdatedAt.text = [NSString stringWithFormat:@"Weather data from DarkSky last updated at\n %@",[dateFormatter stringFromDate:updatedTime]];
             [self zoomToAnnotationsBounds :self.MapView.annotations];
         }
     }
@@ -1473,7 +1397,7 @@ remarks:
 
 /*
  created date:      21/08/2019
- last modified:     21/08/2019
+ last modified:     05/10/2019
  remarks:           segue controls .
  */
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -1481,7 +1405,6 @@ remarks:
     if([segue.identifier isEqualToString:@"ShowTripPaymentList"]){
         PaymentListingVC *controller = (PaymentListingVC *)segue.destinationViewController;
         controller.delegate = self;
-
         controller.realm = self.realm;
         controller.TripItem = self.Trip;
         // we need the trip image..

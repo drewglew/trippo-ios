@@ -21,12 +21,13 @@
 #import "Reachability.h"
 #import "WeatherRLM.h"
 #import "PaymentListingVC.h"
+#import "SettingsRLM.h"
 
 
 @protocol ProjectDataEntryDelegate <NSObject>
 @end
 
-@interface ProjectDataEntryVC : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate, MKMapViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface ProjectDataEntryVC : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate, MKMapViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PaymentListingDelegate>
 
 @property (strong, nonatomic) ProjectNSO *Project;
 @property TripRLM *Trip;

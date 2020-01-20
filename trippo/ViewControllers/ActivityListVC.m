@@ -110,6 +110,7 @@ CGFloat Scale = 4.14f;
                            @"Cat-Trek",
                            @"Cat-Venue",
                            @"Cat-Village",
+                           @"Cat-Vineyard",
                            @"Cat-Windmill",
                            @"Cat-Zoo"
                            ];
@@ -130,7 +131,7 @@ CGFloat Scale = 4.14f;
 
     ActivityListFooterFilterHeightConstant = self.FooterWithSegmentConstraint.constant;
 
-    self.TableViewDiary.rowHeight = 125;
+    self.TableViewDiary.rowHeight = 145;
     
     UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
     [self.CollectionViewActivities addGestureRecognizer:longPressRecognizer];
@@ -207,6 +208,8 @@ CGFloat Scale = 4.14f;
     self.ViewLoading.layer.masksToBounds=YES;
     self.ViewLoading.layer.borderWidth = 1.0f;
     self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
+    
+    [self PresentAssistantView :@"ActivityListVC-Grid" :@"Activity Grid"];
     
 }
 
@@ -384,6 +387,9 @@ CGFloat Scale = 4.14f;
     
     NSString *whereClause = @"state==0";
     
+   
+
+    
     if (State==[NSNumber numberWithLong:0] || !self.tweetview) {
         
         if (self.tweetview) {
@@ -392,8 +398,24 @@ CGFloat Scale = 4.14f;
         
         RLMResults<ActivityRLM*> *plannedactivities = [self.AllActivitiesInTrip objectsWhere:whereClause];
         
+                       
+         
+        
         for (ActivityRLM* planned in plannedactivities) {
+            
+            
+            RLMResults <PaymentRLM*> *payments = [PaymentRLM objectsWhere:@"activitykey=%@", planned.key];
+            
+            for (PaymentRLM* payment in payments) {
+                if ([payment.amt_est intValue]>0) {
+                    planned.hasestpayment = [NSNumber numberWithInt:1];
+                } else {
+                    planned.hasestpayment = [NSNumber numberWithInt:0];
+                }
+            }
+            
             [dataset setObject:planned forKey:planned.key];
+            
         }
         self.IdentityStartDt  = [plannedactivities minOfProperty:@"startdt"];
         self.IdentityEndDt = [plannedactivities minOfProperty:@"enddt"];
@@ -409,10 +431,23 @@ CGFloat Scale = 4.14f;
         }
 
         RLMResults<ActivityRLM*> *actualactivities = [self.AllActivitiesInTrip objectsWhere:whereClause];
+
         bool found=false;
         for (ActivityRLM* actual in actualactivities) {
+            RLMResults <PaymentRLM*> *payments = [PaymentRLM objectsWhere:@"activitykey=%@", actual.key];
+
+            for (PaymentRLM* payment in payments) {
+                if ([payment.amt_act intValue]>0) {
+                    actual.hasactpayment = [NSNumber numberWithInt:1];
+                } else {
+                    actual.hasactpayment = [NSNumber numberWithInt:0];
+                }
+            }
+            
             [dataset setObject:actual forKey:actual.key];
             found = true;
+
+            
         }
         if (found) {
             self.IdentityStartDt  = [actualactivities minOfProperty:@"startdt"];
@@ -421,7 +456,7 @@ CGFloat Scale = 4.14f;
     }
     
     NSArray *temp2 = [[NSArray alloc] initWithArray:[dataset allValues]];
-
+    
     NSSortDescriptor *sortDescriptorState = [[NSSortDescriptor alloc] initWithKey:@"state" ascending:NO];
     NSSortDescriptor *sortDescriptorStartDt = [[NSSortDescriptor alloc] initWithKey:@"startdt"
                                                  ascending:YES];
@@ -640,7 +675,7 @@ CGFloat Scale = 4.14f;
 
 /*
  created date:      30/04/2018
- last modified:     10/09/2019
+ last modified:     19/01/2020
  remarks:  [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text]   df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -664,7 +699,7 @@ CGFloat Scale = 4.14f;
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
 
         cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
-        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
+        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"ActivityFGColor"]];
         [cell.ImageViewActivity setBackgroundColor: [UIColor clearColor]];
         cell.VisualViewBlur.hidden = true;
         cell.ViewOverlay.hidden = true;
@@ -673,8 +708,8 @@ CGFloat Scale = 4.14f;
         cell.ViewActiveBadge.hidden = true;
         cell.ViewActiveItem.backgroundColor = [UIColor clearColor];
     } else {
-        [cell.ImageViewActivity setBackgroundColor: [UIColor systemIndigoColor]];
-        [cell.ImageViewActivity setTintColor: [UIColor systemBackgroundColor]];
+        [cell.ImageViewActivity setBackgroundColor: [UIColor colorNamed:@"ActivityBGColor"]];
+        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"ActivityFGColor"]];
         if (!self.editmode) {
             cell.ViewOverlay.hidden = false;
         } else {
@@ -693,6 +728,12 @@ CGFloat Scale = 4.14f;
         } else {
             cell.LabelStartTimePlusWeekDay.text = @"";
             cell.LabelStartDate.text = @"";
+        }
+
+        if (([cell.activity.hasestpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 0) || ([cell.activity.hasactpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 1)) {
+            cell.ViewExpenseFlag.hidden=false;
+        } else {
+            cell.ViewExpenseFlag.hidden=true;
         }
         
          /* setup enddt & approx duration popup that shows on longpress */
@@ -721,10 +762,11 @@ CGFloat Scale = 4.14f;
                 cell.ImageViewBookmark.image = nil;
             } else {
                 ActivityRLM *single = [activitySet firstObject];
+                [cell.ImageViewBookmark setTintColor:[UIColor colorNamed:@"DiaryHeaderBGColor"]];
                 if (single.state == [NSNumber numberWithInteger:1]) {
                     
                     //[cell.ImageViewBookmark setImage:[UIImage systemImageNamed:@"bookmark.fill"]];
-                    [cell.ImageViewBookmark setTintColor:[UIColor yellowColor]];
+                    
                     
                     //[cell.ImageViewBookmark setImage:[UIImage imageNamed:@"Bookmark-Yellow"]];
                 } else {
@@ -754,7 +796,7 @@ CGFloat Scale = 4.14f;
             if ([cell.activity.startdt compare: cell.activity.enddt] == NSOrderedSame && cell.activity.startdt!=nil) {
                 // only show badge when activity is Actual.
                 if (cell.activity.state == [NSNumber numberWithInteger:1]) {
-                    cell.BadgeHeightConstraint.constant = (50*Scale)/2;
+                    cell.BadgeHeightConstraint.constant = (25*Scale)/2;
                     cell.ViewActiveBadge.layer.cornerRadius = cell.BadgeHeightConstraint.constant/2;
                     cell.ViewActiveBadge.layer.masksToBounds = YES;
                     cell.ViewActiveBadge.transform = CGAffineTransformMakeRotation(.34906585);
@@ -798,6 +840,8 @@ CGFloat Scale = 4.14f;
         PoiRLM *poiobject = [PoiRLM objectForPrimaryKey:cell.activity.poikey];
         
         cell.ImageViewTypeOfPoi.image = [UIImage imageNamed:[self.TypeItems objectAtIndex:[poiobject.categoryid integerValue]]];
+        // 2019-09-15
+        [cell.ImageViewTypeOfPoi setTintColor:[UIColor colorNamed:@"PoiType-FGColor"]];
 
         if (!self.editmode || indexPath.row == NumberOfItems -1) {
              cell.ViewOverlay.hidden = false;
@@ -815,16 +859,15 @@ CGFloat Scale = 4.14f;
         cell.ImageViewActivity.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
         
         if (self.tweetview) {
-            cell.ViewPoiType.backgroundColor = [UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0];
+            //cell.ViewPoiType.backgroundColor = [UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0];
         } else {
             cell.ImageBlurBackground.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
             cell.ImageBlurBackgroundBottomHalf.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
-            cell.ViewPoiType.backgroundColor = [UIColor systemBlueColor];
         }
+        cell.ViewPoiType.backgroundColor = [UIColor colorNamed:@"PoiType-BGColor"];
         
-        
-        NSLog(@"cell.activity.poi.IncludeWeather %@",cell.activity.poi.IncludeWeather);
-        if ([cell.activity.poi.IncludeWeather intValue] == 0 || cell.activity.poi.IncludeWeather == nil || ([self.ButtonWeatherRequest isEnabled] && self.SegmentState.selectedSegmentIndex == 0)) {
+        if ([cell.activity.poi.IncludeWeather intValue] == 0 || cell.activity.poi.IncludeWeather == nil || ([self.ButtonWeatherRequest isEnabled] && self.SegmentState.selectedSegmentIndex == 0) ||
+            (cell.activity.state == [NSNumber numberWithInteger:0] && self.SegmentState.selectedSegmentIndex == 1)) {
             [cell.ViewWeather setHidden:true];
         } else {
             UIBezierPath *path = [UIBezierPath new];
@@ -1101,7 +1144,7 @@ remarks:
 
 /*
  created date:      17/03/2019
- last modified:     02/09/2019
+ last modified:     06/01/2020
  remarks:
  */
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -1122,17 +1165,15 @@ remarks:
     UIView* headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, headerHeight)];
 
     UILabel* title = [[UILabel alloc] init];
-    title.frame = CGRectMake(10, 10, tableView.frame.size.width - 50, 20);
+    title.frame = CGRectMake(10, 10, tableView.frame.size.width - 50, 24);
 
     //headerView.backgroundColor = [UIColor tertiarySystemBackgroundColor];
-    
-    // orange
-    headerView.backgroundColor = [UIColor colorNamed:@"DiaryHeaderBGColor"];
-    
+    headerView.backgroundColor = [UIColor colorNamed:@"TripFGColor"];
     //headerView.backgroundColor = [UIColor secondarySystemBackgroundColor];
-    title.textColor = [UIColor labelColor];
+    title.textColor =  [UIColor secondarySystemBackgroundColor];
+    //title.textColor = [UIColor colorNamed:@"UtilityColor"];
     
-    title.font = [UIFont systemFontOfSize:20 weight:UIFontWeightRegular];
+    title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
     title.text = dd.daytitle;
     title.textAlignment = NSTextAlignmentLeft;
 
@@ -1145,7 +1186,7 @@ remarks:
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
     [button setImage:[UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config] forState:UIControlStateNormal];
 
-    [button setTintColor: [UIColor labelColor]];
+    [button setTintColor: [UIColor secondarySystemBackgroundColor]];
     
     [button addTarget:self action:@selector(sectionHeaderButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -1159,7 +1200,7 @@ remarks:
             UILabel* detailLabel = [[UILabel alloc] init];
                detailLabel.frame = CGRectMake(xPos, yPos, tableView.frame.size.width - 60, height);
             detailLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightRegular];
-            [detailLabel setTextColor:[UIColor secondaryLabelColor]];
+            [detailLabel setTextColor:[UIColor secondarySystemBackgroundColor]];
             detailLabel.text = detail;
             detailLabel.textAlignment = NSTextAlignmentLeft;
             [headerView addSubview:detailLabel];
@@ -1171,7 +1212,7 @@ remarks:
         UILabel* detailLabel = [[UILabel alloc] init];
            detailLabel.frame = CGRectMake(xPos, yPos, tableView.frame.size.width - 60, height);
         detailLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightRegular];
-        [detailLabel setTextColor:[UIColor secondaryLabelColor]];
+        [detailLabel setTextColor:[UIColor secondarySystemBackgroundColor]];
         detailLabel.text = [NSString stringWithFormat:@"and %d more", (int)dd.extendedActivityDetail.count - 9];
         detailLabel.textAlignment = NSTextAlignmentLeft;
         [headerView addSubview:detailLabel];
@@ -1654,12 +1695,23 @@ remarks:           table view with sections.
 
 /*
  created date:      20/02/2019
- last modified:     17/03/2019
+ last modified:     12/01/2020
  remarks:
  */
 - (IBAction)SwapMainViewPressed:(id)sender {
+        
+    for (UIView *i in self.view.subviews){
+        if (i.tag==100 || i.tag==101) {
+            [i removeFromSuperview];
+        }
+    }
     
     if (self.TableViewDiary.hidden == true) {
+        
+        /* Present Diary view */
+
+        [self PresentAssistantView :@"ActivityListVC-Diary" :@"Activity Diary"];
+        
         self.ButtonShare.hidden = true;
         self.TableViewDiary.hidden = false;
         [self.TableViewDiary reloadData];
@@ -1668,6 +1720,11 @@ remarks:           table view with sections.
         [self.ButtonSwapMainView setImage:[UIImage systemImageNamed:@"square.grid.2x2"] forState:UIControlStateNormal];
 
     } else {
+        
+        /* Present Grid view */
+        
+        [self PresentAssistantView :@"ActivityListVC-Grid" :@"Activity Grid"];
+              
         self.ButtonShare.hidden = false;
         self.TableViewDiary.hidden = true;
         [self.CollectionViewActivities reloadData];
@@ -1676,6 +1733,111 @@ remarks:           table view with sections.
        
     }
 }
+
+/*
+created date:      12/01/2020
+last modified:     12/01/2020
+remarks:
+*/
+-(void) PresentAssistantView :(NSString*)ViewName :(NSString*) Title {
+   
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",ViewName] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+
+        NSString *helpContent;
+        CGFloat helperHeight = 300.0f;
+        
+        if ([ViewName isEqualToString:@"ActivityListVC-Grid"]) {
+         helperHeight = 550.0f;
+        }
+
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, helperHeight)];
+
+
+        if ([ViewName isEqualToString:@"ActivityListVC-Grid"]) {
+            helperView.tag = 101;
+            helpContent = @"This view provides a visualisation of activities contained within the selected Trip. Pressing the (+) icon will require you to add an associated Point Of Interest before an editor is presented to create a new activity.\n\nThere are planned activities and actual ones.  Prior your trip you can create many planned activities, these are ordered by the date/time. When the trip is ongoing using the Actual switch either use the same planned items created  transforming them into actual activities or create further new ones.\n\nPinching and zooming the grid of Activities allows you to increase/decrease the size the activity items.\nYou may delete existing activities as well by pressing the red trash icon.  Long depress of an activity item shows the date detail and if a Point Of Interest has weather report enabled - tapping the dog ear expands the weather report.  If planned activities are in view and trip contains a Point of Interest with weather reports enabled, a weather button is shown.  Pressing it requests a current Weather report.\n\nLastly there is a Share button that can allow the user to either tweet or email to a friend the Trip activities.";
+            
+        } else {
+            helperView.tag = 100;
+            helpContent = @"This view presents the activities as a diary by date within the current Trip.  Pressing the (+) icon against any date heading will open an editor to create a new activity (firstly requiring you to add a Point Of Interest) - by default the dates will contain the whole day of the date you chose.\n\nOnce again there are planned activities and actual ones.  Prior your trip you can create many planned activities, ordered by the date/time chosen. When the trip is ongoing you can select the Actual option instead and select either a planned item or create a further new one.";
+            
+        }
+          
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = Title;
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, helperView.bounds.size.height - 100);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = helpContent;
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        [self.view addSubview:helperView];
+    }
+    
+}
+
+/*
+ created date:      12/01/2020
+ last modified:     12/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    
+    UIView *parentView = [(UIView *)sender superview];
+    
+    //if ([parentView.tag
+    NSString *viewName = @"ActivityListVC-Grid";
+    if (parentView.tag == 100) {
+        viewName = @"ActivityListVC-Diary";
+    }
+    
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+         AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",viewName] firstObject];
+         
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    
+    [parentView setHidden:TRUE];
+}
+
 
 
 /*
@@ -1866,7 +2028,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
         if (self.SegmentState.selectedSegmentIndex == 0) {
             TripType = @"itinerary";
         }
-        [composer setText:[NSString stringWithFormat:@"%@ trip %@, generated in @TrippoApp ",self.Trip.name, TripType]];
+        [composer setText:[NSString stringWithFormat:@"%@ trip %@, generated in @trHippoApp ",self.Trip.name, TripType]];
         [composer setImage:image];
         [composer showFromViewController:self completion:^(TWTRComposerResult result) {
             if (result == TWTRComposerResultCancelled) {
@@ -1890,11 +2052,11 @@ remarks:           User dismisses action to send ePostcard or Tweet.
           
         [mail setSubject:[NSString stringWithFormat:@"ePostcard %@", self.Trip.name]];
         
-        [mail setMessageBody:@"Wish you were here! <br/><br/>(Generated using Trippo App for iOS)" isHTML:YES];
+        [mail setMessageBody:@"Wish you were here! <br/><br/>(Generated using trHippo App for iOS)" isHTML:YES];
                                                     
         
         NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
-        NSString *attachmentName = @"trippo-collage.jpg";
+        NSString *attachmentName = @"trHippo-collage.jpg";
         [mail addAttachmentData:imageData mimeType:@"image/jpeg" fileName:attachmentName];
                                                                        
         [self presentViewController:mail animated:YES completion:NULL];

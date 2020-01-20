@@ -75,5 +75,4 @@
 @property (weak, nonatomic) IBOutlet UIVisualEffectView *EffectsViewWaiting;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *ActivityView;
 @property (weak, nonatomic) IBOutlet UIView *ViewLoading;
-
 @end

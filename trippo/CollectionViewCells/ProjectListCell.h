@@ -22,9 +22,6 @@
 @property (strong, nonatomic) TripRLM *trip;
 @property (weak, nonatomic) IBOutlet UIView *VisualEffectsViewBlur;
 @property (weak, nonatomic) IBOutlet UILabel *LabelDateRange;
-@property (weak, nonatomic) IBOutlet UILabel *LabelNbrOfActivities;
-@property (weak, nonatomic) IBOutlet UILabel *LabelNbrOfActivities2;
-@property (weak, nonatomic) IBOutlet UILabel *LabelNbrOfActivities3;
 @property (weak, nonatomic) IBOutlet UIView *RotatingView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *ActivityIndicatorView;
 @property (weak, nonatomic) IBOutlet UIView *ViewMain;

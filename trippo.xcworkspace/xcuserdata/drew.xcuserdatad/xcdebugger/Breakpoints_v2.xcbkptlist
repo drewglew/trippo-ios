@@ -7,23 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "0E85F02E-D867-4030-B907-B43B8E9F427A"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "trippo/ViewControllers/SettingsVC.m"
-            timestampString = "585940618.9650511"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
-            landmarkName = "-DismissAllPendingNotificationsPressed:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "98D23491-1F2B-4158-8EB0-3C1633E7D8D3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
@@ -32,8 +15,8 @@
             timestampString = "586212042.720589"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1466"
-            endingLineNumber = "1466"
+            startingLineNumber = "1554"
+            endingLineNumber = "1554"
             landmarkName = "-ActionButtonPressed:"
             landmarkType = "7">
          </BreakpointContent>
@@ -85,7 +68,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "348"
             endingLineNumber = "348"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkName = "-tableView:viewForFooterInSection:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -100,8 +83,8 @@
             timestampString = "585810322.400314"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "557"
-            endingLineNumber = "557"
+            startingLineNumber = "573"
+            endingLineNumber = "573"
             landmarkName = "AppDelegate"
             landmarkType = "3">
          </BreakpointContent>
@@ -143,23 +126,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1EF1644C-9825-4825-819E-BD0CCE7FF802"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
-            timestampString = "586212042.720788"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1378"
-            endingLineNumber = "1378"
-            landmarkName = "-constructWeatherMapPointData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "7AA78EEC-955A-46FE-998D-C814A34E79DD"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -168,8 +134,8 @@
             timestampString = "585328587.302147"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "344"
-            endingLineNumber = "344"
+            startingLineNumber = "390"
+            endingLineNumber = "390"
             landmarkName = "-RefreshPoiFilteredData:"
             landmarkType = "7">
          </BreakpointContent>
@@ -185,8 +151,8 @@
             timestampString = "585328587.302278"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "338"
-            endingLineNumber = "338"
+            startingLineNumber = "384"
+            endingLineNumber = "384"
             landmarkName = "-RefreshPoiFilteredData:"
             landmarkType = "7">
          </BreakpointContent>
@@ -457,10 +423,10 @@
             timestampString = "586212042.7253031"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "470"
-            endingLineNumber = "470"
-            landmarkName = "TravelPlanVC"
-            landmarkType = "3">
+            startingLineNumber = "535"
+            endingLineNumber = "535"
+            landmarkName = "-MapSideButtonPressed:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -474,8 +440,8 @@
             timestampString = "586212042.725861"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1189"
-            endingLineNumber = "1189"
+            startingLineNumber = "1319"
+            endingLineNumber = "1319"
             landmarkName = "-tableView:willSelectRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -491,8 +457,8 @@
             timestampString = "586212042.725964"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "427"
-            endingLineNumber = "427"
+            startingLineNumber = "557"
+            endingLineNumber = "557"
             landmarkName = "-keyboardWasShown:"
             landmarkType = "7">
          </BreakpointContent>
@@ -508,8 +474,8 @@
             timestampString = "586212042.7260309"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "438"
-            endingLineNumber = "438"
+            startingLineNumber = "568"
+            endingLineNumber = "568"
             landmarkName = "-keyboardWillBeHidden:"
             landmarkType = "7">
          </BreakpointContent>
@@ -525,8 +491,8 @@
             timestampString = "586212042.726091"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "440"
-            endingLineNumber = "440"
+            startingLineNumber = "570"
+            endingLineNumber = "570"
             landmarkName = "-keyboardWillBeHidden:"
             landmarkType = "7">
          </BreakpointContent>
@@ -542,8 +508,8 @@
             timestampString = "586212042.7261471"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "446"
-            endingLineNumber = "446"
+            startingLineNumber = "576"
+            endingLineNumber = "576"
             landmarkName = "-textFieldDidBeginEditing:"
             landmarkType = "7">
          </BreakpointContent>
@@ -558,8 +524,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "196"
-            endingLineNumber = "196"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
             landmarkName = "-addDoneToolBarToKeyboard:"
             landmarkType = "7">
          </BreakpointContent>
@@ -574,8 +540,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1445"
-            endingLineNumber = "1445"
+            startingLineNumber = "1575"
+            endingLineNumber = "1575"
             landmarkName = "-InsertActivityImage"
             landmarkType = "7">
          </BreakpointContent>
@@ -592,8 +558,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "255"
             endingLineNumber = "255"
-            landmarkName = "-tableView:viewForFooterInSection:"
-            landmarkType = "7">
+            landmarkName = "PaymentListingVC"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -606,8 +572,8 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1063"
-            endingLineNumber = "1063"
+            startingLineNumber = "1103"
+            endingLineNumber = "1103"
             landmarkName = "-collectionView:didSelectItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -622,8 +588,8 @@
             filePath = "trippo/ViewControllers/SettingsVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "46"
-            endingLineNumber = "46"
+            startingLineNumber = "41"
+            endingLineNumber = "41"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -632,14 +598,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A1F54283-3561-4DB1-849F-1862331845FA"
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "trippo/ViewControllers/SettingsVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
+            startingLineNumber = "43"
+            endingLineNumber = "43"
             landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
@@ -654,8 +620,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1471"
-            endingLineNumber = "1471"
+            startingLineNumber = "1392"
+            endingLineNumber = "1392"
             landmarkName = "-onDefaultDtTimeZonePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -670,8 +636,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "547"
-            endingLineNumber = "547"
+            startingLineNumber = "618"
+            endingLineNumber = "618"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -686,8 +652,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "545"
-            endingLineNumber = "545"
+            startingLineNumber = "616"
+            endingLineNumber = "616"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -702,8 +668,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "554"
-            endingLineNumber = "554"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -718,8 +684,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "559"
-            endingLineNumber = "559"
+            startingLineNumber = "630"
+            endingLineNumber = "630"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -750,8 +716,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "608"
-            endingLineNumber = "608"
+            startingLineNumber = "679"
+            endingLineNumber = "679"
             landmarkName = "-LoadExistingData"
             landmarkType = "7">
          </BreakpointContent>
@@ -766,8 +732,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "609"
-            endingLineNumber = "609"
+            startingLineNumber = "680"
+            endingLineNumber = "680"
             landmarkName = "-LoadExistingData"
             landmarkType = "7">
          </BreakpointContent>
@@ -782,8 +748,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "553"
-            endingLineNumber = "553"
+            startingLineNumber = "624"
+            endingLineNumber = "624"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -798,8 +764,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2373"
-            endingLineNumber = "2373"
+            startingLineNumber = "2503"
+            endingLineNumber = "2503"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -814,8 +780,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2392"
-            endingLineNumber = "2392"
+            startingLineNumber = "2522"
+            endingLineNumber = "2522"
             landmarkName = "-onDatePickerValueChanged:"
             landmarkType = "7">
          </BreakpointContent>
@@ -830,26 +796,10 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "564"
-            endingLineNumber = "564"
+            startingLineNumber = "694"
+            endingLineNumber = "694"
             landmarkName = "ActivityDataEntryVC"
             landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "8FD9EE92-0D75-4859-B755-6CE86014463C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "trippo/AppDelegate.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
-            landmarkName = "-application:openURL:options:"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -862,8 +812,8 @@
             filePath = "trippo/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "329"
-            endingLineNumber = "329"
+            startingLineNumber = "335"
+            endingLineNumber = "335"
             landmarkName = "-ProcessPdfFile::"
             landmarkType = "7">
             <Locations>
@@ -910,8 +860,8 @@
             filePath = "trippo/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
             landmarkName = "-ProcessPdfFile::"
             landmarkType = "7">
             <Locations>
@@ -1086,8 +1036,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "289"
-            endingLineNumber = "289"
+            startingLineNumber = "354"
+            endingLineNumber = "354"
             landmarkName = "TravelPlanVC"
             landmarkType = "3">
          </BreakpointContent>
@@ -1102,8 +1052,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "246"
-            endingLineNumber = "246"
+            startingLineNumber = "311"
+            endingLineNumber = "311"
             landmarkName = "-getChildren:::"
             landmarkType = "7">
          </BreakpointContent>
@@ -1136,7 +1086,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "313"
             endingLineNumber = "313"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkName = "-tableView:viewForFooterInSection:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1152,7 +1102,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "311"
             endingLineNumber = "311"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkName = "-tableView:viewForFooterInSection:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1168,7 +1118,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "326"
             endingLineNumber = "326"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
+            landmarkName = "-tableView:viewForFooterInSection:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1182,8 +1132,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1822"
-            endingLineNumber = "1822"
+            startingLineNumber = "1952"
+            endingLineNumber = "1952"
             landmarkName = "-collectionView:cellForItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1198,8 +1148,8 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1734"
-            endingLineNumber = "1734"
+            startingLineNumber = "1890"
+            endingLineNumber = "1890"
             landmarkName = "-shareButtonPressed:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1214,10 +1164,10 @@
             filePath = "trippo/ViewControllers/PoiSearchVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "959"
-            endingLineNumber = "959"
-            landmarkName = "-FilterPressed:"
-            landmarkType = "7">
+            startingLineNumber = "1005"
+            endingLineNumber = "1005"
+            landmarkName = "PoiSearchVC"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1230,8 +1180,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "980"
-            endingLineNumber = "980"
+            startingLineNumber = "1045"
+            endingLineNumber = "1045"
             landmarkName = "-tableView:cellForRowAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1262,8 +1212,8 @@
             filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "388"
-            endingLineNumber = "388"
+            startingLineNumber = "459"
+            endingLineNumber = "459"
             landmarkName = "-mapView:viewForAnnotation:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1342,10 +1292,10 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "332"
-            endingLineNumber = "332"
-            landmarkName = "MenuVC"
-            landmarkType = "3">
+            startingLineNumber = "375"
+            endingLineNumber = "375"
+            landmarkName = "-LoadFeaturedPoi"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1358,9 +1308,9 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "336"
-            endingLineNumber = "336"
-            landmarkName = "-prepareForSegue:sender:"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
+            landmarkName = "-LoadFeaturedPoi"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1374,9 +1324,9 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
-            landmarkName = "-prepareForSegue:sender:"
+            startingLineNumber = "378"
+            endingLineNumber = "378"
+            landmarkName = "-LoadFeaturedPoi"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1390,10 +1340,10 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "331"
-            endingLineNumber = "331"
-            landmarkName = "MenuVC"
-            landmarkType = "3">
+            startingLineNumber = "374"
+            endingLineNumber = "374"
+            landmarkName = "-LoadFeaturedPoi"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1406,9 +1356,9 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "490"
-            endingLineNumber = "490"
-            landmarkName = "-viewDidLayoutSubviews"
+            startingLineNumber = "531"
+            endingLineNumber = "531"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1422,10 +1372,10 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "501"
-            endingLineNumber = "501"
-            landmarkName = "MenuVC"
-            landmarkType = "3">
+            startingLineNumber = "542"
+            endingLineNumber = "542"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1438,9 +1388,9 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "493"
-            endingLineNumber = "493"
-            landmarkName = "-ButtonFeaturedPoiPressed:"
+            startingLineNumber = "534"
+            endingLineNumber = "534"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1454,10 +1404,10 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "496"
-            endingLineNumber = "496"
-            landmarkName = "MenuVC"
-            landmarkType = "3">
+            startingLineNumber = "537"
+            endingLineNumber = "537"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1470,10 +1420,10 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "499"
-            endingLineNumber = "499"
-            landmarkName = "MenuVC"
-            landmarkType = "3">
+            startingLineNumber = "540"
+            endingLineNumber = "540"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1486,9 +1436,9 @@
             filePath = "trippo/ViewControllers/MenuVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "495"
-            endingLineNumber = "495"
-            landmarkName = "-ButtonFeaturedPoiPressed:"
+            startingLineNumber = "536"
+            endingLineNumber = "536"
+            landmarkName = "-collectionView:didSelectItemAtIndexPath:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1504,7 +1454,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "165"
             endingLineNumber = "165"
-            landmarkName = "-topViewController"
+            landmarkName = "-topViewController:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1527,22 +1477,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1F666656-6123-4956-918E-5DC54F8106B9"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "trippo/ViewControllers/ProjectDataEntryVC.m"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1269"
-            endingLineNumber = "1269"
-            landmarkName = "-constructWeatherMapPointData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "0A1F13E2-21BC-4DA4-A4A1-CFECA1306157"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -1552,7 +1486,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "117"
             endingLineNumber = "117"
-            landmarkName = "-locationManager:didUpdateLocations:"
+            landmarkName = "-viewDidDisappear:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1568,7 +1502,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "118"
             endingLineNumber = "118"
-            landmarkName = "-locationManager:didUpdateLocations:"
+            landmarkName = "-viewDidDisappear:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1584,7 +1518,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "213"
             endingLineNumber = "213"
-            landmarkName = "-AddAnnotationToMap:"
+            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1600,7 +1534,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "216"
             endingLineNumber = "216"
-            landmarkName = "-AddAnnotationToMap:"
+            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1616,8 +1550,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "326"
             endingLineNumber = "326"
-            landmarkName = "-tableView:cellForRowAtIndexPath:"
-            landmarkType = "7">
+            landmarkName = "LocatorVC"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1632,7 +1566,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "225"
             endingLineNumber = "225"
-            landmarkName = "-AddAnnotationToMap:"
+            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1648,7 +1582,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "212"
             endingLineNumber = "212"
-            landmarkName = "-AddAnnotationToMap:"
+            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1664,7 +1598,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "217"
             endingLineNumber = "217"
-            landmarkName = "-AddAnnotationToMap:"
+            landmarkName = "-locationManager:didUpdateLocations:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1680,7 +1614,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "267"
             endingLineNumber = "267"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1696,7 +1630,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "288"
             endingLineNumber = "288"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1712,7 +1646,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "304"
             endingLineNumber = "304"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1728,7 +1662,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "271"
             endingLineNumber = "271"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1744,7 +1678,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "272"
             endingLineNumber = "272"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1760,7 +1694,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "278"
             endingLineNumber = "278"
-            landmarkName = "-searchBar:textDidChange:"
+            landmarkName = "-AddAnnotationToMap:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -1774,8 +1708,8 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1106"
-            endingLineNumber = "1106"
+            startingLineNumber = "1146"
+            endingLineNumber = "1146"
             landmarkName = "ActivityListVC"
             landmarkType = "3">
          </BreakpointContent>
@@ -1790,10 +1724,10 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1107"
-            endingLineNumber = "1107"
-            landmarkName = "-tableView:viewForHeaderInSection:"
-            landmarkType = "7">
+            startingLineNumber = "1147"
+            endingLineNumber = "1147"
+            landmarkName = "ActivityListVC"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -1806,8 +1740,8 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1112"
-            endingLineNumber = "1112"
+            startingLineNumber = "1152"
+            endingLineNumber = "1152"
             landmarkName = "-tableView:viewForHeaderInSection:"
             landmarkType = "7">
          </BreakpointContent>
@@ -1822,8 +1756,8 @@
             filePath = "trippo/ViewControllers/ActivityListVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1149"
-            endingLineNumber = "1149"
+            startingLineNumber = "1187"
+            endingLineNumber = "1187"
             landmarkName = "-tableView:viewForHeaderInSection:"
             landmarkType = "7">
             <Locations>
@@ -1950,8 +1884,8 @@
             filePath = "trippo/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "528"
-            endingLineNumber = "528"
+            startingLineNumber = "534"
+            endingLineNumber = "534"
             landmarkName = "-ProcessImportFile"
             landmarkType = "7">
          </BreakpointContent>
@@ -1966,8 +1900,8 @@
             filePath = "trippo/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "343"
-            endingLineNumber = "343"
+            startingLineNumber = "349"
+            endingLineNumber = "349"
             landmarkName = "-ProcessImportFile"
             landmarkType = "7">
          </BreakpointContent>
@@ -1982,8 +1916,8 @@
             filePath = "trippo/AppDelegate.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "350"
-            endingLineNumber = "350"
+            startingLineNumber = "356"
+            endingLineNumber = "356"
             landmarkName = "-ProcessImportFile"
             landmarkType = "7">
          </BreakpointContent>
@@ -2014,8 +1948,8 @@
             filePath = "trippo/ViewControllers/PoiDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1277"
-            endingLineNumber = "1277"
+            startingLineNumber = "1365"
+            endingLineNumber = "1365"
             landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2030,8 +1964,8 @@
             filePath = "trippo/ViewControllers/PoiDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1089"
-            endingLineNumber = "1089"
+            startingLineNumber = "1177"
+            endingLineNumber = "1177"
             landmarkName = "-InsertPoiImage"
             landmarkType = "7">
          </BreakpointContent>
@@ -2046,8 +1980,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "736"
-            endingLineNumber = "736"
+            startingLineNumber = "801"
+            endingLineNumber = "801"
             landmarkName = "-calculateDistance::completionHandler:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2062,8 +1996,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "384"
+            endingLineNumber = "384"
             landmarkName = "-getActivityImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2078,8 +2012,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "322"
-            endingLineNumber = "322"
+            startingLineNumber = "387"
+            endingLineNumber = "387"
             landmarkName = "-getActivityImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2094,8 +2028,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "328"
-            endingLineNumber = "328"
+            startingLineNumber = "393"
+            endingLineNumber = "393"
             landmarkName = "-getActivityImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2110,8 +2044,8 @@
             filePath = "trippo/ViewControllers/TravelPlanVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "317"
-            endingLineNumber = "317"
+            startingLineNumber = "382"
+            endingLineNumber = "382"
             landmarkName = "-getActivityImage:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2120,7 +2054,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "497BB2F4-D6C8-4A5C-8A2F-8B57B6CCB403"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "trippo/ViewControllers/ActivityListVC.m"
@@ -2142,8 +2076,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2326"
-            endingLineNumber = "2326"
+            startingLineNumber = "2456"
+            endingLineNumber = "2456"
             landmarkName = "-pickerView:didSelectRow:inComponent:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2158,8 +2092,8 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2327"
-            endingLineNumber = "2327"
+            startingLineNumber = "2457"
+            endingLineNumber = "2457"
             landmarkName = "-pickerView:didSelectRow:inComponent:"
             landmarkType = "7">
          </BreakpointContent>
@@ -2174,9 +2108,185 @@
             filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2331"
-            endingLineNumber = "2331"
+            startingLineNumber = "2461"
+            endingLineNumber = "2461"
             landmarkName = "-pickerView:didSelectRow:inComponent:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D86D25BF-A785-48A2-906D-A1469B06713E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6CB56972-E81E-4EB1-A781-A2D10CCA8DEB"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "296"
+            endingLineNumber = "296"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D3B30C19-F0C3-4C72-A241-2E4D712CE9B8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4459AD45-1E49-408A-B408-9973DDB49191"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "310"
+            endingLineNumber = "310"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "06C63139-3969-45D9-B761-A85FC273B588"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "312"
+            endingLineNumber = "312"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "EE924863-DA01-47BF-B148-2F180E2248FE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/ViewControllers/ActivityDataEntryVC.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1306"
+            endingLineNumber = "1306"
+            landmarkName = "-tableView:didSelectRowAtIndexPath:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "312CB650-72F6-43BF-92D0-835CA1CFD8D8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/AppDelegate.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "257"
+            endingLineNumber = "257"
+            landmarkName = "-ProcessPdfFile::"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D4CAA8F9-ABE4-4C77-96A3-7191C48BC84F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/ViewControllers/MenuVC.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "31"
+            endingLineNumber = "31"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "411459E3-0452-4F51-8F48-A82A9014AEFA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/ViewControllers/ExpenseDataEntryVC.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "-viewDidLoad"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F54AF25F-EB3A-4CD8-B80F-9C3BF010D467"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/ViewControllers/MenuVC.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
+            landmarkName = "-LocateTripContent"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "18FC0199-62DF-4C27-8126-73476593BAAA"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "trippo/ViewControllers/LocatorVC.m"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "-viewDidLoad"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

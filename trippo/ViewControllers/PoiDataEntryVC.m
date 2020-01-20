@@ -122,8 +122,8 @@ bool CenterSelectedType;
     // Map Distance Picker frame
     self.ViewDistancePicker.layer.cornerRadius=8.0f;
     self.ViewDistancePicker.layer.masksToBounds=YES;
-    self.ViewDistancePicker.layer.borderColor=[[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]CGColor];
-    self.ViewDistancePicker.layer.borderWidth= 2.5f;
+    self.ViewDistancePicker.layer.borderColor=[[UIColor colorNamed:@"PoiFGColor"]CGColor];
+    self.ViewDistancePicker.layer.borderWidth= 1.5f;
     
     
     self.TextViewNotes.layer.cornerRadius=8.0f;
@@ -221,6 +221,65 @@ bool CenterSelectedType;
     self.SegmentDetailOption.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentDetailOption setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     
+    UILongPressGestureRecognizer *LongPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressWikiInsert:)];
+    
+    // LongPressGesture.minimumPressDuration = 2.0;
+    [self.TextViewNotes addGestureRecognizer:LongPressGesture];
+    
+    /* new block 20200111 */
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiDataEntryVC"] firstObject];
+
+    if ([assist.State integerValue] == 1) {
+    
+        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 520)];
+        helperView.backgroundColor = [UIColor labelColor];
+        
+        helperView.layer.cornerRadius=8.0f;
+        helperView.layer.masksToBounds=YES;
+        
+        UILabel* title = [[UILabel alloc] init];
+        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
+        title.textColor =  [UIColor secondarySystemBackgroundColor];
+        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+        title.text = @"Point of Interest detail";
+        title.textAlignment = NSTextAlignmentCenter;
+        [helperView addSubview:title];
+        
+        UIImageView *logo = [[UIImageView alloc] init];
+        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
+        logo.image = [UIImage imageNamed:@"Trippo"];
+        [helperView addSubview:logo];
+        
+        UILabel* helpText = [[UILabel alloc] init];
+        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 420);
+        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
+        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+        helpText.numberOfLines = 0;
+        helpText.adjustsFontSizeToFitWidth = YES;
+        helpText.minimumScaleFactor = 0.5;
+
+        helpText.text = @"The Point of Interest item is key to creating Trips and the Activities inside them.  When creating new Point Of Interest item after the location has been pinned down, you may change the title and select a type on the Main page.  There are over 50 predefined types including Golf, Concert, Climbing, Airport to choose from.  Each type has a logical range of meters used elsewhere in the App for notifications etc.\n\nThere are multiple ways to update the notes:\n 1. You may manually enter text\n 2. if Wikipedia page has already been connected to the Point of Interest, long depress of the Notes area uploads an extract from the Wiki page.\n 3. select the scan option from the menu to take photo of a page in a book/leaflet and using OCR technology transform it into standard text.\n\nTo enable weather report so attached Activities can request weather from DarkSky, enable the switch.";
+        helpText.textAlignment = NSTextAlignmentLeft;
+        [helperView addSubview:helpText];
+
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:button];
+        
+        UIButton *buttonNext = [UIButton buttonWithType:UIButtonTypeSystem];
+        buttonNext.frame = CGRectMake(helperView.bounds.size.width - 40.0, helperView.bounds.size.height - 40, 35.0, 35.0); // x,y,width,height
+        [buttonNext setImage:[UIImage systemImageNamed:@"chevron.right.circle" withConfiguration:config] forState:UIControlStateNormal];
+        [buttonNext setTintColor: [UIColor secondarySystemBackgroundColor]];
+        [buttonNext addTarget:self action:@selector(helperViewNextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [helperView addSubview:buttonNext];
+        
+        [self.view addSubview:helperView];
+    }
+    
 }
 
 
@@ -247,6 +306,45 @@ bool CenterSelectedType;
     
     
     self.PoiScrollView.contentSize = CGSizeMake(self.PoiScrollView.frame.size.width, self.PoiScrollViewContent.frame.size.height);
+}
+
+/*
+ created date:      15/01/2020
+ last modified:     15/01/2020
+ remarks:
+ */
+-(void)helperViewButtonPressed :(id)sender {
+    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiDataEntryVC"] firstObject];
+    NSLog(@"%@",assist);
+    if ([assist.State integerValue] == 1) {
+        [self.realm beginWriteTransaction];
+        assist.State = [NSNumber numberWithInteger:0];
+        [self.realm commitWriteTransaction];
+    }
+    UIView *parentView = [(UIView *)sender superview];
+    [parentView setHidden:TRUE];
+    
+}
+
+/*
+ created date:      15/01/2020
+ last modified:     15/01/2020
+ remarks:
+ */
+-(void)helperViewNextButtonPressed :(id)sender {
+    
+    UIView *parentView = [(UIView *)sender superview];
+    for(UIView *v in parentView.subviews)
+    {
+         if([v isKindOfClass:[UILabel class]])
+         {
+             if (((UILabel*)v).bounds.size.height != 24) {
+                 ((UILabel*)v).text = @"Still on the Main page pressing the Wiki button while connected online will request  the wikipedia page in the language used on your device.  If it cannot be found there are some options to try to obtain a valid document.  If the name of the Point of Interest is wrong, check the Wikipedia page title in your browser, rename the Point of Interest to match and try again to request the wiki document.  Other options include changing the language to the local or English.  Instead of searching on name you may also wish to try and find the document searching by the location.  With a Wikipedia document attached you are able to add extract to the notes and also add photos embedded in the wikipedia document.\n\nPhotos can be added in a number of ways and follows same principal as Activities. Press the (+) to add new.  Use the switch to show photo sub-menu; select a key image by pressing the Star in the photo sub menu.\n\nFinal page named 'Info' has detail on the current Point of Interest including, if it is used in activities an average rating.  Finally you may Share a Point of Interest with a friend by pressing the Share button.  Only the text content and key photo is transferred.";
+             }
+         }
+    }
+    [sender setHidden:true];
 }
 
 // Call this method somewhere in your view controller setup code.
@@ -408,6 +506,7 @@ bool CenterSelectedType;
                        @"Cat-Trek",
                        @"Cat-Venue",
                        @"Cat-Village",
+                       @"Cat-Vineyard",
                        @"Cat-Windmill",
                        @"Cat-Zoo"
                        ];
@@ -468,6 +567,7 @@ bool CenterSelectedType;
                              @"Trekking",
                              @"Venue",
                              @"Village",
+                             @"Vineyard",
                              @"Windmill",
                              @"Zoo"
                              ];
@@ -528,8 +628,9 @@ bool CenterSelectedType;
                                 @10000, // @"Trekking”, = 52
                                 @250, // @"Venue", = 53
                                 @1000, // @"Village", = 54
-                                @1000, // @"Windmill", = 55
-                                @1000 // @"Zoo", = 56
+                                @500, // @"Vineyard", = 55
+                                @1000, // @"Windmill", = 56
+                                @1000 // @"Zoo", = 57
                              ];
 
     self.LabelPoi.text = [self GetPoiLabelWithType:self.PointOfInterest.categoryid];
@@ -578,20 +679,20 @@ bool CenterSelectedType;
 
 /*
  created date:      28/03/2019
- last modified:     28/03/2019
+ last modified:     12/01/2020
  remarks:
  */
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
     UILabel *pickerLabel = (UILabel *)view;
     // Reuse the label if possible, otherwise create and configure a new one
     if ((pickerLabel == nil) || ([pickerLabel class] != [UILabel class])) { //newlabel
-        CGRect frame = CGRectMake(0.0, 0.0, 270, 32.0);
+        CGRect frame = CGRectMake(0.0, 0.0, 270, 45.0);
         pickerLabel = [[UILabel alloc] initWithFrame:frame];
         pickerLabel.textAlignment =NSTextAlignmentCenter;
         pickerLabel.backgroundColor = [UIColor clearColor];
-        pickerLabel.font = [UIFont fontWithName:@"AmericanTypewriter" size:12];
+        pickerLabel.font = [UIFont fontWithName:@"System" size:10];
     }
-    pickerLabel.textColor = [UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0];
+    pickerLabel.textColor = [UIColor colorNamed:@"PoiFGColor"];
     pickerLabel.text = [self.DistancePickerItems objectAtIndex:row];
     return pickerLabel;
 }
@@ -1825,8 +1926,78 @@ remarks:
 
 
 /*
+created date:      15/01/2020
+last modified:     15/01/2020
+remarks:
+*/
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
+
+/*
+created date:      15/01/2020
+last modified:     15/01/2020
+remarks:
+*/
+
+-(void)handleLongPressWikiInsert:(UILongPressGestureRecognizer*)recognizer{
+    
+     if (![self.PointOfInterest.wikititle isEqualToString:@""] && recognizer.state == UIGestureRecognizerStateBegan) {
+    
+         self.feedback = [[UISelectionFeedbackGenerator alloc] init];
+         [self.feedback prepare];
+    
+     } else if (![self.PointOfInterest.wikititle isEqualToString:@""] && recognizer.state == UIGestureRecognizerStateEnded) {
+              // add text to notes from wiki page.
+    
+         [self.feedback selectionChanged];
+         [self.feedback prepare];
+         
+          NSArray *parms = [self.PointOfInterest.wikititle componentsSeparatedByString:@"~"];
+          
+          NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=%@",[parms objectAtIndex:0],[parms objectAtIndex:1]];
+          
+          url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
+          
+          /* get data */
+          [self fetchFromWikiApi:url withDictionary:^(NSDictionary *data) {
+              
+              NSDictionary *query = [data objectForKey:@"query"];
+              NSDictionary *pages =  [query objectForKey:@"pages"];
+              NSArray *keys = [pages allKeys];
+              NSDictionary *item =  [pages objectForKey:[keys firstObject]];
+              dispatch_async(dispatch_get_main_queue(), ^{
+                  
+                  if (!self.TextViewNotes.selectedTextRange.empty) {
+                  
+                      // use selected position to obtain location where to add the text
+                      [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[item objectForKey:@"extract"]];
+                      
+                  } else {
+                      // we append to the end of the contents.
+                      NSString *content = self.TextViewNotes.text;
+                      if ([content isEqualToString:@""]) {
+                          content = [item objectForKey:@"extract"];
+                      } else {
+                          content = [NSString stringWithFormat:@"%@\n\n%@", content, [item objectForKey:@"extract"]];
+                      }
+                      self.TextViewNotes.text = content;
+                  }
+              });
+          }];
+          
+      }
+    
+}
+
+
+
+
+/*
  created date:      26/09/2018
- last modified:     28/03/2019
+ last modified:     15/01/2020
  remarks:
  */
 - (IBAction)ButtonWikiPressed:(id)sender {
@@ -1851,50 +2022,8 @@ remarks:
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         controller.gsradius = [f numberFromString:[self.DistancePickerItems objectAtIndex: [self.PickerDistance selectedRowInComponent:0]]];
-        
-        
-        //controller.gsradius = [self.TypeDistanceItems objectAtIndex:[self.PointOfInterest.categoryid longValue]];
-        
+
         [self presentViewController:controller animated:YES completion:nil];
-        
-    } else {
-        if (![self.PointOfInterest.wikititle isEqualToString:@""]) {
-            // add text to notes from wiki page.
-  
-            NSArray *parms = [self.PointOfInterest.wikititle componentsSeparatedByString:@"~"];
-            
-            NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=%@",[parms objectAtIndex:0],[parms objectAtIndex:1]];
-            
-            url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-            
-            /* get data */
-            [self fetchFromWikiApi:url withDictionary:^(NSDictionary *data) {
-                
-                NSDictionary *query = [data objectForKey:@"query"];
-                NSDictionary *pages =  [query objectForKey:@"pages"];
-                NSArray *keys = [pages allKeys];
-                NSDictionary *item =  [pages objectForKey:[keys firstObject]];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    
-                    if (!self.TextViewNotes.selectedTextRange.empty) {
-                    
-                        // use selected position to obtain location where to add the text
-                        [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[item objectForKey:@"extract"]];
-                        
-                    } else {
-                        // we append to the end of the contents.
-                        NSString *content = self.TextViewNotes.text;
-                        if ([content isEqualToString:@""]) {
-                            content = [item objectForKey:@"extract"];
-                        } else {
-                            content = [NSString stringWithFormat:@"%@\n\n%@", content, [item objectForKey:@"extract"]];
-                        }
-                        self.TextViewNotes.text = content;
-                    }
-                });
-            }];
-            
-        }
         
     }
 }
@@ -1923,11 +2052,6 @@ remarks:
                                   }];
     [task resume];
 }
-
-
-
-
-
 
 
 

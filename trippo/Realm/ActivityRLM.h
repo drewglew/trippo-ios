@@ -42,6 +42,8 @@
 @property  NSString *startdttimezonename;
 @property  NSString *enddttimezonename;
 @property  NSString *defaulttimezonename;
+@property NSNumber<RLMInt> *hasestpayment;
+@property NSNumber<RLMInt> *hasactpayment;
 
 @property RLMArray<ImageCollectionRLM *><ImageCollectionRLM> *images;
 @property RLMArray<AttachmentRLM *><AttachmentRLM> *attachments;
