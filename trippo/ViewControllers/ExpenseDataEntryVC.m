@@ -36,11 +36,12 @@
     [dateFormatter setDateFormat:@"yyyy-MM-dd"];
     
     self.DuplicateCurrenciesExchangeRate = [[ExchangeRateRLM alloc] init];
-    self.DuplicateCurrenciesExchangeRate.compondkey = [NSString stringWithFormat:@"00-00-00~%@%@", self.HomeCurrencyCode, self.HomeCurrencyCode];
+    self.DuplicateCurrenciesExchangeRate.compondkey = [NSString stringWithFormat:@"%@~%@%@", [[NSUUID UUID] UUIDString], self.HomeCurrencyCode, self.HomeCurrencyCode];
     self.DuplicateCurrenciesExchangeRate.currencycode = self.HomeCurrencyCode;
     self.DuplicateCurrenciesExchangeRate.homecurrencycode = self.HomeCurrencyCode;
     self.DuplicateCurrenciesExchangeRate.rate = [NSNumber numberWithInt:10000];
     
+
     if (self.newitem) {
         NSLog(@"empty expense");
         self.ExpenseItem = [[PaymentRLM alloc] init];
@@ -55,7 +56,7 @@
             }
             self.ExpenseItem.amt_est = 0;
             self.ExpenseItem.amt_act = 0;
-            
+
         }
         
         
@@ -645,6 +646,7 @@
     
     if (self.SegmentExpenseType.selectedSegmentIndex == 0 || self.SegmentExpenseType.selectedSegmentIndex == 2) {
         if ([self.SelectedCurrencyCode isEqualToString:self.HomeCurrencyCode]) {
+            
             self.ExpenseItem.rate_est = self.DuplicateCurrenciesExchangeRate;
         } else {
             self.ExpenseItem.rate_est = self.ActiveExchangeRate;
@@ -653,6 +655,7 @@
     
     if (self.SegmentExpenseType.selectedSegmentIndex == 1 || self.SegmentExpenseType.selectedSegmentIndex == 2) {
         if ([self.SelectedCurrencyCode isEqualToString:self.HomeCurrencyCode]) {
+            
             self.ExpenseItem.rate_act = self.DuplicateCurrenciesExchangeRate;
         } else {
             self.ExpenseItem.rate_act = self.ActiveExchangeRate;

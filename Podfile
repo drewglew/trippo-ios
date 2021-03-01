@@ -8,6 +8,5 @@ target 'trippo' do
 pod 'Realm'
 pod 'TesseractOCRiOS'
 pod 'TOCropViewController'
-pod 'TwitterKit', '5'
 
 end

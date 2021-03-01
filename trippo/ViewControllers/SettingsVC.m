@@ -7,7 +7,7 @@
 //
 
 #import "SettingsVC.h"
-#import <TwitterKit/TWTRLogInButton.h>
+
 @interface SettingsVC ()
 
 @end
@@ -16,17 +16,14 @@
 
 /*
  created date:      23/08/2018
- last modified:     14/01/2020
+ last modified:     21/01/2020
  remarks:
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
     
     self.TextFieldNickName.delegate = self;
 
-    
     if (self.Settings!=nil) {
         self.TextFieldNickName.text = self.Settings.username;
     }
@@ -34,24 +31,9 @@
     self.ViewUserName.layer.cornerRadius = 5;
     self.ViewUserName.layer.masksToBounds = true;
 
-    TWTRLogInButton *logInButton = [TWTRLogInButton buttonWithLogInCompletion:^(TWTRSession *session, NSError *error) {
-        if (session) {
-
-            NSLog(@"Logged in as %@",[session userName]);
-        } else {
-            NSLog(@"error: %@", [error localizedDescription]);
-        }
-    }];
-    
-    [self.ViewTwitterLogIn addSubview:logInButton];
     self.TableViewOpenNotifications.delegate = self;
     self.TableViewOpenNotifications.rowHeight = 150;
-    
-    
     [self GetOpenNotifications];
-    
-
-    
 }
 
 /*
@@ -200,7 +182,7 @@ remarks:
             self.Settings.ActivityCellColumns = [NSNumber numberWithInt:3];
             self.Settings.NodeScale = [NSNumber numberWithInt:60];
             [self.realm beginWriteTransaction];
-            [self ResetAssistantState];
+            [self ResetAssistantState :0];
             [self.realm addObject:self.Settings];
             [self.realm commitWriteTransaction];
             
@@ -221,10 +203,10 @@ remarks:
 
 /*
 created date:      12/01/2020
-last modified:     19/01/2020
+last modified:     29/02/2020
 remarks:           Clears existing Realm array and reloads with all set to state 1 (view)
 */
--(void)ResetAssistantState {
+-(void)ResetAssistantState :(int)Enabled {
  
     [self.realm deleteObjects: self.Settings.AssistantCollection];
     
@@ -249,7 +231,7 @@ remarks:           Clears existing Realm array and reloads with all set to state
     for (NSString *name in ViewControllerNames) {
         AssistantRLM *item = [[AssistantRLM alloc] init];
         item.ViewControllerName = name;
-        item.State = [NSNumber numberWithInt:1];
+        item.State = [NSNumber numberWithInt:Enabled];
         [self.Settings.AssistantCollection addObject:item];
     }
     
@@ -268,22 +250,7 @@ remarks:           Clears existing Realm array and reloads with all set to state
     [AppDelegateDef.UserNotificationCenter removeAllPendingNotificationRequests];
     
     [self GetOpenNotifications];
-    
-    /*
-    [[UNUserNotificationCenter currentNotificationCenter] getPendingNotificationRequestsWithCompletionHandler:^(NSArray<UNNotificationRequest *> *requests){
-        NSLog(@"requests: %@", requests);
-        for (UNNotificationRequest *object in requests) {
-            NSString *identifier = object.identifier;
-            NSArray *activityNotification = [NSArray arrayWithObjects:identifier, nil];
-                                             
-            [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:activityNotification];
-        }
-        NSLog(@"Completed! removed ");
-        
-        // TODO add message box here.
-        
-    }];
-    */
+   
 }
 
 /*
@@ -293,7 +260,7 @@ remarks:
 */
 - (IBAction)ResetAssitantState:(id)sender {
     [self.realm beginWriteTransaction];
-    [self ResetAssistantState];
+    [self ResetAssistantState :1];
     [self.realm commitWriteTransaction];
 }
 

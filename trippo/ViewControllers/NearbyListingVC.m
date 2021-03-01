@@ -24,9 +24,9 @@ bool runOnce = true;
         self.HeaderHeightConstraint.constant = 70.0f;
     }
     lastNearbyListingFooterFilterHeightConstant = self.FooterWithSegmentConstraint.constant;
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 50)];
+    //UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 50)];
 
-    self.TableViewNearbyPoi.tableHeaderView = headerView;
+    //self.TableViewNearbyPoi.tableHeaderView = headerView;
     
     if ([self checkInternet]) {
         if (self.PointOfInterest==nil) {
@@ -195,7 +195,7 @@ bool runOnce = true;
                     }
                     poi.Coordinates = CLLocationCoordinate2DMake([[item valueForKey:@"lat"] doubleValue], [[item valueForKey:@"lon"] doubleValue]);
                     poi.PageId = [item valueForKey:@"pageid"];
-                    
+//boo
                     [self.nearbyitems addObject:poi];
                 }
             }
@@ -389,7 +389,7 @@ bool runOnce = true;
     cell.LabelType.text = item.type;
     
     if (item.Image == nil) {
-        [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"command"]];
+        [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"target"]];
         [cell.ImageViewThumbPhoto setTintColor:[UIColor systemBackgroundColor]];
     } else {
         [cell.ImageViewThumbPhoto setImage:[ToolBoxNSO imageWithImage:item.Image scaledToSize:cell.ImageViewThumbPhoto.frame.size]];
@@ -533,7 +533,7 @@ bool runOnce = true;
                                         controller.haswikimainimage = false;
                                     }
                                     
-                                    [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                    [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                     [self presentViewController:controller animated:YES completion:nil];
                                 });
                             }];
@@ -557,7 +557,7 @@ bool runOnce = true;
                             controller.fromnearby = true;
                             controller.haswikimainimage = false;
                             
-                            [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                             [self presentViewController:controller animated:YES completion:nil];
                         }
                     });
@@ -669,17 +669,6 @@ bool runOnce = true;
 }
 
 
-/*
- created date:      16/07/2018
- last modified:     12/08/2018
- remarks:
- */
-- (IBAction)BackPressed:(id)sender {
-    if (self.UpdatedPoi) {
-        [self.delegate didUpdatePoi :@"created" :self.PointOfInterest];
-    }
-    [self dismissViewControllerAnimated:YES completion:Nil];
-}
 
 /*
  created date:      05/02/2019
@@ -726,8 +715,8 @@ bool runOnce = true;
     if (self.FooterWithSegmentConstraint.constant==98) {
         [UIView animateWithDuration:0.25f animations:^{
             self.FooterWithSegmentConstraint.constant=350;
-            [self.ButtonPaneResize setImage:[UIImage systemImageNamed:@"arrow.down.square"] forState:UIControlStateNormal];
-            [self.ButtonPaneResize setTitle:@"Minimize" forState:UIControlStateNormal];
+            [self.ButtonPaneResize setImage:[UIImage systemImageNamed:@"arrow.down.forward.and.arrow.up.backward"] forState:UIControlStateNormal];
+            [self.ButtonPaneResize setTitle:@"Hide" forState:UIControlStateNormal];
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
             UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, self.FooterWithSegmentConstraint.constant)];
@@ -738,7 +727,7 @@ bool runOnce = true;
     } else {
         [UIView animateWithDuration:0.25f animations:^{
             self.FooterWithSegmentConstraint.constant=98;
-            [self.ButtonPaneResize setImage:[UIImage systemImageNamed:@"arrow.up.square"] forState:UIControlStateNormal];
+            [self.ButtonPaneResize setImage:[UIImage systemImageNamed:@"arrow.up.backward.and.arrow.down.forward"] forState:UIControlStateNormal];
             [self.ButtonPaneResize setTitle:@"Expand" forState:UIControlStateNormal];
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {

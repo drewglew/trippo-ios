@@ -10,8 +10,6 @@
 #import <Realm/Realm.h>
 #import "MenuVC.h"
 #import "LoginVC.h"
-#import <TwitterKit/TWTRKit.h>
-
 
 @interface AppDelegate ()
 
@@ -102,7 +100,7 @@
      Migration block - to use if we change the model..
     */
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-    config.schemaVersion = 13;
+    config.schemaVersion = 16;
     config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) { };
     [RLMRealmConfiguration setDefaultConfiguration:config];
     
@@ -116,7 +114,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     MenuVC *menu = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
     
-    self.window.backgroundColor = [UIColor whiteColor];
+    //self.window.backgroundColor = [UIColor whiteColor];
     
     self.PoiBackgroundImageDictionary = [[NSMutableDictionary alloc] init];
     
@@ -127,15 +125,6 @@
     
     self.window.hidden = false;
     [self.window makeKeyAndVisible];
-    
-
-    NSString *pathForTwitterProperties = [[NSBundle mainBundle] pathForResource:@"Twitter" ofType:@"plist"];
-    NSDictionary *TwitterProperties = [[NSDictionary alloc] initWithContentsOfFile:pathForTwitterProperties];
-    twitterConsumerKey = [TwitterProperties valueForKey:@"TwitterConsumerKey"];
-    twitterSecretKey = [TwitterProperties valueForKey:@"TwitterSecretKey"];
-    
-    [[Twitter sharedInstance] startWithConsumerKey:twitterConsumerKey consumerSecret: twitterSecretKey];
-    
     
     return YES;
 }
@@ -205,9 +194,7 @@
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options {
     
-    if ([url.absoluteString containsString:@"twitter"]){
-        return [[Twitter sharedInstance] application:app openURL:url options:options];
-    } else if (url) {
+    if (url) {
         NSURLSession *session = [NSURLSession sharedSession];
         
         [[session dataTaskWithURL:url

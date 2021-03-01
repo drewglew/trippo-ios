@@ -9,7 +9,9 @@
 #import "AttachmentRLM.h"
 
 @implementation AttachmentRLM
+/*
 + (NSArray *)ignoredProperties {
     return @[@"isselected"];
 }
+*/
 @end

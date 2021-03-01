@@ -53,7 +53,7 @@ CGFloat ImagePickerFooterFilterHeightConstant;
 
 /*
  created date:      10/06/2018
- last modified:     01/09/2018
+ last modified:     23/02/2021
  remarks:  This runs inside its own thread - one of the most complex methods in the application.
  */
 -(void) LoadImageData {
@@ -131,10 +131,10 @@ CGFloat ImagePickerFooterFilterHeightConstant;
     } else {
             /*
              Obtain Wiki data based on name.
-             https://en.wikipedia.org/api/rest_v1/page/media/Göteborg
+             https://en.wikipedia.org/api/rest_v1/page/media-list/Göteborg
              */
             NSArray *parms = [self.PointOfInterest.wikititle componentsSeparatedByString:@"~"];
-            NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/api/rest_v1/page/media/%@",[parms objectAtIndex:0] , [parms objectAtIndex:1]];
+            NSString *url = [NSString stringWithFormat:@"https://%@.wikipedia.org/api/rest_v1/page/media-list/%@",[parms objectAtIndex:0] , [parms objectAtIndex:1]];
             
             url = [url stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
             [self fetchFromWikiApiMediaByTitle:url withDictionary:^(NSDictionary *data) {
@@ -152,32 +152,34 @@ CGFloat ImagePickerFooterFilterHeightConstant;
                 for (NSDictionary *item in items) {
                     int MaxNumberOfPhotos = 200;
 
-                    NSDictionary *DescriptionItem = [item objectForKey:@"description"];
+                    NSDictionary *DescriptionItem = [item objectForKey:@"caption"];
                     
                     /* no more than 200 photos! */
                     if (self.imageitems.count < MaxNumberOfPhotos) {
-                    
-                        NSDictionary *OriginalItem = [item objectForKey:@"original"];
-                        NSDictionary *ThumbnailItem = [item objectForKey:@"thumbnail"];
+                        NSArray *SourceSet = [item objectForKey:@"srcset"];
                         
-                        [self downloadImageFrom:[NSURL URLWithString:[ThumbnailItem valueForKey:@"source"]] completion:^(UIImage *image) {
+                        NSDictionary *SourceItem = [SourceSet objectAtIndex:0];
+                        
+                        NSString *AssetUrl = [NSString stringWithFormat:@"https:%@",[SourceItem valueForKey:@"src"]];
+                        
+                        [self downloadImageFrom:[NSURL URLWithString: AssetUrl] completion:^(UIImage *image) {
 
                             AssetCounter ++;
 
                             if (image!=nil) {
                                 ImageNSO *imageitem = [[ImageNSO alloc] init];
-                                imageitem.originalsource = [OriginalItem valueForKey:@"source"];
-                                imageitem.thumbnailsource = [ThumbnailItem valueForKey:@"source"];
-                                                                    if (image.size.height > image.size.width) {
-                                    CGRect aRect = CGRectMake(0,(image.size.height / 2) - (image.size.width / 2), image.size.width, image.size.width);
-                                    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], aRect);
-                                    image = [UIImage imageWithCGImage:imageRef];
-                                    CGImageRelease(imageRef);
+                                imageitem.originalsource = AssetUrl;
+                                
+                                if (image.size.height > image.size.width) {
+                                        CGRect aRect = CGRectMake(0,(image.size.height / 2) - (image.size.width / 2), image.size.width, image.size.width);
+                                        CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], aRect);
+                                        image = [UIImage imageWithCGImage:imageRef];
+                                        CGImageRelease(imageRef);
                                 } else if (image.size.height < image.size.width) {
-                                    CGRect aRect = CGRectMake((image.size.width / 2) - (image.size.height / 2), 0, image.size.height, image.size.height);
-                                    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], aRect);
-                                    image = [UIImage imageWithCGImage:imageRef];
-                                    CGImageRelease(imageRef);
+                                        CGRect aRect = CGRectMake((image.size.width / 2) - (image.size.height / 2), 0, image.size.height, image.size.height);
+                                        CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], aRect);
+                                        image = [UIImage imageWithCGImage:imageRef];
+                                        CGImageRelease(imageRef);
                                 }
                                 imageitem.Image = [ToolBoxNSO imageWithImage:image scaledToSize:self.ImageSize];
                                 if (DescriptionItem.count>0) {
@@ -187,7 +189,7 @@ CGFloat ImagePickerFooterFilterHeightConstant;
                                 [self.imageitems addObject:imageitem];
                                 // keep the collection view updated with the new image
                                 [self.ImageCollectionView reloadData];
-                                
+                                    
                             }
                             
                             dispatch_async(dispatch_get_main_queue(), ^(){
@@ -201,11 +203,10 @@ CGFloat ImagePickerFooterFilterHeightConstant;
 
                         }];
                     }
-                    
                     if([[NSThread currentThread] isCancelled])
                         break;
-                }
-            }];
+            }
+        }];
     }
 }
 

@@ -45,12 +45,12 @@ int DocumentListingViewPresentedHeight = 250;
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
     
     if (self.Activity.state == [NSNumber  numberWithInteger:0]) {
-        self.ImagePicture.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
-        self.ImageViewKeyActivity.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImagePicture.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
+        self.ImageViewKeyActivity.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
         self.MainImageTrailingConstraint.constant = [UIScreen mainScreen].bounds.size.width;;
     } else {
-        self.ImagePicture.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
-        self.ImageViewKeyActivity.image =  [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImagePicture.image =  [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
+        self.ImageViewKeyActivity.image =  [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
     }
     [self.ImagePicture setTintColor:[UIColor colorNamed:@"ActivityFGColor"]];
     [self.ImagePicture setBackgroundColor:[UIColor colorNamed:@"ActivityBGColor"]];
@@ -237,9 +237,7 @@ int DocumentListingViewPresentedHeight = 250;
     self.startDt = self.Activity.startdt;
     self.endDt = self.Activity.enddt;
     
-    NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-    NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
-    
+
     
     [self addDoneToolBarToKeyboard:self.TextViewNotes];
     [self addDoneToolBarForTextFieldToKeyboard:self.TextFieldName];
@@ -263,15 +261,15 @@ int DocumentListingViewPresentedHeight = 250;
         self.ViewStarRating.accurateHalfStars = YES;
 
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
-        self.ImageViewSettingsStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
+        self.ImageViewSettingsStateIndicator.image = [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
           
     } else {
         BlurredMainViewPresentedHeight = 150;
         
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
-        self.ImageViewSettingsStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
+        self.ImageViewSettingsStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
     }
 
     self.CollectionViewActivityImages.dataSource = self;
@@ -281,12 +279,26 @@ int DocumentListingViewPresentedHeight = 250;
     self.ScrollViewImage.delegate = self;
 
     
-    /* here to do work! */
+    /* new datepicker */
     
-    /* initialize the datePicker for start dt */
-    self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
-    [self.datePicker setDatePickerMode:UIDatePickerModeDateAndTime];
-    [self.datePicker addTarget:self action:@selector(onDatePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.DatePickerStartDt addTarget:self action:@selector(onDatePickerStartValueChanged:) forControlEvents:UIControlEventEditingDidEnd];
+    
+    [self.DatePickerStartDt addTarget:self action:@selector(onDatePickerStartSelected:) forControlEvents:UIControlEventEditingDidBegin];
+    
+    self.DatePickerStartDt.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+    self.DatePickerStartDt.date = self.startDt;
+    
+    [self.DatePickerEndDt addTarget:self action:@selector(onDatePickerEndValueChanged:) forControlEvents:UIControlEventEditingDidEnd];
+    
+    [self.DatePickerEndDt addTarget:self action:@selector(onDatePickerEndSelected:) forControlEvents:UIControlEventEditingDidBegin];
+    
+    self.DatePickerEndDt.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
+    self.DatePickerEndDt.date = self.endDt;
+    
+    self.DatePickerStartDt.maximumDate = self.DatePickerEndDt.date;
+    self.DatePickerEndDt.minimumDate = self.DatePickerStartDt.date;
+    
+    
     
     /* add toolbar control for 'Done' option */
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
@@ -295,31 +307,15 @@ int DocumentListingViewPresentedHeight = 250;
     UIBarButtonItem *space=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [toolBar setItems:[NSArray arrayWithObjects:space,doneBtn, nil]];
     
-    /* extend features on the input view of the text field for start dt */
-    self.TextFieldStartDt.inputView = self.datePicker;
-    self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :timeZoneStartDp :@" "]];
-    [self.TextFieldStartDt setInputAccessoryView:toolBar];
     
     /* extend features on the input view of the text field for end dt */
-    self.TextFieldEndDt.inputView = self.datePicker;
     
     NSDateFormatter *dateformatter = [[NSDateFormatter alloc] init];
     [dateformatter setDateFormat:@"EEE, dd MMM yyyy"];
     NSDateFormatter *timeformatter = [[NSDateFormatter alloc] init];
     [timeformatter setDateFormat:@"HH:mm"];
     
-    // firstly test the start and end dates.  Remember the start and end are the same if activity is checked in.
-    NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute fromDate:self.startDt toDate:self.endDt options:0];
-    
-    if ((components.day!=0 || components.hour!=0 || components.minute!=0) || self.Activity.state==[NSNumber numberWithInteger:0]) {
-        self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :timeZoneEndDp :@" "]];
-    } else {
-        // now using same exponent, we can write out the time that has passed since user checked into activity.
-        NSString *PrettyDateDifference = [ToolBoxNSO PrettyDateDifference :self.startDt :[NSDate date] :@" ago"];
-        if (![PrettyDateDifference isEqualToString:@""]) {
-            self.TextFieldEndDt.text = PrettyDateDifference;
-        }
-    }
+
 
     if ([self.ButtonArriving isEnabled]) {
         if (self.toggleNotifyArrivingFlag == 1) {
@@ -339,7 +335,6 @@ int DocumentListingViewPresentedHeight = 250;
         [self.ButtonUpdateActualWeather setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
     }
     
-    [self.TextFieldEndDt setInputAccessoryView:toolBar];
     
     self.StartDtTimeZoneNameTextField.inputView = self.StartDtTimeZonePicker;
     [self.StartDtTimeZoneNameTextField setInputAccessoryView:toolBar];
@@ -483,7 +478,7 @@ int DocumentListingViewPresentedHeight = 250;
 
 /*
 created date:       15/08/2019
-last modified:      11/01/2020
+last modified:      23/02/2021
 remarks:
 */
 
@@ -503,8 +498,14 @@ remarks:
             self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
             self.ViewCheckInOut.hidden = false;
             self.ViewCheckInOut.backgroundColor = [UIColor systemRedColor];
-            self.LabelCheckInOut.text = @"Check\nOut";
-            [self.LabelCheckInOut setTextColor:[UIColor whiteColor]];
+            
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightRegular ];
+            
+            [self.ButtonCheckInOut setImage:[UIImage systemImageNamed:@"arrow.left.to.line" withConfiguration:config] forState:UIControlStateNormal];
+            
+            
+            [self.ButtonCheckInOut setTitle:@"check out" forState:UIControlStateNormal];
+            
 
         }
        
@@ -515,7 +516,15 @@ remarks:
         self.ViewCheckInOut.clipsToBounds = YES;
         self.ViewCheckInOut.transform = CGAffineTransformMakeRotation(-.34906585);
         self.ViewCheckInOut.hidden = false;
-        self.LabelCheckInOut.text = @"Check\nIn";
+        
+        self.ViewCheckInOut.backgroundColor = [UIColor systemGreenColor];
+        
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightRegular];
+       
+        
+        [self.ButtonCheckInOut setImage:[UIImage systemImageNamed:@"arrow.right.to.line" withConfiguration:config] forState:UIControlStateNormal];
+        
+         [self.ButtonCheckInOut setTitle:@"check in" forState:UIControlStateNormal];
      
     } else if (self.newitem) {
         // do nothing
@@ -574,6 +583,8 @@ remarks:
     self.ActivityScrollView.contentInset = contentInsets;
     self.ActivityScrollView.scrollIndicatorInsets = contentInsets;
 }
+
+
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -699,8 +710,8 @@ remarks:            Add wiki document into collection if possible.
  */
 - (void)HidePickers
 {
-    [self.TextFieldStartDt resignFirstResponder];
-    [self.TextFieldEndDt resignFirstResponder];
+    [self.DatePickerStartDt resignFirstResponder];
+    [self.DatePickerEndDt resignFirstResponder];
     [self.StartDtTimeZoneNameTextField resignFirstResponder];
     [self.EndDtTimeZoneNameTextField resignFirstResponder];
 }
@@ -1508,6 +1519,7 @@ remarks:
         self.ButtonPayment.hidden = false;
         self.ButtonDirections.hidden = false;
         self.SwitchViewPhotoOptions.hidden = true;
+        self.ButtonExpandCollapseList.hidden = true;
         
         
     } else if ([self.SegmentPresenter selectedSegmentIndex] == 1) {
@@ -1521,9 +1533,9 @@ remarks:
         self.ButtonPayment.hidden = true;
         self.ButtonDirections.hidden = true;
         self.SwitchViewPhotoOptions.hidden = false;
+        self.ButtonExpandCollapseList.hidden = true;
         
     } else if ([self.SegmentPresenter selectedSegmentIndex] == 2) {
-        
         
         // only do this once.
         if (self.DocumentCollection.count > 0 && [self.WebViewPreview isHidden]) {
@@ -1550,6 +1562,7 @@ remarks:
         self.ButtonPayment.hidden = true;
         self.ButtonDirections.hidden = true;
         self.SwitchViewPhotoOptions.hidden = true;
+        self.ButtonExpandCollapseList.hidden = false;
         
         
     } else if ([self.SegmentPresenter selectedSegmentIndex] == 3) {
@@ -1563,6 +1576,7 @@ remarks:
         self.ButtonPayment.hidden = true;
         self.ButtonDirections.hidden = true;
         self.SwitchViewPhotoOptions.hidden = true;
+        self.ButtonExpandCollapseList.hidden = true;
     }
     
 }
@@ -1663,7 +1677,7 @@ remarks:
                                                                          controller.wikiimages = false;
                                                                          
                                                                          controller.ImageSize = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
-                                                                         [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                                                         [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                                                          [self presentViewController:controller animated:YES completion:nil];
                                                                          
                                                                      }];
@@ -1689,7 +1703,7 @@ remarks:
                                                                   controller.wikiimages = true;
                                                                   
                                                                   controller.ImageSize = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
-                                                                  [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                                                  [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                                                   [self presentViewController:controller animated:YES completion:nil];
                                                               }];
     
@@ -2358,9 +2372,9 @@ remarks:
                                  
                                  NSString* directionsURL;
                                  if (from == nil) {
-                                     directionsURL = [NSString stringWithFormat:@"http://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+                                     directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
                                  } else {
-                                     directionsURL = [NSString stringWithFormat:@"http://maps.apple.com/?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+                                     directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
                                  }
                                  
                                  if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
@@ -2381,9 +2395,9 @@ remarks:
                                       NSString *directionsURL;
                                       
                                       if (from == nil) {
-                                          directionsURL = [NSString stringWithFormat:@"http://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+                                          directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
                                       } else {
-                                          directionsURL = [NSString stringWithFormat:@"http://maps.google.com/maps?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+                                          directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
                                       }
                                       
                                       if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
@@ -2447,8 +2461,8 @@ remarks:
 }
 
 /*
- created date:      07/04/2019
- last modified:     15/08/2019
+ created date:      27/02/2021
+ last modified:     27/02/2021
  remarks:
  */
 - (void)pickerView:(UIPickerView *)thePickerView
@@ -2458,71 +2472,107 @@ remarks:
     
     if (thePickerView == self.StartDtTimeZonePicker) {
         self.StartDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
-        self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
+        self.DatePickerStartDt.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
         
+        
+              
     } else if (thePickerView == self.EndDtTimeZonePicker) {
         self.EndDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
-        self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
+        self.DatePickerEndDt.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
         
+            
     } 
     
 }
 
 
 /*
- created date:      16/02/2019
- last modified:     15/08/2019
+ created date:      27/02/2021
+ last modified:     27/02/2021
  remarks:
  */
-- (void)onDatePickerValueChanged:(UIDatePicker *)datePicker
+- (void)onDatePickerStartValueChanged:(UIDatePicker *)datePicker
 {
-    NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+   // NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
     NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
     
-    if (self.ActiveTextField == self.TextFieldStartDt) {
+    self.startDt = datePicker.date;
     
-        self.startDt = datePicker.date;
-        self.ActiveTextField.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
+    self.DatePickerEndDt.minimumDate = datePicker.date;
     
-    
-        NSComparisonResult result = [datePicker.date compare:self.endDt];
-    
-        switch (result)
-        {
-            case NSOrderedDescending:
-                NSLog(@"%@ is in future from %@", datePicker.date, self.endDt);
-                self.endDt = datePicker.date;
-                self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-                break;
-            case NSOrderedAscending: NSLog(@"%@ is in past from %@", datePicker.date, self.endDt); break;
-            case NSOrderedSame: NSLog(@"%@ is the same as %@", datePicker.date, self.endDt); break;
-            default: NSLog(@"erorr dates %@, %@", datePicker.date, self.endDt); break;
-        }
-       
-    } else if (self.ActiveTextField == self.TextFieldEndDt) {
-        
-        self.endDt = datePicker.date;
-        self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-        
-        NSComparisonResult result = [datePicker.date compare: self.startDt];
-        
-        switch (result)
-        {
-            case NSOrderedAscending:
-                NSLog(@"%@ is in future from %@", self.datePicker.date, self.startDt);
-                self.startDt = datePicker.date;
-                self.TextFieldStartDt.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
-                break;
-            case NSOrderedDescending:
-                NSLog(@"%@ is in past from %@", self.startDt, datePicker.date);
-                
-                break;
-            case NSOrderedSame: NSLog(@"%@ is the same as %@", self.startDt, datePicker.date); break;
-            default: NSLog(@"erorr dates %@, %@", self.startDt, datePicker.date); break;
-        }
-        
+    NSComparisonResult result = [datePicker.date compare:self.endDt];
+
+    switch (result)
+    {
+        case NSOrderedDescending:
+            NSLog(@"%@ is in future from %@", datePicker.date, self.endDt);
+            self.endDt = datePicker.date;
+            self.DatePickerEndDt.date = self.endDt;
+            self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
+            break;
+        case NSOrderedAscending: NSLog(@"%@ is in past from %@", datePicker.date, self.endDt); break;
+        case NSOrderedSame: NSLog(@"%@ is the same as %@", datePicker.date, self.endDt); break;
+        default: NSLog(@"erorr dates %@, %@", datePicker.date, self.endDt); break;
     }
+}
+
+
+/*
+ created date:      28/02/2021
+ last modified:     28/02/2021
+ remarks:
+ */
+- (void)onDatePickerStartSelected:(UIDatePicker *)datePicker
+{
+    //datePicker.maximumDate = self.DatePickerEndDt.date;
+}
+
+
+/*
+ created date:      27/02/2021
+ last modified:     27/02/2021
+ remarks:
+ */
+- (void)onDatePickerEndValueChanged:(UIDatePicker *)datePicker
+{
+    NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+
+    self.endDt = datePicker.date;
     
+    self.DatePickerStartDt.maximumDate = datePicker.date;
+    
+    NSComparisonResult result = [datePicker.date compare: self.startDt];
+    
+    switch (result)
+    {
+        case NSOrderedAscending:
+            NSLog(@"%@ is in future from %@", self.datePicker.date, self.startDt);
+            self.startDt = datePicker.date;
+            self.DatePickerStartDt.date = self.startDt;
+            self.TextFieldStartDt.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
+            break;
+        case NSOrderedDescending:
+            NSLog(@"%@ is in past from %@", self.startDt, datePicker.date);
+            break;
+        case NSOrderedSame:
+            NSLog(@"%@ is the same as %@", self.startDt, datePicker.date);
+            break;
+        default:
+            NSLog(@"erorr dates %@, %@", self.startDt, datePicker.date);
+            break;
+    }
+}
+
+/*
+ created date:      28/02/2021
+ last modified:     28/02/2021
+ remarks:
+ */
+- (void)onDatePickerEndSelected:(UIDatePicker *)datePicker
+{
+    
+    //datePicker.minimumDate = self.DatePickerStartDt.date;
+
 }
 
 
@@ -2536,11 +2586,7 @@ remarks:
     [[self.view.subviews objectAtIndex:(self.view.subviews.count - 1)]removeFromSuperview];
 }
 
--(void)doneButtonClickedDismissDatePicker
-{
-    [self.TextFieldStartDt resignFirstResponder];
-    [self.TextFieldEndDt resignFirstResponder];
-}
+
 
 /*
  created date:      17/02/2019
@@ -2602,14 +2648,16 @@ remarks:
             self.ViewDocumentListHeightConstraint.constant=0;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"doc.circle"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"arrow.up.backward.and.arrow.down.forward"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setTitle:@"Expand" forState:UIControlStateNormal];
         }];
     } else {
         [UIView animateWithDuration:0.5 animations:^{
             self.ViewDocumentListHeightConstraint.constant=DocumentListingViewPresentedHeight;
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
-            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"minus.circle"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setImage:[UIImage systemImageNamed:@"arrow.down.forward.and.arrow.up.backward"] forState:UIControlStateNormal];
+            [self.ButtonExpandCollapseList setTitle:@"Hide" forState:UIControlStateNormal];
         }];
     }
 }
@@ -2752,7 +2800,7 @@ remarks:
     int ModifiedToggleFlag=0;
     
     if (ToggleFlag == 0) {
-        [button setBackgroundColor:[UIColor colorWithRed:0.0f/255.0f green:102.0f/255.0f blue:51.0f/255.0f alpha:1.0]];
+        [button setBackgroundColor:[UIColor colorNamed:@"TrippoColor"]];
         ModifiedToggleFlag = 1;
     } else if(ToggleFlag == 1){
         // set whatever color you want after tap button

@@ -31,7 +31,6 @@
 @property (assign) bool UpdatedPoi;
 @property (strong, nonatomic)  CLLocationManager *locationManager;
 @property RLMRealm *realm;
-@property (weak, nonatomic) IBOutlet UIButton *ButtonBack;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentFilterType;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentImageEnabler;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *LoadingActivityIndictor;

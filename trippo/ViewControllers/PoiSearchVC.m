@@ -707,7 +707,7 @@ remarks:
         controller.realm = self.realm;
         controller.PointOfInterest = Poi;
         controller.newitem = false;
-        [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+        [controller setModalPresentationStyle:UIModalPresentationPageSheet];
         [self presentViewController:controller animated:YES completion:nil];
        
     } else {
@@ -724,7 +724,7 @@ remarks:
         controller.deleteitem = false;
         controller.transformed = self.transformed;
         controller.newitem = true;
-        [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+        [controller setModalPresentationStyle:UIModalPresentationPageSheet];
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
@@ -753,6 +753,7 @@ remarks:
     UIContextualAction *deleteAction = [[UIContextualAction alloc] init];
     
     deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        
         [self tableView:tableView deletePoi:indexPath];
         self.TableViewSearchPoiItems.editing = NO;
     }];
@@ -1047,8 +1048,8 @@ remarks:
             self.FilterOptionHeightConstraint.constant=350;
             self.ButtonResetFilter.hidden = false;
 
-            [self.ButtonFilter setImage:[UIImage systemImageNamed:@"arrow.down.square"] forState:UIControlStateNormal];
-            [self.ButtonFilter setTitle:@"" forState:UIControlStateNormal];
+            [self.ButtonFilter setImage:[UIImage systemImageNamed:@"arrow.down.forward.and.arrow.up.backward"] forState:UIControlStateNormal];
+            [self.ButtonFilter setTitle:@"Hide" forState:UIControlStateNormal];
         
             [self.view layoutIfNeeded];
         } completion:^(BOOL finished) {
@@ -1062,7 +1063,7 @@ remarks:
             self.FilterOptionHeightConstraint.constant=98;
             self.ButtonResetFilter.hidden = true;
 
-            [self.ButtonFilter setImage:[UIImage systemImageNamed:@"arrow.up.square"] forState:UIControlStateNormal];
+            [self.ButtonFilter setImage:[UIImage systemImageNamed:@"arrow.up.backward.and.arrow.down.forward"] forState:UIControlStateNormal];
             [self.ButtonFilter setTitle:@"Expand" forState:UIControlStateNormal];
             
             [self.view layoutIfNeeded];

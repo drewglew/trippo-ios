@@ -83,6 +83,8 @@
  */
 +(NSString*)PrettyDateDifference :(NSDate*)Start :(NSDate*)End :(NSString*) PostFixText {
     
+    
+    
     NSString *PrettyDate = @"";
     
     NSDateFormatter *dateformatter = [[NSDateFormatter alloc] init];

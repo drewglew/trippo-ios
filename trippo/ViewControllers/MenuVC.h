@@ -15,6 +15,7 @@
 #import "PoiNSO.h"
 #import "LocatorVC.h"
 #import "PoiDataEntryVC.h"
+#import "NearbyListingVC.h"
 #import "SettingsRLM.h"
 #import "SettingsVC.h"
 #import "AssistantRLM.h"
@@ -24,7 +25,7 @@
 @protocol MenuDelegate <NSObject>
 @end
 
-@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectDataEntryDelegate, ActivityListDelegate, LocatorDelegate, PoiDataEntryDelegate, SettingsDelegate, MKMapViewDelegate>
+@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectDataEntryDelegate, ActivityListDelegate, LocatorDelegate, PoiDataEntryDelegate, NearbyListingDelegate, SettingsDelegate, MKMapViewDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *ButtonProject;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPoi;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonInfo;
@@ -33,6 +34,14 @@
 @property (strong, nonatomic) NSMutableArray *selectedtripitems;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonSettings;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewFeaturedPoi;
+//@property (weak, nonatomic) IBOutlet UILabel *LabelFeaturedPoi;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedPoiHeader;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedSharedPoi;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedSharedPoiHeader;
+@property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedPoi;
+
+
+
 @property (nonatomic, weak) id <MenuDelegate> delegate;
 @property (strong, nonatomic) RLMRealm *realm;
 @property (assign) bool SetReload;
@@ -40,7 +49,8 @@
 @property (strong, nonatomic) SettingsRLM *Settings;
 @property (strong, nonatomic) NSMutableDictionary *TripImageDictionary;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *ActivityView;
-@property (weak, nonatomic) IBOutlet UILabel *LabelFeaturedPoi;
+
+
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewPoi;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewTrip;
 @property (weak, nonatomic) IBOutlet MKMapView *FeaturedPoiMap;

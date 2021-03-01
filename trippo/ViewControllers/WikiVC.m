@@ -18,6 +18,7 @@ CGFloat WikiFooterFilterHeightConstant;
  created date:      13/06/2018
  last modified:     04/02/2019
  remarks:           Need to make sure we create folder
+ https://en.wikipedia.org/api/rest_v1/#/Page%20content/getContent-media-list
  */
 - (void)viewDidLoad {
     [super viewDidLoad];

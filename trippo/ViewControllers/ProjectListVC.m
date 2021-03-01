@@ -272,8 +272,8 @@ CGFloat TripScale = 4.14f;
             
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
            
-        cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
-        [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TripFGColor"]];
+        cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
+        [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TrippoColor"]];
         
         cell.isNewAccessor = true;
         cell.VisualEffectsViewBlur.hidden = true;
@@ -284,7 +284,12 @@ CGFloat TripScale = 4.14f;
         UIImage *image = [self.TripImageDictionary objectForKey:cell.trip.key];
         
         if (CGSizeEqualToSize(image.size, CGSizeZero)) {
-            cell.ImageViewProject.image = [UIImage imageNamed:@"Project"];
+            cell.ImageViewProject.image = [UIImage systemImageNamed:@"latch.2.case"];
+            
+            [cell.ImageViewProject setTintColor: [UIColor systemBackgroundColor]];
+            [cell.ImageViewProject setBackgroundColor:[UIColor colorNamed:@"TrippoColor"]];
+             
+            
         } else {
             cell.ImageViewProject.image = image;
         }
@@ -305,13 +310,13 @@ CGFloat TripScale = 4.14f;
             cell.VisualEffectsViewBlur.hidden = true;
         }
 
-        
-        //UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:14.0];
-        UIFont *font = [UIFont systemFontOfSize:16.0];
-        
+        UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:20.0f];
         if (TripNumberOfCellsInRow >= 3.0f) {
-            font = [UIFont systemFontOfSize:12.0];
-            
+            if (TripNumberOfCellsInRow > 4.0f) {
+                font = [UIFont fontWithName:@"AmericanTypewriter" size:8.0f];
+            } else {
+                font = [UIFont fontWithName:@"AmericanTypewriter" size:14.0];
+            }
             if (TripNumberOfCellsInRow > 3.0f) {
                 cell.deleteButton.hidden = true;
             }
@@ -319,9 +324,11 @@ CGFloat TripScale = 4.14f;
             cell.deleteButton.hidden = false;
         }
         
-        NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor colorWithRed:35.0f/255.0f green:35.0f/255.0f blue:35.0f/255.0f alpha:1.0], NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName:font};
+        NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor secondarySystemBackgroundColor], NSForegroundColorAttributeName:[UIColor labelColor], NSFontAttributeName:font};
         NSAttributedString *string = [[NSAttributedString alloc] initWithString:cell.trip.name attributes:attributes];
         cell.LabelProjectName.attributedText = string;
+        
+        cell.LabelProjectName.transform = CGAffineTransformMakeRotation(-.05);
         
     }
     return cell;
@@ -353,7 +360,7 @@ CGFloat TripScale = 4.14f;
         controller.TripImage = cell.ImageViewProject.image;
         controller.Trip = [self.tripcollection objectAtIndex:indexPath.row];
        
-        [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+        [controller setModalPresentationStyle:UIModalPresentationPageSheet];
         [self presentViewController:controller animated:YES completion:nil];
         [cell.ActivityIndicatorView stopAnimating];
     }
@@ -581,7 +588,7 @@ CGFloat TripScale = 4.14f;
                                                                   });
                                                               }];
         
-        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Canel" style:UIAlertActionStyleDefault
+        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction * action) {
                                                                  // do nothing..
                                                                  

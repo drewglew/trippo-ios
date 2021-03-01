@@ -126,4 +126,5 @@
 @property (weak, nonatomic) IBOutlet UIView *PoiScrollViewContent;
 @property (weak, nonatomic) IBOutlet UILabel *LabelImageOptions;
 @property (strong, nonatomic) UISelectionFeedbackGenerator *feedback;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonDeleteImage;
 @end

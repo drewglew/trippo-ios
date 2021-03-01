@@ -69,6 +69,10 @@
 @property (nonatomic, strong)IBOutlet UIPickerView *StartDtTimeZonePicker;
 @property (nonatomic, strong)IBOutlet UIPickerView *EndDtTimeZonePicker;
 @property (nonatomic, strong)IBOutlet UIPickerView *DefaultDtTimeZonePicker;
+
+@property (weak, nonatomic) IBOutlet UIDatePicker *DatePickerStart;
+@property (weak, nonatomic) IBOutlet UIDatePicker *DatePickerEnd;
+
 @property (nonatomic, weak) id <ProjectDataEntryDelegate> delegate;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentAnnotations;
 @property (weak, nonatomic) IBOutlet UILabel *LabelWeatherLastUpdatedAt;

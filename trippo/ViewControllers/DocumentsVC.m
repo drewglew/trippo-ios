@@ -93,6 +93,11 @@ CGFloat DocumentFooterFilterHeightConstant;
 {
     AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
     RLMResults <AttachmentRLM*> *items = [self.Activity.attachments objectsWhere:@"key=%@",document.key];
+    
+    // NSLog(@"Key - %@",self.Activity.attachments[0].key);
+    NSLog(@"document = %@",document);
+    NSLog(@"activity attachments  = %@",self.Activity);
+    
     if (items.count==0) {
         [cell setSelected: false];
         [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -107,14 +112,29 @@ CGFloat DocumentFooterFilterHeightConstant;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    
+    
     AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
-    document.isselected = [NSNumber numberWithInt:1];
+    
+    NSLog(@"%@",document);
+    
+    [self.realm transactionWithBlock:^{
+        document.isselected = [NSNumber numberWithInt:1];
+    }];
+    
+    
 }
 
 
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath  {
     AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
-    document.isselected = [NSNumber numberWithInt:0];
+    
+    NSLog(@"%@",document);
+    
+    [self.realm transactionWithBlock:^{
+        document.isselected = [NSNumber numberWithInt:0];
+    }];
+    
     
 }
 
@@ -253,10 +273,13 @@ remarks:
 
 - (IBAction)ActionPressed:(id)sender {
     
-    NSArray *selectedIndexPathArray = [self.TableViewDocuments indexPathsForSelectedRows];
+    //NSArray *selectedIndexPathArray = [self.TableViewDocuments indexPathsForSelectedRows];
+    
+    
     
     
     [self.Activity.realm beginWriteTransaction];
+    
     [self.Activity.attachments removeAllObjects];
     [self.Activity.realm commitWriteTransaction];
     
@@ -264,12 +287,24 @@ remarks:
     
     //NSArray *selectedIndexPathArray = [self.TableViewDocuments indexPathsForSelectedRows];
     
-    for (NSIndexPath *indexPath in selectedIndexPathArray) {
+    for (AttachmentRLM *a in self.DocumentCollection) {
+        
+        NSLog(@"Attachment: %@",a);
+        
+        if ([a.isselected intValue] == 1) {
+            [self.Activity.attachments addObject:a];
+        }
+    }
+    /*for (NSIndexPath *indexPath in selectedIndexPathArray) {
         AttachmentRLM *item = [self.DocumentCollection objectAtIndex:indexPath.row];
         
         [self.Activity.attachments addObject:item];
+        
+        NSLog(@"Activity Attachments: %@",self.Activity.attachments );
         NSLog(@"%@", item.notes);
-    }
+    }*/
+    
+    //NSLog(@"number of attachments in Activity:%lu",(unsigned long)self.Activity.attachments.count);
     
     /*
     for (int section = 0; section < [self.TableViewDocuments numberOfSections]; section++) {

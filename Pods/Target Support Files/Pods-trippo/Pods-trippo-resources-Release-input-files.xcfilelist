@@ -1,4 +1,2 @@
 ${PODS_ROOT}/Target Support Files/Pods-trippo/Pods-trippo-resources.sh
 ${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewControllerBundle.bundle
-${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterKitResources.bundle
-${PODS_ROOT}/TwitterKit/iOS/TwitterKit.framework/TwitterShareExtensionUIResources.bundle

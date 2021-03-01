@@ -20,8 +20,22 @@
 
     self.datePicker = [[UIDatePicker alloc] init];
     self.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-    [self.datePicker addTarget:self action:@selector(datePickerValueChanged:) forControlEvents:UIControlEventValueChanged]; // method to respond to changes in the picker value
+    
+    
 
+    [self.DatePickerStart addTarget:self action:@selector(datePickerStartValueChanged:) forControlEvents:UIControlEventValueChanged]; // method to respond to changes in the picker value
+
+    [self.DatePickerStart addTarget:self action:@selector(datePickerStartDismissed:) forControlEvents:UIControlEventEditingDidEnd]; // method to respond to changes in the picker value
+    
+    
+    [self.DatePickerEnd addTarget:self action:@selector(datePickerEndValueChanged:) forControlEvents:UIControlEventValueChanged]; // method to respond to changes in the picker value
+    
+    
+    [self.DatePickerEnd addTarget:self action:@selector(datePickerEndDismissed:) forControlEvents:UIControlEventEditingDidEnd]; // method to respond to changes in the picker value
+    
+    
+
+    /*
     self.datePickerToolbar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 44)];
     [self.datePickerToolbar setTintColor:[UIColor orangeColor]];
     UIBarButtonItem *doneBtn=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(dismissPicker:)];
@@ -35,6 +49,7 @@
     self.TextFieldEndDt.inputView = self.datePicker;
     self.TextFieldEndDt.inputAccessoryView = self.datePickerToolbar;
     self.TextFieldEndDt.delegate = self;
+     */
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -70,7 +85,21 @@ remarks:
  remarks:           Must stay on active line - due to validations.  TODO - resolve that!
                     Max/Min simply done, not taking into account things outside of Trip.
  */
--(void)dismissPicker:(id)sender{
+
+-(void)datePickerStartDismissed:(id)sender{
+
+    self.DatePickerEnd.minimumDate = self.DatePickerStart.date;
+    [self dismissPicker];
+}
+
+
+-(void)datePickerEndDismissed:(id)sender{
+    self.DatePickerStart.maximumDate = self.DatePickerEnd.date;
+    [self dismissPicker];
+}
+
+
+-(void)dismissPicker {
 
     RLMResults <ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"tripkey=%@ and state=%@",self.activity.tripkey, self.activity.state];
     
@@ -98,6 +127,9 @@ remarks:
                 
                 if ((isStartDtInsideRange && isEndDtInsideRange) || (!isStartDtInsideRange && !isEndDtInsideRange)) {
                     NSLog(@"Activity has dates that are allowed!");
+                    
+                    
+                    
                 } else {
                     ErrorInCurrentItem = true;
                     
@@ -140,10 +172,11 @@ remarks:
             
             self.startDt = self.activity.startdt;
             self.endDt = self.activity.enddt;
-           
-            df.timeZone = [NSTimeZone timeZoneWithName:self.defaultTimeZone];
-            [self.TextFieldStartDt setText:[df stringFromDate:self.startDt]];
-            [self.TextFieldEndDt setText:[df stringFromDate:self.endDt]];
+                       
+            //df.timeZone = [NSTimeZone timeZoneWithName:self.defaultTimeZone];
+            
+            //[self.TextFieldStartDt setText:[df stringFromDate:self.startDt]];
+            //[self.TextFieldEndDt setText:[df stringFromDate:self.endDt]];
             
             [self.topViewController presentViewController:alert animated:YES completion:^{}];
 
@@ -152,10 +185,15 @@ remarks:
             self.activity.startdt = self.startDt;
             self.activity.enddt = self.endDt;
 
+            
             [self.activity.realm commitWriteTransaction];
             [self endEditing:YES];
         }
+        self.DatePickerStart.date = self.startDt;
+        self.DatePickerEnd.date = self.endDt;
     }
+    
+    
 }
 
 - (UIViewController *)topViewController{
@@ -223,5 +261,39 @@ remarks:
         
     }    
 }
+
+
+/*
+ created date:      27/02/2021
+ last modified:     27/02/2021
+ remarks:
+ */
+- (void)datePickerStartValueChanged:(id)sender{
+    
+    UIDatePicker *datePicker = (UIDatePicker*)sender;
+    
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"HH:mm"];
+
+    df.timeZone = [NSTimeZone timeZoneWithName:self.defaultTimeZone];
+    self.startDt = datePicker.date;
+}
+
+/*
+ created date:      27/02/2021
+ last modified:     27/02/2021
+ remarks:
+ */
+- (void)datePickerEndValueChanged:(id)sender{
+    
+    UIDatePicker *datePicker = (UIDatePicker*)sender;
+    
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"HH:mm"];
+   
+    df.timeZone = [NSTimeZone timeZoneWithName:self.defaultTimeZone];
+    self.endDt = datePicker.date;
+}
+
 
 @end

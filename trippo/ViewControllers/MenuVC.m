@@ -29,9 +29,9 @@ bool FirstLoad;
  */
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.FeaturedPoiMap.delegate = self;
-    self.ImageViewFeaturedPoi.layer.borderWidth = 1;
-    self.ImageViewFeaturedPoi.layer.borderColor = [UIColor whiteColor].CGColor;
+    //self.FeaturedPoiMap.delegate = self;
+    //self.ImageViewFeaturedPoi.layer.borderWidth = 1;
+    //self.ImageViewFeaturedPoi.layer.borderColor = [UIColor whiteColor].CGColor;
     
     FirstLoad = true;
     self.TripImageDictionary = [[NSMutableDictionary alloc] init];
@@ -49,6 +49,7 @@ bool FirstLoad;
         [weakSelf LocateTripContent];
         [weakSelf.CollectionViewPreviewPanel reloadData];
     }];
+    
     
     
 }
@@ -245,7 +246,7 @@ bool FirstLoad;
         emptytrip.itemgrouping = [NSNumber numberWithInt:3];
         emptytrip.name = @"";
         [self.selectedtripitems addObject:emptytrip];
-        [self.TripImageDictionary setObject:[UIImage imageNamed:@"Project"] forKey:emptytrip.key];
+        [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:emptytrip.key];
     }
     
     sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
@@ -282,7 +283,7 @@ bool FirstLoad;
         emptytrip.key = [[NSUUID UUID] UUIDString];
         emptytrip.itemgrouping = [NSNumber numberWithInt:5];;
         emptytrip.name = @"";
-        [self.TripImageDictionary setObject:[UIImage imageNamed:@"Project"] forKey:emptytrip.key];
+        [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:emptytrip.key];
         [self.selectedtripitems addObject:emptytrip];
     }
 }
@@ -298,12 +299,12 @@ bool FirstLoad;
         NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
         NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
         if (pngData==nil) {
-            [self.TripImageDictionary setObject:[UIImage imageNamed:@"Project"] forKey:trip.key];
+            [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:trip.key];
         } else {
             [self.TripImageDictionary setObject:[UIImage imageWithData:pngData] forKey:trip.key];
         }
     } else {
-        [self.TripImageDictionary setObject:[UIImage imageNamed:@"Project"] forKey:trip.key];
+        [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:trip.key];
     }
 }
 
@@ -333,7 +334,7 @@ bool FirstLoad;
     int featuredIndex = arc4random_uniform((int)poicollection.count);
     self.FeaturedPoi = [poicollection objectAtIndex:featuredIndex];
     
-    self.LabelFeaturedPoi.text = [NSString stringWithFormat:@"In focus... %@", self.FeaturedPoi.name];
+    //self.LabelFeaturedPoi.text = [NSString stringWithFormat:@"In focus... %@", self.FeaturedPoi.name];
     
     NSURL *url = [self applicationDocumentsDirectory];
     
@@ -364,7 +365,7 @@ bool FirstLoad;
         self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
     }
     
-    [self.FeaturedPoiMap removeAnnotations:self.FeaturedPoiMap.annotations];
+    //[self.FeaturedPoiMap removeAnnotations:self.FeaturedPoiMap.annotations];
     
     MKPointAnnotation *anno = [[MKPointAnnotation alloc] init];
     anno.title = self.FeaturedPoi.name;
@@ -374,16 +375,34 @@ bool FirstLoad;
     
     anno.coordinate = coord;
     
-    //NSNumber *radius = [self.TypeDistanceItems objectAtIndex:[self.Poi.categoryid unsignedLongValue]];
+    //UIFont *font = [UIFont systemFontOfSize:20.0];
     
-    [self.FeaturedPoiMap setCenterCoordinate:coord animated:YES];
+    UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:20.0f];
     
-    //MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coord, [radius doubleValue] * 2.2, [radius doubleValue] * 2.2);
+    NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor secondarySystemBackgroundColor], NSForegroundColorAttributeName:[UIColor labelColor], NSFontAttributeName:font};
+    NSAttributedString *string = [[NSAttributedString alloc] initWithString:@"Featured Local POI..." attributes:attributes];
+    self.LabelFeaturedPoiHeader.attributedText = string;
     
-    //MKCoordinateRegion adjustedRegion = [self.PoiMapView regionThatFits:viewRegion];
-    //[self.PoiMapView setRegion:adjustedRegion animated:YES];
-    [self.FeaturedPoiMap addAnnotation:anno];
-    [self.FeaturedPoiMap selectAnnotation:anno animated:YES];
+    //self.LabelFeaturedPoiHeader.transform = CGAffineTransformMakeRotation(.34906585);
+    self.LabelFeaturedPoiHeader.transform = CGAffineTransformMakeRotation(.1);
+    
+    string = [[NSAttributedString alloc] initWithString:self.FeaturedPoi.name attributes:attributes];
+    
+    self.LabelFeaturedPoi.attributedText = string;
+    self.LabelFeaturedPoi.transform = CGAffineTransformMakeRotation(-.1);
+    
+    string = [[NSAttributedString alloc] initWithString:@"Featured Shared POI..." attributes:attributes];
+    
+    self.LabelFeaturedSharedPoiHeader.attributedText = string;
+    
+    self.LabelFeaturedSharedPoiHeader.transform = CGAffineTransformMakeRotation(-.1);
+    
+    string = [[NSAttributedString alloc] initWithString:@"Rome" attributes:attributes];
+    
+    self.LabelFeaturedSharedPoi.attributedText = string;
+  
+    self.LabelFeaturedSharedPoi.transform = CGAffineTransformMakeRotation(.1);
+    
 }
 
 /*
@@ -435,8 +454,15 @@ remarks:
         controller.delegate = self;
         controller.Settings = self.Settings;
         controller.realm = self.realm;
+    } else if([segue.identifier isEqualToString:@"ShowMeNearby"]){
+        NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.fromproject = false;
     }
 }
+
+
+
 
 
 
@@ -454,11 +480,16 @@ remarks:
  created date:      28/02/2019
  last modified:     28/02/2019
  remarks:
+
  */
+
+/*
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(CGRectGetHeight(collectionView.frame) - 20, (CGRectGetHeight(collectionView.frame) - 20));
 }
+*/
+
 
 /*
  created date:      14/08/2018
@@ -492,10 +523,10 @@ remarks:
     cell.LabelDateRange.text = reference;
     
     //TODO
-    cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 120) / 2;
+    //cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 120) / 2;
     
     //cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.bounds.size.height / 2;
-    cell.ImageViewProject.layer.masksToBounds = true;
+    //cell.ImageViewProject.layer.masksToBounds = true;
     
     return cell;
 }
@@ -518,7 +549,7 @@ remarks:
             controller.Trip = [[TripRLM alloc] init];
             controller.newitem = true;
             controller.realm = self.realm;
-            [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
             [self presentViewController:controller animated:YES completion:nil];
         } else {
             ActivityListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityListViewController"];
@@ -536,7 +567,7 @@ remarks:
              controller.Trip = [self.tripcollection objectAtIndex:indexPath.row];
             */
             
-            [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
             [self presentViewController:controller animated:YES completion:nil];
         }
     }
@@ -594,7 +625,7 @@ remarks:
     controller.Activity = nil;
     controller.realm = self.realm;
     
-    [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+    [controller setModalPresentationStyle:UIModalPresentationPageSheet];
     [self presentViewController:controller animated:YES completion:nil];
     
     [self.ActivityView stopAnimating];
@@ -632,6 +663,7 @@ remarks:
 - (void)didCreatePoiFromProjectPassThru :(PoiRLM*)Object {
     
 }
+
 
 
 @end

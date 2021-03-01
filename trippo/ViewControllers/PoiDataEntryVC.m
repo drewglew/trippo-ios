@@ -955,6 +955,7 @@ remarks:
         if (imageitem.KeyImage) {
             self.SelectedImageKey = imageitem.key;
             self.ViewSelectedKey.hidden = false;
+            [self.ButtonKey setTintColor:[UIColor labelColor]];
             [self.ImagePicture setImage:image];
             [self.ImageViewKey setImage:image];
         }
@@ -999,7 +1000,7 @@ remarks:
        
             UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
                                  
-            cell.ImagePoi.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
+            cell.ImagePoi.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
             [cell.ImagePoi setTintColor: [UIColor colorNamed:@"TrippoColor"]];
        
         } else {
@@ -1046,16 +1047,24 @@ remarks:
                 self.SelectedImageKey = imgobject.key;
                 self.SelectedImageIndex = [NSNumber numberWithLong:indexPath.row];
                 if (imgobject.KeyImage==0) {
+                    [self.ButtonKey setTintColor:[UIColor colorNamed:@"TrippoColor"]];
                     self.ViewSelectedKey.hidden = true;
                 } else {
+                    [self.ButtonKey setTintColor:[UIColor labelColor]];
                     self.ViewSelectedKey.hidden = false;
                 }
                 [self.ImagePicture setImage:[self.PoiImageDictionary objectForKey:imgobject.key]];
                 self.LabelPhotoInfo.text = imgobject.info;
                 if (imgobject.ImageFlaggedDeleted==0) {
                     self.ViewTrash.hidden = true;
+                   
+                    [self.ButtonDeleteImage setTintColor:[UIColor redColor]];
+                   
                 } else {
                      self.ViewTrash.hidden = false;
+                    
+                    [self.ButtonDeleteImage setTintColor:[UIColor labelColor]];
+                   
                 }
 
             }
@@ -1204,7 +1213,7 @@ remarks:
                                                                   controller.wikiimages = false;
                                                                   
                                                                   controller.ImageSize = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
-                                                                  [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                                                  [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                                                   [self presentViewController:controller animated:YES completion:nil];
                                                                   
                                                               }];
@@ -1230,7 +1239,7 @@ remarks:
                                                                   controller.wikiimages = true;
                                                                   
                                                                   controller.ImageSize = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
-                                                                  [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                                                  [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                                                   [self presentViewController:controller animated:YES completion:nil];
                                                               }];
     
@@ -1523,7 +1532,7 @@ remarks:
                 [self.presentingViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
             }
         } else {
-            // special functionality needed here for Trip items.  We must present the Activity data entry view
+
             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             ActivityDataEntryVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityDataEntryViewController"];
             controller.delegate = self;
@@ -1575,7 +1584,7 @@ remarks:
                 [AppDelegateDef.PoiBackgroundImageDictionary setObject:thumbImage forKey:self.PointOfInterest.key];
             }
             
-            [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
             [self presentViewController:controller animated:YES completion:nil];
         }
     
@@ -1802,6 +1811,10 @@ remarks:
                 if (imgobject.ImageFlaggedDeleted==0) {
                     //if (item.KeyImage==0) {
                         self.ViewTrash.hidden = false;
+                    
+                    
+                        [self.ButtonDeleteImage setTintColor:[UIColor labelColor]];
+                    
                         imgobject.ImageFlaggedDeleted = 1;
                         DeletedFlagEnabled = true;
                         imgobject.UpdateImage = true;
@@ -1810,6 +1823,9 @@ remarks:
                 else {
                     self.ViewTrash.hidden = true;
                     imgobject.ImageFlaggedDeleted = 0;
+                    
+                    [self.ButtonDeleteImage setTintColor:[UIColor redColor]];
+                    
                 }
                 [self.realm commitWriteTransaction];
             }
@@ -1840,12 +1856,16 @@ remarks:
             if ([imgobject.key isEqualToString:self.SelectedImageKey]) {
                 if (imgobject.KeyImage==0) {
                     self.ViewSelectedKey.hidden = false;
+                    [self.ButtonKey setTintColor:[UIColor labelColor]];
+                    
                     imgobject.KeyImage = 1;
                     KeyImageEnabled = true;
                     imgobject.UpdateImage = true;
                     [self.ImageViewKey setImage:self.ImagePicture.image];
                 } else {
                     self.ViewSelectedKey.hidden = true;
+                    
+                    [self.ButtonKey setTintColor:[UIColor colorNamed:@"TrippoColor"]];
                     imgobject.KeyImage = 0;
                     imgobject.UpdateImage = true;
                 }
@@ -2079,6 +2099,13 @@ remarks:
         } completion:^(BOOL finished) {
             self.ViewSelectedKey.hidden = showkeyview;
             self.ViewTrash.hidden = showdeletedflag;
+            if (showdeletedflag) {
+                [self.ButtonDeleteImage setTintColor:[UIColor redColor]];
+            } else {
+                [self.ButtonDeleteImage setTintColor:[UIColor labelColor]];
+            }
+            
+            //[self.ButtonKey setTintColor:[UIColor colorNamed:@"TrippoColor"]];
         }];
         
     } else {
@@ -2088,6 +2115,12 @@ remarks:
         } completion:^(BOOL finished) {
             self.ViewSelectedKey.hidden = showkeyview;
             self.ViewTrash.hidden = showdeletedflag;
+            if (showdeletedflag) {
+                [self.ButtonDeleteImage setTintColor:[UIColor redColor]];
+            } else {
+                [self.ButtonDeleteImage setTintColor:[UIColor labelColor]];
+            }
+            
         }];
     }
 }
@@ -2536,7 +2569,7 @@ remarks:
                                       
                                       NSString* directionsURL;
                                       
-                                    directionsURL = [NSString stringWithFormat:@"http://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, self.PointOfInterest.lat, self.PointOfInterest.lon];
+                                    directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, self.PointOfInterest.lat, self.PointOfInterest.lon];
                                       
                                       if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
@@ -2556,7 +2589,7 @@ remarks:
                                        NSString *directionsURL;
                                        
                                   
-                                       directionsURL = [NSString stringWithFormat:@"http://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, self.PointOfInterest.lat, self.PointOfInterest.lon];
+                                       directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, self.PointOfInterest.lat, self.PointOfInterest.lon];
                                    
                                        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
                                        

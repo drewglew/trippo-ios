@@ -39,9 +39,6 @@ BOOL loadedPlannedWeatherData = false;
     self.DefaultDtTimeZonePicker.delegate = self;
     self.DefaultDtTimeZonePicker.dataSource = self;
     
-    self.TextFieldStartDt.delegate = self;
-   
-    self.TextFieldEndDt.delegate = self;
 
     self.loadedActualWeatherData = false;
     self.loadedPlannedWeatherData = false;
@@ -69,34 +66,53 @@ BOOL loadedPlannedWeatherData = false;
     NSDate *startOfToday = [[NSDate alloc] init];
     
     NSTimeZone *defaultTimeZone = [NSTimeZone defaultTimeZone];
-    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
     
     /* if a new trip, set both start & end dates to today at 00:00  */
     if (self.newitem) {
         
-        [cal setTimeZone:defaultTimeZone];
-        startOfToday = [cal startOfDayForDate:[NSDate date]];
+        
+        
+        self.DatePickerStart.date = startOfToday;
+        self.DatePickerStart.timeZone = defaultTimeZone;
         self.StartDtTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
+        
+        self.DatePickerEnd.date = startOfToday;
+        self.DatePickerEnd.timeZone = defaultTimeZone;
         self.EndDtTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
+        
         self.DefaultTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
+        
+        
+        
         self.startDt = startOfToday;
         self.endDt = startOfToday;
+        self.Trip.startdt = startOfToday;
+        self.Trip.enddt = startOfToday;
+        
+        
+        
     } else {
         self.startDt = self.Trip.startdt;
         self.endDt = self.Trip.enddt;
+        self.DatePickerStart.date = self.Trip.startdt;
+        self.DatePickerEnd.date = self.Trip.enddt;
+        
+        
+        
     }
     
-    
-    /* initialize the datePicker for start dt */
-    self.datePicker = [[UIDatePicker alloc] initWithFrame:CGRectZero];
-    [self.datePicker setDatePickerMode:UIDatePickerModeDateAndTime];
-    
-    if (self.newitem) {
-        self.Trip.startdt = startOfToday;
-        self.Trip.enddt = startOfToday;
-    }
-    [self.datePicker addTarget:self action:@selector(onDatePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
+    //[self.datePicker addTarget:self action:@selector(onDatePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
 
+    [self.DatePickerStart addTarget:self action:@selector(onDatePickerStartValueChanged:) forControlEvents:UIControlEventValueChanged];
+    
+    [self.DatePickerEnd addTarget:self action:@selector(onDatePickerEndValueChanged:) forControlEvents:UIControlEventValueChanged];
+    /*
+    [self.DatePickerStart addTarget:self action:@selector(onDatePickerStartTouchedUp:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.DatePickerEnd addTarget:self action:@selector(onDatePickerEndTouchedUp:) forControlEvents:UIControlEventTouchUpInside];
+    */
+    
     /* add toolbar control for 'Done' option */
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
    // [toolBar setTintColor:[UIColor grayColor]];
@@ -107,35 +123,43 @@ BOOL loadedPlannedWeatherData = false;
     UIBarButtonItem *space=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [toolBar setItems:[NSArray arrayWithObjects:space,doneBtn, nil]];
 
-    /* extend features on the input view of the text field for start dt */
-    self.TextFieldStartDt.inputView = self.datePicker;
-    self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
-    [self.TextFieldStartDt setInputAccessoryView:toolBar];
-
-    /* extend features on the input view of the text field for end dt */
-    self.TextFieldEndDt.inputView = self.datePicker;
-    self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
-    [self.TextFieldEndDt setInputAccessoryView:toolBar];
-
-    /* add toolbar control for 'Done' option */
     
+    
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    
+    [cal setTimeZone:defaultTimeZone];
+    startOfToday = [cal startOfDayForDate:[NSDate date]];
+
     self.StartDtTimeZoneNameTextField.inputView = self.StartDtTimeZonePicker;
     [self.StartDtTimeZoneNameTextField setInputAccessoryView:toolBar];
-    
+    NSInteger anIndex=[self.timezones indexOfObject:self.StartDtTimeZoneNameTextField.text];
+    [self.StartDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
+
     self.EndDtTimeZoneNameTextField.inputView = self.EndDtTimeZonePicker;
     [self.EndDtTimeZoneNameTextField setInputAccessoryView:toolBar];
+    anIndex=[self.timezones indexOfObject:self.EndDtTimeZoneNameTextField.text];
+    [self.EndDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
     self.DefaultTimeZoneNameTextField.inputView = self.DefaultDtTimeZonePicker;
     [self.DefaultTimeZoneNameTextField setInputAccessoryView:toolBar];
-
-    
-    NSInteger anIndex=[self.timezones indexOfObject:self.StartDtTimeZoneNameTextField.text];
-    [self.StartDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
-    
-    anIndex=[self.timezones indexOfObject:self.EndDtTimeZoneNameTextField.text];
-     [self.EndDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
-    
     anIndex=[self.timezones indexOfObject:self.DefaultTimeZoneNameTextField.text];
+    [self.DefaultDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
+    
+    
+    /* extend features on the input view of the text field for start dt */
+    
+    /*self.TextFieldStartDt.inputView = self.datePicker;
+    self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
+    [self.TextFieldStartDt setInputAccessoryView:toolBar];
+
+    self.TextFieldEndDt.inputView = self.datePicker;
+    self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
+    [self.TextFieldEndDt setInputAccessoryView:toolBar];
+     */
+     
+    /* add toolbar control for 'Done' option */
+    
+    
     
     /* set map annotations by default to planned */
     [self constructWeatherMapPointData :false];
@@ -143,10 +167,10 @@ BOOL loadedPlannedWeatherData = false;
     [self registerForKeyboardNotifications];
     
     /* new block 20200111 */
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
+    // RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectDataEntryVC"] firstObject];
-
+    //AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectDataEntryVC"] firstObject];
+/*
     if ([assist.State integerValue] == 1) {
     
         UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 350)];
@@ -190,7 +214,7 @@ BOOL loadedPlannedWeatherData = false;
         
         [self.view addSubview:helperView];
     }
-    
+    */
 }
 
 /*
@@ -243,11 +267,14 @@ BOOL loadedPlannedWeatherData = false;
     
     if (thePickerView == self.StartDtTimeZonePicker) {
         self.StartDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
-        self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
+        self.DatePickerStart.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+        //self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
         
     } else if (thePickerView == self.EndDtTimeZonePicker) {
         self.EndDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
-        self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
+        self.DatePickerEnd.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
+       
+        //self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
         
     } else {
         self.DefaultTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
@@ -342,7 +369,7 @@ BOOL loadedPlannedWeatherData = false;
     self.TripScrollView.contentInset = contentInsets;
     self.TripScrollView.scrollIndicatorInsets = contentInsets;
 }
-
+/*
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.ActiveTextField = textField;
@@ -355,7 +382,7 @@ BOOL loadedPlannedWeatherData = false;
         self.datePicker.date = self.endDt;
     }
 }
-
+*/
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     self.ActiveTextField = nil;
@@ -552,8 +579,8 @@ remarks:
  */
 - (void)HidePickers
 {
-    [self.TextFieldStartDt resignFirstResponder];
-    [self.TextFieldEndDt resignFirstResponder];
+    //[self.TextFieldStartDt resignFirstResponder];
+   // [self.TextFieldEndDt resignFirstResponder];
     [self.StartDtTimeZoneNameTextField resignFirstResponder];
     [self.EndDtTimeZoneNameTextField resignFirstResponder];
     
@@ -606,67 +633,66 @@ remarks:
 }
 
 
-
-
-
 /*
- created date:      16/02/2019
- last modified:     15/08/2019
+ created date:      28/02/2021
+ last modified:     28/02/2021
  remarks:
  */
-- (void)onDatePickerValueChanged:(UIDatePicker *)datePicker
+- (void)onDatePickerStartValueChanged:(UIDatePicker *)datePicker
 {
     NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-    NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
+    //NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
     
-    if (self.ActiveTextField == self.TextFieldStartDt) {
-    
-        self.startDt = datePicker.date;
-        self.ActiveTextField.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
-    
-    
-        NSComparisonResult result = [datePicker.date compare:self.endDt];
-    
-        switch (result)
-        {
-            case NSOrderedDescending:
-                NSLog(@"%@ is in future from %@", datePicker.date, self.endDt);
-                self.endDt = datePicker.date;
-                self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-                break;
-            case NSOrderedAscending: NSLog(@"%@ is in past from %@", datePicker.date, self.endDt); break;
-            case NSOrderedSame: NSLog(@"%@ is the same as %@", datePicker.date, self.endDt); break;
-            default: NSLog(@"erorr dates %@, %@", datePicker.date, self.endDt); break;
-        }
-       
-    } else if (self.ActiveTextField == self.TextFieldEndDt) {
-        
-        self.endDt = datePicker.date;
-        self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-        
-        NSComparisonResult result = [datePicker.date compare: self.startDt];
-        
-        switch (result)
-        {
-            case NSOrderedAscending:
-                NSLog(@"%@ is in future from %@", self.datePicker.date, self.startDt);
-                self.startDt = datePicker.date;
-                self.TextFieldStartDt.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
-                break;
-            case NSOrderedDescending:
-                NSLog(@"%@ is in past from %@", self.startDt, datePicker.date);
-                
-                break;
-            case NSOrderedSame: NSLog(@"%@ is the same as %@", self.startDt, datePicker.date); break;
-            default: NSLog(@"erorr dates %@, %@", self.startDt, datePicker.date); break;
-        }
-        
+    self.startDt = datePicker.date;
+    self.ActiveTextField.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
+
+
+    NSComparisonResult result = [datePicker.date compare:self.endDt];
+
+    switch (result)
+    {
+        case NSOrderedDescending:
+            NSLog(@"%@ is in future from %@", datePicker.date, self.endDt);
+            self.endDt = datePicker.date;
+            //self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
+            break;
+        case NSOrderedAscending: NSLog(@"%@ is in past from %@", datePicker.date, self.endDt); break;
+        case NSOrderedSame: NSLog(@"%@ is the same as %@", datePicker.date, self.endDt); break;
+        default: NSLog(@"erorr dates %@, %@", datePicker.date, self.endDt); break;
     }
-    
 }
 
+/*
+ created date:      28/02/2021
+ last modified:     28/02/2021
+ remarks:
+ */
+- (void)onDatePickerEndValueChanged:(UIDatePicker *)datePicker
+{
+    //NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+    NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
+    
 
-
+    self.endDt = datePicker.date;
+    self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
+    
+    NSComparisonResult result = [datePicker.date compare: self.startDt];
+    
+    switch (result)
+    {
+        case NSOrderedAscending:
+            NSLog(@"%@ is in future from %@", self.datePicker.date, self.startDt);
+            self.startDt = datePicker.date;
+            //self.TextFieldStartDt.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
+            break;
+        case NSOrderedDescending:
+            NSLog(@"%@ is in past from %@", self.startDt, datePicker.date);
+            
+            break;
+        case NSOrderedSame: NSLog(@"%@ is the same as %@", self.startDt, datePicker.date); break;
+        default: NSLog(@"erorr dates %@, %@", self.startDt, datePicker.date); break;
+    }
+}
 
 
 
@@ -769,7 +795,7 @@ remarks:
     if (pngData!=nil) {
         self.ImageViewProject.image = [UIImage imageWithData:pngData];
     } else {
-        [self.ImageViewProject setImage:[UIImage imageNamed:@"Project"]];
+        [self.ImageViewProject setImage:[UIImage systemImageNamed:@"latch.2.case"]];
     }
 }
 /*
@@ -1416,7 +1442,7 @@ remarks:
         if (pngData!=nil) {
             controller.headerImage = [UIImage imageWithData:pngData];
         } else {
-            controller.headerImage = [UIImage imageNamed:@"Project"];
+            controller.headerImage = [UIImage systemImageNamed:@"latch.2.case"];
         }
         controller.ActivityItem = nil;
         // controller.activitystate = [NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex];

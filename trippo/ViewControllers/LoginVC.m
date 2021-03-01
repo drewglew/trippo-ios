@@ -61,7 +61,7 @@
                                                                          MenuVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
                                                                          controller.delegate = self;
                                                                          controller.realm = realm;
-                                                                         [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                                                         [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                                                          [self presentViewController:controller animated:YES completion:nil];
                                                                          
                                                                      }
@@ -116,7 +116,7 @@
                                          MenuVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"MenuViewController"];
                                          controller.delegate = self;
                                          controller.realm = realm;
-                                         [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+                                         [controller setModalPresentationStyle:UIModalPresentationPageSheet];
                                          [self presentViewController:controller animated:YES completion:nil];
                                          
                                      }

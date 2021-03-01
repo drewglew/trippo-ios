@@ -7,8 +7,6 @@
 //
 
 #import "ActivityListVC.h"
-#import <TwitterKit/TWTRComposer.h>
-#import <TwitterKit/TWTRTwitter.h>
 @import UserNotifications;
 
 @interface ActivityListVC ()
@@ -25,7 +23,7 @@ CGFloat Scale = 4.14f;
 
 /*
  created date:      30/04/2018
- last modified:     13/08/2019
+ last modified:     24/02/2021
  remarks:
  */
 - (void)viewDidLoad {
@@ -37,9 +35,9 @@ CGFloat Scale = 4.14f;
     self.editmode = false;
     
     /* table header */
-    if (![ToolBoxNSO HasTopNotch]) {
-        self.HeaderViewHeightConstraint.constant = 70.0f;
-    }
+   // if (![ToolBoxNSO HasTopNotch]) {
+   //     self.HeaderViewHeightConstraint.constant = 70.0f;
+   // }
  
     // Do any additional setup after loading the view.
     if (self.Trip.itemgrouping==[NSNumber numberWithInt:1]) {
@@ -131,7 +129,6 @@ CGFloat Scale = 4.14f;
 
     ActivityListFooterFilterHeightConstant = self.FooterWithSegmentConstraint.constant;
 
-    self.TableViewDiary.rowHeight = 145;
     
     UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(onLongPress:)];
     [self.CollectionViewActivities addGestureRecognizer:longPressRecognizer];
@@ -149,22 +146,17 @@ CGFloat Scale = 4.14f;
 
     self.TableViewDiary.sectionFooterHeight = 50;
     
-    
-    
     self.tweetview = false;
     
-    //self.ViewStateIndicator.layer.cornerRadius = (self.ViewStateIndicator.bounds.size.width / 2);
-    //self.ViewStateIndicator.clipsToBounds = YES;
- 
     if (self.SegmentState.selectedSegmentIndex == 1) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
     } else {
         
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
     }
     
     bool HasAnyWeatherPois = false;
@@ -386,10 +378,7 @@ CGFloat Scale = 4.14f;
     self.AllActivitiesInTrip = [ActivityRLM objectsWhere:@"tripkey = %@", self.Trip.key];
     
     NSString *whereClause = @"state==0";
-    
-   
 
-    
     if (State==[NSNumber numberWithLong:0] || !self.tweetview) {
         
         if (self.tweetview) {
@@ -634,13 +623,13 @@ CGFloat Scale = 4.14f;
             @autoreleasepool {
                 //UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Planning"] toFitInSize:CellSize];
                 
-                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"i.circle" withConfiguration:config] forKey:activity.compondkey];
+                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"lightbulb" withConfiguration:config] forKey:activity.compondkey];
                 //image = nil;
             }
         } else {
             @autoreleasepool {
                 //UIImage *image = [ToolBoxNSO resizeImage:[UIImage imageNamed:@"Activity"] toFitInSize:CellSize];
-                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config]  forKey:activity.compondkey];
+                [self.ActivityImageDictionary setObject:[UIImage systemImageNamed:@"figure.walk" withConfiguration:config]  forKey:activity.compondkey];
                 //image = nil;
             }
         }
@@ -653,7 +642,7 @@ CGFloat Scale = 4.14f;
         
     }
 }
-
+/*
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section
 {
     if ([ToolBoxNSO HasTopNotch]) {
@@ -663,6 +652,7 @@ CGFloat Scale = 4.14f;
         return CGSizeMake(0, 50);
     }
 }
+*/
 
 /*
  created date:      30/04/2018
@@ -675,7 +665,7 @@ CGFloat Scale = 4.14f;
 
 /*
  created date:      30/04/2018
- last modified:     19/01/2020
+ last modified:     28/02/2021
  remarks:  [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text]   df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -698,8 +688,8 @@ CGFloat Scale = 4.14f;
         }
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
 
-        cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
-        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"ActivityFGColor"]];
+        cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
+        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
         [cell.ImageViewActivity setBackgroundColor: [UIColor clearColor]];
         cell.VisualViewBlur.hidden = true;
         cell.ViewOverlay.hidden = true;
@@ -730,12 +720,6 @@ CGFloat Scale = 4.14f;
             cell.LabelStartDate.text = @"";
         }
 
-        if (([cell.activity.hasestpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 0) || ([cell.activity.hasactpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 1)) {
-            cell.ViewExpenseFlag.hidden=false;
-        } else {
-            cell.ViewExpenseFlag.hidden=true;
-        }
-        
          /* setup enddt & approx duration popup that shows on longpress */
         NSComparisonResult resultSameStartEndDt = [cell.activity.startdt compare:cell.activity.enddt];
         
@@ -837,11 +821,11 @@ CGFloat Scale = 4.14f;
             cell.ViewActiveBadge.hidden = true;
         }
 
-        PoiRLM *poiobject = [PoiRLM objectForPrimaryKey:cell.activity.poikey];
+        //PoiRLM *poiobject = [PoiRLM objectForPrimaryKey:cell.activity.poikey];
         
-        cell.ImageViewTypeOfPoi.image = [UIImage imageNamed:[self.TypeItems objectAtIndex:[poiobject.categoryid integerValue]]];
+        //cell.ImageViewTypeOfPoi.image = [UIImage imageNamed:[self.TypeItems objectAtIndex:[poiobject.categoryid integerValue]]];
         // 2019-09-15
-        [cell.ImageViewTypeOfPoi setTintColor:[UIColor colorNamed:@"PoiType-FGColor"]];
+        //[cell.ImageViewTypeOfPoi setTintColor:[UIColor colorNamed:@"TrippoColor"]];
 
         if (!self.editmode || indexPath.row == NumberOfItems -1) {
              cell.ViewOverlay.hidden = false;
@@ -864,7 +848,7 @@ CGFloat Scale = 4.14f;
             cell.ImageBlurBackground.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
             cell.ImageBlurBackgroundBottomHalf.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
         }
-        cell.ViewPoiType.backgroundColor = [UIColor colorNamed:@"PoiType-BGColor"];
+        //cell.ViewPoiType.backgroundColor = [UIColor colorNamed:@"PoiType-BGColor"];
         
         if ([cell.activity.poi.IncludeWeather intValue] == 0 || cell.activity.poi.IncludeWeather == nil || ([self.ButtonWeatherRequest isEnabled] && self.SegmentState.selectedSegmentIndex == 0) ||
             (cell.activity.state == [NSNumber numberWithInteger:0] && self.SegmentState.selectedSegmentIndex == 1)) {
@@ -988,11 +972,15 @@ CGFloat Scale = 4.14f;
             }
            
         }
-        
-        UIFont *font = [UIFont systemFontOfSize:16.0];
-        
+
+        UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:20.0f];
+
         if (NumberOfCellsInRow >= 3.0f) {
-            font = [UIFont systemFontOfSize:12.0];
+            if (NumberOfCellsInRow > 4.0f) {
+                font = [UIFont fontWithName:@"AmericanTypewriter" size:8.0f];
+            } else {
+                font = [UIFont fontWithName:@"AmericanTypewriter" size:14.0];
+            }
             cell.ViewWeather.hidden = true;
             
             if (NumberOfCellsInRow > 3.0f) {
@@ -1043,9 +1031,12 @@ CGFloat Scale = 4.14f;
         }
         
         
-        NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor colorWithRed:35.0f/255.0f green:35.0f/255.0f blue:35.0f/255.0f alpha:1.0], NSForegroundColorAttributeName:[UIColor whiteColor], NSFontAttributeName:font};
+        
+        NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor secondarySystemBackgroundColor], NSForegroundColorAttributeName:[UIColor labelColor], NSFontAttributeName:font};
         NSAttributedString *string = [[NSAttributedString alloc] initWithString:cell.activity.name attributes:attributes];
         cell.LabelName.attributedText = string;
+        cell.LabelName.transform = CGAffineTransformMakeRotation(.05);
+        
         
     }
     return cell;
@@ -1100,7 +1091,7 @@ CGFloat Scale = 4.14f;
             controller.transformed = false;
         }
         controller.deleteitem = false;
-        [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+        [controller setModalPresentationStyle:UIModalPresentationPageSheet];
         [self presentViewController:controller animated:YES completion:nil];
     }
 }
@@ -1144,7 +1135,7 @@ remarks:
 
 /*
  created date:      17/03/2019
- last modified:     06/01/2020
+ last modified:     27/02/2021
  remarks:
  */
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -1168,12 +1159,12 @@ remarks:
     title.frame = CGRectMake(10, 10, tableView.frame.size.width - 50, 24);
 
     //headerView.backgroundColor = [UIColor tertiarySystemBackgroundColor];
-    headerView.backgroundColor = [UIColor colorNamed:@"TripFGColor"];
-    //headerView.backgroundColor = [UIColor secondarySystemBackgroundColor];
-    title.textColor =  [UIColor secondarySystemBackgroundColor];
+    //headerView.backgroundColor = [UIColor colorNamed:@"TrippoColor"];
+    headerView.backgroundColor = [UIColor tertiarySystemBackgroundColor];
+    title.textColor =  [UIColor labelColor];
     //title.textColor = [UIColor colorNamed:@"UtilityColor"];
     
-    title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
+    title.font = [UIFont systemFontOfSize:20 weight:UIFontWeightRegular];
     title.text = dd.daytitle;
     title.textAlignment = NSTextAlignmentLeft;
 
@@ -1184,9 +1175,9 @@ remarks:
     button.tag = section;
     
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-    [button setImage:[UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config] forState:UIControlStateNormal];
+    [button setImage:[UIImage systemImageNamed:@"plus" withConfiguration:config] forState:UIControlStateNormal];
 
-    [button setTintColor: [UIColor secondarySystemBackgroundColor]];
+    [button setTintColor: [UIColor colorNamed:@"TrippoColor"]];
     
     [button addTarget:self action:@selector(sectionHeaderButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -1199,8 +1190,8 @@ remarks:
         if (counterIndex >= beginIndex) {
             UILabel* detailLabel = [[UILabel alloc] init];
                detailLabel.frame = CGRectMake(xPos, yPos, tableView.frame.size.width - 60, height);
-            detailLabel.font = [UIFont systemFontOfSize:12 weight:UIFontWeightRegular];
-            [detailLabel setTextColor:[UIColor secondarySystemBackgroundColor]];
+            detailLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
+            [detailLabel setTextColor:[UIColor secondaryLabelColor]];
             detailLabel.text = detail;
             detailLabel.textAlignment = NSTextAlignmentLeft;
             [headerView addSubview:detailLabel];
@@ -1233,6 +1224,8 @@ remarks:
 
 
 
+
+
 /*
  created date:      20/02/2019
  last modified:     17/08/2019
@@ -1244,16 +1237,24 @@ remarks:
     cell.activity = [[self.diarycollection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
     if (self.SegmentState.selectedSegmentIndex==1 && cell.activity.state==[NSNumber numberWithInteger:0]) {
-        cell.TextFieldStartDt.enabled = false;
-        cell.TextFieldEndDt.enabled = false;
+        //cell.TextFieldStartDt.enabled = false;
+        //cell.TextFieldEndDt.enabled = false;
+        
+        cell.DatePickerStart.enabled = false;
+        cell.DatePickerEnd.enabled = false;
+        
        
         [cell.LabelName setTextColor:[UIColor secondaryLabelColor]];
         [cell.LabelDuration setTextColor:[UIColor tertiaryLabelColor]];
         
         cell.ButtonDelete.hidden = true;
     } else if (self.SegmentState.selectedSegmentIndex==1)  {
-        cell.TextFieldStartDt.enabled = true;
-        cell.TextFieldEndDt.enabled = true;
+        //cell.TextFieldStartDt.enabled = true;
+        //cell.TextFieldEndDt.enabled = true;
+        
+        cell.DatePickerStart.enabled = true;
+        cell.DatePickerEnd.enabled = true;
+        
         [cell.LabelName setTextColor:[UIColor labelColor]];
         if ( [cell.activity.startdt compare:cell.activity.enddt] == NSOrderedSame) {
             cell.LabelDuration.text = @"active!";
@@ -1263,8 +1264,10 @@ remarks:
         }
         cell.ButtonDelete.hidden = false;
     } else {
-        cell.TextFieldStartDt.enabled = true;
-        cell.TextFieldEndDt.enabled = true;
+        cell.DatePickerStart.enabled = true;
+        cell.DatePickerEnd.enabled = true;
+        //cell.TextFieldStartDt.enabled = true;
+        //cell.TextFieldEndDt.enabled = true;
         [cell.LabelName setTextColor:[UIColor labelColor]];
         cell.ButtonDelete.hidden = false;
         cell.LabelDuration.text = [ToolBoxNSO PrettyDateDifference: cell.activity.startdt :cell.activity.enddt :@""];
@@ -1277,12 +1280,34 @@ remarks:
     cell.defaultTimeZone = self.Trip.defaulttimezonename;
     
     NSTimeZone *tz = [NSTimeZone timeZoneWithName:cell.activity.enddttimezonename];
-    cell.TextFieldStartDt.text = [self FormatPrettyTime :cell.activity.startdt :tz];
-    cell.TextFieldStartDt.delegate = self;
+    
+    cell.DatePickerEnd.timeZone = tz;
+
+    cell.DatePickerEnd.date = cell.activity.enddt;
+    //cell.TextFieldStartDt.text = [self FormatPrettyTime :cell.activity.startdt :tz];
+    //cell.DatePickerEnd.delegate = self;
+    
+    //cell.TextFieldStartDt.delegate = self;
     
     tz = [NSTimeZone timeZoneWithName:cell.activity.enddttimezonename];
-    cell.TextFieldEndDt.text = [self FormatPrettyTime :cell.activity.enddt :tz];
-    cell.TextFieldEndDt.delegate = self;
+    //cell.TextFieldEndDt.text = [self FormatPrettyTime :cell.activity.enddt :tz];
+    //cell.TextFieldEndDt.delegate = self;
+    cell.DatePickerStart.timeZone = tz;
+    //cell.DatePickerStart.delegate = self;
+    cell.DatePickerStart.date = cell.activity.startdt;
+
+    cell.DatePickerStart.maximumDate = cell.DatePickerEnd.date;
+    cell.DatePickerEnd.minimumDate = cell.DatePickerStart.date;
+    
+    PoiRLM *poiobject = [PoiRLM objectForPrimaryKey:cell.activity.poikey];
+    
+    cell.ImageViewTypeOfPoi.image = [UIImage imageNamed:[self.TypeItems objectAtIndex:[poiobject.categoryid integerValue]]];
+    
+    if (([cell.activity.hasestpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 0) || ([cell.activity.hasactpayment intValue] == 1 && self.SegmentState.selectedSegmentIndex == 1)) {
+        cell.ViewExpenseFlag.hidden=false;
+    } else {
+        cell.ViewExpenseFlag.hidden=true;
+    }
     
     cell.indexPathForCell = indexPath;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -1310,6 +1335,7 @@ remarks:
  last modified:     25/02/2019
  remarks:
  */
+/*
 -(bool) textFieldShouldBeginEditing:(UITextField *)textField {
     
     if (self.TableViewDiary.allowsSelection) {
@@ -1318,18 +1344,21 @@ remarks:
         CGPoint buttonPosition = [textField convertPoint:CGPointZero toView:self.TableViewDiary];
         NSIndexPath *indexPath = [self.TableViewDiary indexPathForRowAtPoint:buttonPosition];
         ActivityDiaryCell *cell = [self.TableViewDiary cellForRowAtIndexPath:indexPath];
+        
         if ([cell.TextFieldStartDt isFirstResponder] || [cell.TextFieldEndDt isFirstResponder]) {
             return true;
         }
     }
     return false;
 }
+ */
 
 /*
  created date:      25/02/2019
  last modified:     17/08/2019
  remarks:
  */
+/*
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
 
@@ -1350,6 +1379,7 @@ remarks:
      }
     [cell setSelected:YES animated:NO];
 }
+*/
 
 /*
  created date:      25/02/2019
@@ -1408,7 +1438,7 @@ remarks:           table view with sections.
         controller.transformed = false;
     }
     controller.deleteitem = false;
-    [controller setModalPresentationStyle:UIModalPresentationFullScreen];
+    [controller setModalPresentationStyle:UIModalPresentationPageSheet];
     [self presentViewController:controller animated:YES completion:nil];
 }
 
@@ -1538,7 +1568,7 @@ remarks:           table view with sections.
         if (pngData!=nil) {
             controller.headerImage = [UIImage imageWithData:pngData];
         } else {
-            controller.headerImage = [UIImage imageNamed:@"Project"];
+            controller.headerImage = [UIImage systemImageNamed:@"latch.2.case"];
         }
         controller.ActivityItem = nil;
         controller.activitystate = [NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex];
@@ -1603,7 +1633,7 @@ remarks:           table view with sections.
                                                                   });
                                                               }];
         
-        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Canel" style:UIAlertActionStyleDefault
+        UIAlertAction* cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction * action) {
                                                                  // do nothing..
                                                                  
@@ -1645,12 +1675,12 @@ remarks:           table view with sections.
     if (self.SegmentState.selectedSegmentIndex == 1) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
     } else {
 
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
 
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
     }
 
     if (self.TableViewDiary.hidden == true) {
@@ -1759,7 +1789,7 @@ remarks:
 
         if ([ViewName isEqualToString:@"ActivityListVC-Grid"]) {
             helperView.tag = 101;
-            helpContent = @"This view provides a visualisation of activities contained within the selected Trip. Pressing the (+) icon will require you to add an associated Point Of Interest before an editor is presented to create a new activity.\n\nThere are planned activities and actual ones.  Prior your trip you can create many planned activities, these are ordered by the date/time. When the trip is ongoing using the Actual switch either use the same planned items created  transforming them into actual activities or create further new ones.\n\nPinching and zooming the grid of Activities allows you to increase/decrease the size the activity items.\nYou may delete existing activities as well by pressing the red trash icon.  Long depress of an activity item shows the date detail and if a Point Of Interest has weather report enabled - tapping the dog ear expands the weather report.  If planned activities are in view and trip contains a Point of Interest with weather reports enabled, a weather button is shown.  Pressing it requests a current Weather report.\n\nLastly there is a Share button that can allow the user to either tweet or email to a friend the Trip activities.";
+            helpContent = @"This view provides a visualisation of activities contained within the selected Trip. Pressing the (+) icon will require you to add an associated Point Of Interest before an editor is presented to create a new activity.\n\nThere are planned activities and actual ones.  Prior your trip you can create many planned activities, these are ordered by the date/time. When the trip is ongoing using the Actual switch either use the same planned items created  transforming them into actual activities or create further new ones.\n\nPinching and zooming the grid of Activities allows you to increase/decrease the size the activity items.\nYou may delete existing activities as well by pressing the red trash icon.  Long depress of an activity item shows the date detail and if a Point Of Interest has weather report enabled - tapping the dog ear expands the weather report.  If planned activities are in view and trip contains a Point of Interest with weather reports enabled, a weather button is shown.  Pressing it requests a current Weather report.\n\nLastly there is a Share button that can allow you to share on social media or email the Trip activities.";
             
         } else {
             helperView.tag = 100;
@@ -1876,12 +1906,12 @@ remarks:
 - (IBAction)shareButtonPressed:(id)sender {
     /* tweet break selected */
     
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Share highlights of Trip\n%@", self.Trip.name] message:@"Send either a tweet or ePostcard with pre-selected activities."
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Share highlights of Trip\n%@", self.Trip.name] message:@"Send an ePostcard or Share on active Social Media with pre-selected activities."
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
     [alert.view setTintColor:[UIColor labelColor]];
     
-    UIAlertAction* tweetAction = [UIAlertAction actionWithTitle:@"Tweet" style:UIAlertActionStyleDefault
+    UIAlertAction* tweetAction = [UIAlertAction actionWithTitle:@"Social Media" style:UIAlertActionStyleDefault
                                                           handler:^(UIAlertAction * action) {
                                                               
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1899,7 +1929,7 @@ remarks:
                                                                         cropViewController.delegate = self;
 
 
-                                                                        [cropViewController setTitle:@"Tweet - Set Picture size"];
+                                                                        [cropViewController setTitle:@"Social Media - Set Picture size"];
 
                                                                         [self presentViewController:cropViewController animated:YES completion:nil];
 
@@ -2005,7 +2035,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
 
 /*
  created date:      22/08/2019
- last modified:     22/08/2019
+ last modified:     21/01/2020
  remarks:           User manually resizes image of collectionview made by system.  This method handles
                     what should do depending on title passed in.  (email or tweet)
  */
@@ -2013,7 +2043,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
 {
 
     bool isTweet = false;
-    if ([cropViewController.titleLabel.text isEqualToString:@"Tweet - Set Picture size"]) {
+    if ([cropViewController.titleLabel.text isEqualToString:@"Social Media - Set Picture size"]) {
         isTweet = true;
     }
     
@@ -2021,28 +2051,28 @@ remarks:           User dismisses action to send ePostcard or Tweet.
     
     if (isTweet) {
         
-        TWTRComposer *composer = [[TWTRComposer alloc] init];
-        
         NSString *TripType = @"highlights";
-        
+               
+        self.tweetview = false;
+        [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
+        [self.CollectionViewActivities reloadData];
+    
         if (self.SegmentState.selectedSegmentIndex == 0) {
             TripType = @"itinerary";
         }
-        [composer setText:[NSString stringWithFormat:@"%@ trip %@, generated in @trHippoApp ",self.Trip.name, TripType]];
-        [composer setImage:image];
-        [composer showFromViewController:self completion:^(TWTRComposerResult result) {
-            if (result == TWTRComposerResultCancelled) {
-                NSLog(@"Tweet composition cancelled");
-            } else {
-                NSLog(@"Sending Tweet");
-            }
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.tweetview = false;
-                [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
-                [self.CollectionViewActivities reloadData];
-            });
-        }];
+        
+        NSString *postText = [NSString stringWithFormat:@"%@ trip %@, generated in @trHippoApp ",self.Trip.name, TripType];
+        UIImage *postImage = image;
+        NSArray *postItems = @[postText, postImage];
+        
+        UIActivityViewController *activityPostVC = [[UIActivityViewController alloc]initWithActivityItems:postItems applicationActivities:nil];
 
+        NSArray *excludedItems = @[UIActivityTypePostToWeibo,UIActivityTypePrint,UIActivityTypeCopyToPasteboard,UIActivityTypeAssignToContact,UIActivityTypeSaveToCameraRoll, UIActivityTypeMail, UIActivityTypeMessage];
+
+        [activityPostVC setExcludedActivityTypes:excludedItems];
+
+        [self presentViewController:activityPostVC animated:YES completion:nil];
+    
     } else {
     
     

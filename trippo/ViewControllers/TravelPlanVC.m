@@ -43,10 +43,10 @@
 
     if (self.ActivityState == [NSNumber numberWithInteger:1]) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"a.circle.fill" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"figure.walk" withConfiguration:config];
     } else {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
-        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"i.circle" withConfiguration:config];
+        self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
     }
 
     __weak typeof(self) weakSelf = self;

@@ -73,7 +73,11 @@
 @property (weak, nonatomic) IBOutlet UILabel *LabelStartDT;
 @property (weak, nonatomic) IBOutlet UILabel *LabelEndDT;
 @property (weak, nonatomic) IBOutlet UIView *ViewCheckInOut;
-@property (weak, nonatomic) IBOutlet UILabel *LabelCheckInOut;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonCheckInOut;
+
+@property (weak, nonatomic) IBOutlet UIDatePicker *DatePickerStartDt;
+@property (weak, nonatomic) IBOutlet UIDatePicker *DatePickerEndDt;
+
 @property (weak, nonatomic) IBOutlet UIButton *ButtonDirections;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPayment;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonCancel;
