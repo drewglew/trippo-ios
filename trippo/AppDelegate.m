@@ -100,7 +100,7 @@
      Migration block - to use if we change the model..
     */
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-    config.schemaVersion = 16;
+    config.schemaVersion = 19;
     config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) { };
     [RLMRealmConfiguration setDefaultConfiguration:config];
     
@@ -367,7 +367,6 @@
                [realm beginWriteTransaction];
                found[0].name = [PoiData objectForKey:@"name"];
                found[0].categoryid = [PoiData objectForKey:@"categoryid"];
-               found[0].countrykey = [PoiData objectForKey:@"countrykey"];
                found[0].country = [PoiData objectForKey:@"country"];
                found[0].administrativearea = [PoiData objectForKey:@"administrativearea"];
                found[0].subadministrativearea = [PoiData objectForKey:@"subadministrativearea"];
@@ -386,7 +385,7 @@
                found[0].authorkey = [PoiData objectForKey:@"authorkey"];
                found[0].sharedby = [PoiData objectForKey:@"sharedby"];
                found[0].devicesharedby = [PoiData objectForKey:@"devicesharedby"];
-               found[0].importeddt = [dateFormat dateFromString:[PoiData objectForKey:@"shareddt"]];
+               found[0].exporteddt = [dateFormat dateFromString:[PoiData objectForKey:@"shareddt"]];
                
                for (ImageCollectionRLM *image in found[0].images) {
                    if (image.KeyImage && ![image.ImageFileReference isEqualToString:[ImageData objectForKey:@"FileReference"]]) {
@@ -408,7 +407,6 @@
             [realm beginWriteTransaction];
             poi.name = [PoiData objectForKey:@"name"];
             poi.categoryid = [PoiData objectForKey:@"categoryid"];
-            poi.countrykey = [PoiData objectForKey:@"countrykey"];
             poi.country = [PoiData objectForKey:@"country"];
             poi.countrycode = [PoiData objectForKey:@"countrycode"];
             poi.administrativearea = [PoiData objectForKey:@"administrativearea"];
@@ -426,7 +424,7 @@
             poi.authorname = [PoiData objectForKey:@"authorname"];
             poi.authorkey = [PoiData objectForKey:@"authorkey"];
             poi.sharedby = [PoiData objectForKey:@"sharedby"];
-            poi.importeddt = [dateFormat dateFromString:[PoiData objectForKey:@"shareddt"]];
+            poi.exporteddt = [dateFormat dateFromString:[PoiData objectForKey:@"shareddt"]];
             poi.devicesharedby = [PoiData objectForKey:@"devicesharedby"];
             [realm addObject:poi];
             

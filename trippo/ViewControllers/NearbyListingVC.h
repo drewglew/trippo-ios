@@ -15,10 +15,9 @@
 #import "Reachability.h"
 #import "PoiRLM.h"
 
-
-
 @protocol NearbyListingDelegate <NSObject>
 - (void)didUpdatePoi :(NSString*)Method :(PoiRLM*)Object;
+- (void)didDismissPresentingViewController;
 @end
 
 @interface NearbyListingVC : UIViewController <UITableViewDelegate, CLLocationManagerDelegate, PoiDataEntryDelegate> 
@@ -39,6 +38,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *LabelTotalItems;
 @property (weak, nonatomic) IBOutlet UIView *ViewLoading;
 @property (assign) bool fromproject;
+@property (assign) bool frommenu;
 @property (strong, nonatomic) TripRLM *TripItem;
 @property (strong, nonatomic) ActivityRLM *ActivityItem;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPaneResize;

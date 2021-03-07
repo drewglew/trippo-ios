@@ -168,73 +168,22 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     /* new block 20200111 */
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiSearchVC"] firstObject];
-
-    if ([assist.State integerValue] == 1) {
     
-        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 550)];
-        helperView.backgroundColor = [UIColor labelColor];
-        
-        helperView.layer.cornerRadius=8.0f;
-        helperView.layer.masksToBounds=YES;
-        
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        title.text = @"Points Of Interest";
-        title.textAlignment = NSTextAlignmentCenter;
-        [helperView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, 10, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [helperView addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 450);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
-
-        helpText.text = @"Here we can search, filter, select, add and view any Points Of Interest that are saved within the App.  By default if you arrived directly from the menu, you will be presented with all Points Of Interest that have been unused, otherwise it will default to the countries you have inside your active Trip.  The filtered selection can be changed from the 'Expand' button that opens the filter options.\n\nEach point of interest can be categorised, such as City, Historic, Zoo, Restaurant etc. There are over 50 to choose from when creating a Point of Interest.  All categories within the current filtered selection are shown across the bottom.  Long pressing a single one will select only that item, tapping will toggle selection.\n\ntrHippo is integrated using Wikipedia's GeoSearch, the circle button to left side of 'Search nearby me' and each Point of Interest item allows us to search interesting places within range.\n\nDeleting Points of Interest can only be done when Unused filter option is selected.  To delete swipe left to right.";
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [helperView addSubview:helpText];
-
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:button];
-        
-        [self.view addSubview:helperView];
-    }
     
 }
-
 
 /*
- created date:      11/01/2020
- last modified:     12/01/2020
+ created date:      01/03/2021
+ last modified:     01/03/2021
  remarks:
  */
--(void)helperViewButtonPressed :(id)sender {
-    
-   RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"PoiSearchVC"] firstObject];
-    NSLog(@"%@",assist);
-    if ([assist.State integerValue] == 1) {
-        [self.realm beginWriteTransaction];
-        assist.State = [NSNumber numberWithInteger:0];
-        [self.realm commitWriteTransaction];
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.frommenu){
+        [self.delegate didDismissPresentingViewController];
     }
-    UIView *parentView = [(UIView *)sender superview];
-    [parentView setHidden:TRUE];
 }
+
 
 /*
  created date:      11/08/2018
@@ -249,9 +198,7 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     CGPoint p = [gestureRecognizer locationInView:self.CollectionViewTypes];
     
     NSIndexPath *indexPath = [self.CollectionViewTypes indexPathForItemAtPoint:p];
-    if (indexPath == nil){
-        NSLog(@"couldn't find index path");
-    } else {
+    if (indexPath != nil){
         
         TypeNSO *type = [self.PoiTypes objectAtIndex:indexPath.row];
         
@@ -331,15 +278,8 @@ remarks:
         NSMutableArray *poiitems = [[NSMutableArray alloc] init];
         
         for (ActivityRLM *usedPois in used) {
-            if (usedPois.name == nil) {
-                NSLog(@"Error caused by null named Activity");
-                /*
-                 [self.realm beginWriteTransaction];
-                [self.realm deleteObject:usedPois];
-                [self.realm commitWriteTransaction];
-                */
-            }
-            else {
+            if (usedPois.name != nil) {
+                
                 [poiitems addObject:usedPois.poikey];
             }
         }
@@ -347,18 +287,18 @@ remarks:
         NSSet *typeset = [[NSSet alloc] initWithArray:poiitems];
         
         if (self.SegmentPoiFilterList.selectedSegmentIndex == 0) {
-            NSLog(@"unused");
+           // NSLog(@"unused");
 
             self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"NOT (key IN %@)",typeset]];
             
         } else if (self.SegmentPoiFilterList.selectedSegmentIndex == 2) {
-            NSLog(@"used");
+            //NSLog(@"used");
 
             self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"key IN %@",typeset]];
             
         }
     } else if (self.SegmentPoiFilterList.selectedSegmentIndex == 3) {
-        NSLog(@"visited");
+        //NSLog(@"visited");
         
         NSArray *keypaths  = [[NSArray alloc] initWithObjects:@"poikey", nil];
         
@@ -392,7 +332,7 @@ remarks:
         NSCountedSet* countedSet = [[NSCountedSet alloc] init];
         
         for (PoiRLM* poi in self.poifilteredcollection) {
-            NSLog(@"%@ : %@",poi.name, poi.categoryid );
+           // NSLog(@"%@ : %@",poi.name, poi.categoryid );
             [countedSet addObject:poi.categoryid];
         }
         
@@ -906,6 +846,7 @@ remarks:
     } else if([segue.identifier isEqualToString:@"ShowNearby"]){
         NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
         controller.delegate = self;
+        controller.frommenu = false;
         if (self.TripItem == nil) {
             controller.fromproject = false;
         }
@@ -929,6 +870,7 @@ remarks:
     } else if([segue.identifier isEqualToString:@"ShowNearbyMe"])
     {
         NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
+        controller.frommenu = false;
         controller.delegate = self;
         controller.realm = self.realm;
         controller.PointOfInterest = nil;
@@ -1122,6 +1064,10 @@ remarks:
     }
 }
 
+- (void)didDismissPresentingViewController {
+}
+
+
 /*
  created date:      11/06/2018
  last modified:     12/08/2018
@@ -1139,14 +1085,12 @@ remarks:
     
 }
 
-/*
- created date:      09/09/2018
- last modified:     09/09/2018
- remarks:  TODO, make sure it is optimal and not called multiple times!
- */
 - (void)didUpdateActivityImages :(bool) ForceUpdate {
-    [self.delegate didUpdateActivityImages :true];
+    
 }
+
+
+
 
 
 @end

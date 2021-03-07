@@ -17,7 +17,6 @@
 @property (strong, nonatomic) NSNumber<RLMInt> *categoryid;
 @property (strong, nonatomic) NSNumber<RLMInt> *transportid;
 @property (strong, nonatomic) NSNumber<RLMInt> *radius;
-@property (strong, nonatomic) NSString *countrykey;
 @property (strong, nonatomic) NSString *country;
 @property (strong, nonatomic) NSString *countrycode;
 @property (strong, nonatomic) NSString *administrativearea;
@@ -37,9 +36,8 @@
 @property (strong, nonatomic) NSString *authorkey;
 @property (strong, nonatomic) NSString *sharedby;
 @property (strong, nonatomic) NSString *devicesharedby;
-@property (strong, nonatomic) NSDate *importeddt;
-@property (strong, nonatomic) NSNumber<RLMInt> *IncludeWeather;
+@property (strong, nonatomic) NSDate *exporteddt;
+@property (strong, nonatomic) NSNumber<RLMInt> *poisharedflag;
 @property RLMArray<ImageCollectionRLM *><ImageCollectionRLM> *images;
 @property RLMArray<AttachmentRLM *><AttachmentRLM> *attachments;
-@property RLMArray<WeatherRLM *><WeatherRLM> *weather;
 @end

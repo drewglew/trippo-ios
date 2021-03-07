@@ -33,9 +33,7 @@ bool runOnce = true;
             NSLog(@"Get Location");
             [self startUserLocationSearch];
         } else {
-            
             self.LabelNearby.text = [NSString stringWithFormat:@"Nearby %@",self.PointOfInterest.name];
-            
             [self LoadNearbyPoiItemsData];
         }
     }
@@ -57,11 +55,17 @@ bool runOnce = true;
     [self.SegmentWikiLanguageOption setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
 }
 
-
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     self.TableViewNearbyPoi.allowsSelection = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (self.frommenu) {
+        [self.delegate didDismissPresentingViewController];
+    }
 }
 
 /*

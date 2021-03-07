@@ -25,6 +25,7 @@
 
 @protocol PoiSearchDelegate <NSObject>
 - (void)didUpdateActivityImages :(bool) ForceUpdate;
+- (void)didDismissPresentingViewController;
 @end
 
 @interface PoiSearchVC : UIViewController <UISearchBarDelegate, UITableViewDelegate, ActivityDataEntryDelegate, LocatorDelegate, PoiDataEntryDelegate, NearbyListingDelegate, UICollectionViewDelegate, UICollectionViewDataSource, UIGestureRecognizerDelegate>
@@ -37,6 +38,7 @@
 @property (assign) bool newitem;
 @property (assign) bool transformed;
 @property (assign) bool isSearching;
+@property (assign) bool frommenu;
 @property (nonatomic, weak) id <PoiSearchDelegate> delegate;
 
 @property (strong, nonatomic) ActivityRLM *Activity;

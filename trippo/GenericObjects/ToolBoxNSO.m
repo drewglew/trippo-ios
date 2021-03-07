@@ -287,46 +287,6 @@
     return image;
 }
 
-/*
-created date:       27/09/2019
-last modified:      27/09/2019
-remarks:
-*/
-+ (NSString *) getWeatherSystemImage:(NSString *) DarkSkyIconName {
-    NSString *weatherSystemImage = @"";
-    
-    if ([DarkSkyIconName isEqualToString:@"clear-day"]) {
-        weatherSystemImage = @"sun.max";
-    } else if ([DarkSkyIconName isEqualToString:@"clear-night"]) {
-        weatherSystemImage = @"moon.stars";
-    } else if ([DarkSkyIconName isEqualToString:@"rain"]) {
-        weatherSystemImage = @"cloud.heavyrain";
-    } else if ([DarkSkyIconName isEqualToString:@"snow"]) {
-        weatherSystemImage = @"cloud.snow";
-    } else if ([DarkSkyIconName isEqualToString:@"sleet"]) {
-        weatherSystemImage = @"cloud.sleet";
-    } else if ([DarkSkyIconName isEqualToString:@"wind"]) {
-        weatherSystemImage = @"wind";
-    } else if ([DarkSkyIconName isEqualToString:@"fog"]) {
-        weatherSystemImage = @"cloud.fog";
-    } else if ([DarkSkyIconName isEqualToString:@"cloudy"]) {
-        weatherSystemImage = @"cloud";
-    } else if ([DarkSkyIconName isEqualToString:@"partly-cloudy-day"]) {
-        weatherSystemImage = @"cloud.sun";
-    } else if ([DarkSkyIconName isEqualToString:@"partly-cloudy-night"]) {
-        weatherSystemImage = @"cloud.moon";
-    } else if ([DarkSkyIconName isEqualToString:@"hail"]) {
-        weatherSystemImage = @"cloud.hail";
-    } else if ([DarkSkyIconName isEqualToString:@"thunderstorm"]) {
-        weatherSystemImage = @"cloud.bolt";
-    } else if ([DarkSkyIconName isEqualToString:@"tornado"]) {
-        weatherSystemImage = @"tornado";
-    } else {
-        weatherSystemImage = @"exclamationmark.icloud";
-    }
-
-    return weatherSystemImage;
-}
 
 
 

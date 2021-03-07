@@ -14,8 +14,8 @@
 
 @implementation ProjectDataEntryVC
 @synthesize delegate;
-BOOL loadedActualWeatherData = false;
-BOOL loadedPlannedWeatherData = false;
+//BOOL loadedActualWeatherData = false;
+//BOOL loadedPlannedWeatherData = false;
 
 /*
  created date:      29/04/2018
@@ -39,9 +39,6 @@ BOOL loadedPlannedWeatherData = false;
     self.DefaultDtTimeZonePicker.delegate = self;
     self.DefaultDtTimeZonePicker.dataSource = self;
     
-
-    self.loadedActualWeatherData = false;
-    self.loadedPlannedWeatherData = false;
     // Do any additional setup after loading the view.
     if (!self.newitem) {
         [self.ButtonAction setTitle:@"Update" forState:UIControlStateNormal];
@@ -162,7 +159,7 @@ BOOL loadedPlannedWeatherData = false;
     
     
     /* set map annotations by default to planned */
-    [self constructWeatherMapPointData :false];
+    //[self constructWeatherMapPointData :false];
     
     [self registerForKeyboardNotifications];
     
@@ -474,15 +471,6 @@ remarks:
         pinView.markerTintColor = [UIColor colorNamed:@"UtilityColor"];
     } else if ([myAnnotation.Type isEqualToString:@"marker-planned"]) {
         pinView.markerTintColor = [UIColor colorNamed:@"UtilityColor"];
-        
-    } else {
-        UIImageView *Weather = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,30,30)];
-        
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:30.0f];
-        Weather.image = [UIImage systemImageNamed:myAnnotation.Type withConfiguration:config];
-        
-        pinView.rightCalloutAccessoryView = Weather;
-        [pinView.rightCalloutAccessoryView setTintColor:[UIColor colorNamed:@"UtilityColor"]];
         
     }
     
@@ -815,8 +803,7 @@ remarks:
  */
 - (IBAction)ProjectActionPressed:(id)sender {
     
-    
-    
+
     NSString *prettystartdt = [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@"\n"];
     NSString *prettyenddt = [self FormatPrettyDate :self.endDt:[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@"\n"];
 
@@ -1069,6 +1056,7 @@ remarks:
     NSString *cameraOption = @"Take a photo with the camera";
     NSString *photorollOption = @"Choose a photo from camera roll";
     NSString *lastphotoOption = @"Select last photo taken";
+    NSString *lastPaste = @"Paste from Clipboard";
     
     UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:cameraOption
                                                            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -1139,9 +1127,7 @@ remarks:
                                                                             }];                                    
                                     }
                                 }];
-    
-    
-    
+        
     UIAlertAction *photorollAction = [UIAlertAction actionWithTitle:photorollOption
                                                               style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                                                   
@@ -1154,7 +1140,35 @@ remarks:
                                                                   
                                                                   NSLog(@"you want to select a photo");
                                                                   
-                                                              }];
+
+    }];
+    
+    UIAlertAction *pasteFromClipboard = [UIAlertAction actionWithTitle:lastPaste
+                                    style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        
+                                    
+        
+                                    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                                    NSData *data = [pasteboard dataForPasteboardType:(NSString *)kUTTypePNG];
+                                    
+                                    if (data==nil) {
+                                        data = [pasteboard dataForPasteboardType:(NSString *)kUTTypeJPEG];
+                                    }
+        
+                                    if (data!=nil) {
+
+                                        UIImage *image = [UIImage imageWithData:data];
+                                        
+                                        TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+                                        cropViewController.delegate = self;
+                                        
+                                        [cropViewController setAspectRatioPreset:TOCropViewControllerAspectRatioPresetSquare];
+                                        
+                                        [self presentViewController:cropViewController animated:YES completion:nil];
+                                                                                    
+                                    }
+    }];
+    
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                            style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
@@ -1166,6 +1180,7 @@ remarks:
     [alert addAction:cameraAction];
     [alert addAction:photorollAction];
     [alert addAction:lastphotoAction];
+    [alert addAction:pasteFromClipboard];
     [alert addAction:cancelAction];
     
     [self presentViewController:alert animated:YES completion:nil];
@@ -1189,19 +1204,35 @@ remarks:
     [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
+
 /*
- created date:      28/04/2018
- last modified:     17/02/2019
- remarks:
+ created date:      02/03/2021
+ last modified:     02/03/2021
+ remarks:           TODO - is it worth presenting the black and white image?
  */
-/*
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.TextViewNotes endEditing:YES];
-    [self.TextFieldName endEditing:YES];
-    [self.TextFieldEndDt endEditing:YES];
-    [self.TextFieldStartDt endEditing:YES];
+- (void)cropViewController:(TOCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
+{
+ 
+    ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
+    imgobject.key = [[NSUUID UUID] UUIDString];
+    
+    CGSize size = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
+
+    image = [ToolBoxNSO imageWithImage:image scaledToSize:size];
+    
+    self.Project.Image = image;
+    self.ImageViewProject.image = image;
+    self.updatedimage = true;
+    
+    if (@available(iOS 13, *)) {
+        [cropViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        cropViewController.transitioningDelegate = nil;
+        
+    }
+    [cropViewController dismissViewControllerAnimated:YES completion:NULL];
 }
-*/
+
+
  
 
 
@@ -1314,6 +1345,7 @@ remarks:
  last modified:     11/01/2020
  remarks:           Loads weather data from API and distributes across the annotations on the map.
  */
+/*
 -(void) constructWeatherMapPointData :(bool)IsActual {
     
     [self.MapView removeAnnotations:self.MapView.annotations];
@@ -1333,7 +1365,6 @@ remarks:
     __block int PoiCounter = 0;
     for (ActivityRLM *activity in ActivitiesByState) {
 
-        /* an item without weather option */
         AnnotationMK *annotation = [[AnnotationMK alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
         annotation.title = activity.name;
@@ -1358,7 +1389,7 @@ remarks:
         }
     }
 }
-
+*/
 
 
 
@@ -1367,6 +1398,7 @@ remarks:
  last modified:     23/06/2019
  remarks:
  */
+/*
 - (IBAction)SegmentAnnotationsChanged:(id)sender {
     
     [self.MapView removeAnnotations:self.MapView.annotations];
@@ -1377,7 +1409,7 @@ remarks:
         [self constructWeatherMapPointData :true];
     }
 }
-
+*/
 
 - (IBAction)StartDateTimeZoneEditingDidBegin:(id)sender {
 

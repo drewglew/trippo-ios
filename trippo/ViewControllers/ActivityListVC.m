@@ -159,31 +159,7 @@ CGFloat Scale = 4.14f;
         self.ImageViewStateIndicator.image = [UIImage systemImageNamed:@"lightbulb" withConfiguration:config];
     }
     
-    bool HasAnyWeatherPois = false;
-    
-    [self.ButtonWeatherRequest setEnabled:false];
-    
-    for (ActivityRLM *activity in self.activitycollection) {
-        
-        if ([activity.poi.IncludeWeather intValue] == 1) {
-            
-            HasAnyWeatherPois  = true;
-            
-            /* we only want to update the forecast if it is older than 1 hour */
-            RLMResults <WeatherRLM*> *weatherresult = [activity.poi.weather objectsWhere:@"timedefition='currently'"];
-            NSNumber *maxtime = [weatherresult maxOfProperty:@"time"];
-            
-            NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-            NSNumber *now = [NSNumber numberWithDouble: timestamp];
-            
-            if (([maxtime doubleValue] + 3600 < [now doubleValue]) || maxtime == nil) {
-                [self.ButtonWeatherRequest setEnabled:true];
-            }
-        }
-    }
-    if (!HasAnyWeatherPois) {
-        [self.ButtonWeatherRequest setHidden:true];
-    }
+   
     
     self.SegmentState.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentState setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
@@ -201,9 +177,11 @@ CGFloat Scale = 4.14f;
     self.ViewLoading.layer.borderWidth = 1.0f;
     self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
     
-    [self PresentAssistantView :@"ActivityListVC-Grid" :@"Activity Grid"];
-    
 }
+
+- (void)didDismissPresentingViewController {
+}
+
 
 - (void)keyboardWillShow:(NSNotification*)aNotification
 {
@@ -614,7 +592,7 @@ CGFloat Scale = 4.14f;
         }
     }
     
-    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
 
     NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
     NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
@@ -848,131 +826,7 @@ CGFloat Scale = 4.14f;
             cell.ImageBlurBackground.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
             cell.ImageBlurBackgroundBottomHalf.image = [self.ActivityImageDictionary objectForKey:cell.activity.compondkey];
         }
-        //cell.ViewPoiType.backgroundColor = [UIColor colorNamed:@"PoiType-BGColor"];
         
-        if ([cell.activity.poi.IncludeWeather intValue] == 0 || cell.activity.poi.IncludeWeather == nil || ([self.ButtonWeatherRequest isEnabled] && self.SegmentState.selectedSegmentIndex == 0) ||
-            (cell.activity.state == [NSNumber numberWithInteger:0] && self.SegmentState.selectedSegmentIndex == 1)) {
-            [cell.ViewWeather setHidden:true];
-        } else {
-            UIBezierPath *path = [UIBezierPath new];
-            [path moveToPoint:(CGPoint){0, 100}];
-            [path addLineToPoint:(CGPoint){100, 100}];
-            [path addLineToPoint:(CGPoint){100, 0}];
-            //[path addLineToPoint:(CGPoint){0, 0}];
-            [path closePath];
-            
-            // Create a CAShapeLayer with this triangular path
-            // Same size as the original imageView
-            CAShapeLayer *mask = [CAShapeLayer new];
-            mask.frame = cell.ViewWeather.bounds;
-            mask.path = path.CGPath;
-            
-            // Mask the imageView's layer with this shape
-            cell.ViewWeather.layer.mask = mask;
-            [cell.ViewWeather setHidden:false];
-            
-            bool HasForecast = false;
-
-            if (self.SegmentState.selectedSegmentIndex == 1 && cell.activity.state == [NSNumber numberWithInteger:1]) { // Collection view is presenting actual and current cell is also actual
-                
-                if ([cell.ViewActiveBadge isHidden]) {
-                    if (cell.activity.weather.count == 0) {
-                        [cell.ImageWeatherIcon setImage:[UIImage systemImageNamed:@"questionmark.diamond"]];
-                        [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor clearColor]];
-                        [cell.ImageWeatherIcon setTintColor:[UIColor systemBackgroundColor]];
-                        cell.LabelWeatherTemp.text = @"";
-                        [cell.ButtonShowWeather setEnabled:FALSE];
-                    } else {
-                        NSLog(@"working with activity actual weather called from history for %@", cell.activity.name);
-                        HasForecast = true;
-                        [cell.ButtonShowWeather setEnabled:TRUE];
-                        RLMResults <WeatherRLM*> *weatherresult = [cell.activity.weather objectsWhere:@"timedefition='currently'"];
-                        NSNumber *maxtime = [weatherresult maxOfProperty:@"time"];
-                        RLMResults <WeatherRLM*> *weathernowresult = [cell.activity.weather objectsWhere:@"time=%@",maxtime];
-                        WeatherRLM *weather = [weathernowresult firstObject];
-                        [cell.ImageWeatherIcon setImage:[UIImage systemImageNamed:weather.systemicon]];
-                        cell.LabelWeatherTemp.text = [NSString stringWithFormat:@"%@",weather.temperature];
-                    }
-                }
-                if (HasForecast) {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor systemPinkColor]];
-                    [cell.LabelWeatherTemp setTextColor:[UIColor whiteColor]];
-                    [cell.ImageWeatherIcon setTintColor:[UIColor whiteColor]];
-                } else if (![self.ButtonWeatherRequest isEnabled]) {
-                    [cell.LabelWeatherTemp setTextColor:[UIColor systemPinkColor]];
-                    [cell.ImageWeatherIcon setTintColor:[UIColor systemPinkColor]];
-                }
-                
-            } else { // Activity can only be planned (placeholder for actual too).
-                RLMResults <WeatherRLM*> *weatherresult = [cell.activity.poi.weather objectsWhere:@"timedefition='currently'"];
-                NSNumber *maxtime = [weatherresult maxOfProperty:@"time"];
-                RLMResults <WeatherRLM*> *weathernowresult = [cell.activity.poi.weather objectsWhere:@"time=%@",maxtime];
-                WeatherRLM *weather = [weathernowresult firstObject];
-                [cell.ImageWeatherIcon setImage:[UIImage systemImageNamed:weather.systemicon]];
-                cell.LabelWeatherTemp.text = [NSString stringWithFormat:@"%@",weather.temperature];
-
-                NSTimeZone *tz = [NSTimeZone timeZoneWithName:self.Trip.defaulttimezonename];
-                NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-                currentCalendar.timeZone = tz;
-                
-                // test if the activity starts today..
-                BOOL today = [currentCalendar isDateInToday:cell.activity.startdt];
-
-                if (today) {
-                    weatherresult = [cell.activity.poi.weather objectsWhere:@"timedefition='hourly'"];
-                    
-                    unsigned unitFlags =  NSCalendarUnitDay | NSCalendarUnitHour;
-                    
-                    NSDateComponents *components = [currentCalendar components:unitFlags fromDate:cell.activity.startdt];
-                    NSInteger activityhour = [components hour];
-                    NSInteger activityday = [components day];
-                    
-                    for (WeatherRLM *weather in weatherresult) {
-                        
-                        components = [currentCalendar components:unitFlags fromDate:[NSDate dateWithTimeIntervalSince1970: [weather.time doubleValue]]];
-                        NSInteger weatherhour = [components hour];
-                        NSInteger weatherday = [components day];
-                        
-                        if (activityhour == weatherhour && activityday == weatherday) {
-                            HasForecast = true;
-                        }
-                    }
-
-                } else {
-                    weatherresult = [cell.activity.poi.weather objectsWhere:@"timedefition='daily'"];
-                    
-                    NSDate *today = [NSDate date];
-                    NSDate *sevenDaysAhead = [today dateByAddingTimeInterval:7*24*60*60];
-                    
-                    if ([cell.activity.startdt compare:today] == NSOrderedDescending &&  [cell.activity.startdt compare:sevenDaysAhead] == NSOrderedAscending) {
-                    
-                        // we loop through
-                        for (WeatherRLM *weather in weatherresult) {
-                            if ([[NSCalendar currentCalendar] isDate:cell.activity.startdt inSameDayAsDate:[NSDate dateWithTimeIntervalSince1970: [weather.time doubleValue]]]) {
-                                //NSLog(@"We have the weather forecast! %@", weather.temperature);
-                                HasForecast = true;
-                            }
-                        }
-                    }
-                    
-                }
-                [cell.ButtonShowWeather setEnabled:TRUE];
-                if (HasForecast) {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor systemPinkColor]];
-                    
-                    [cell.LabelWeatherTemp setTextColor:[UIColor whiteColor]];
-                    [cell.ImageWeatherIcon setTintColor:[UIColor whiteColor]];
-                    
-                } else {
-                    [cell.ViewWeatherDogEarBackground setBackgroundColor:[UIColor clearColor]];
-                    
-                    [cell.LabelWeatherTemp setTextColor:[UIColor systemPinkColor]];
-                    [cell.ImageWeatherIcon setTintColor:[UIColor systemPinkColor]];
-                }
-            }
-           
-        }
-
         UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:20.0f];
 
         if (NumberOfCellsInRow >= 3.0f) {
@@ -993,9 +847,6 @@ CGFloat Scale = 4.14f;
                         cell.ViewPoiType.hidden = false;
                     }
                 } else {
-                    if (cell.activity.poi.IncludeWeather == [NSNumber numberWithInt:1]) {
-                        cell.ViewWeather.hidden = false;
-                    }
                     if (cell.activity.state == [NSNumber numberWithInt:0]) {
                         cell.ButtonDelete.hidden = false;
                     }
@@ -1006,9 +857,6 @@ CGFloat Scale = 4.14f;
                     cell.ButtonDelete.hidden = false;
                 }
                 cell.ViewPoiType.hidden = false;
-                if (cell.activity.poi.IncludeWeather == [NSNumber numberWithInt:1]) {
-                    cell.ViewWeather.hidden = false;
-                }
             }
         } else {
             if (self.editmode == 0) {
@@ -1016,9 +864,6 @@ CGFloat Scale = 4.14f;
                     cell.ButtonDelete.hidden = false;
                 }
                 cell.ViewPoiType.hidden = false;
-                if (cell.activity.poi.IncludeWeather == [NSNumber numberWithInt:1]) {
-                    cell.ViewWeather.hidden = false;
-                }
             }
         }
 
@@ -1515,6 +1360,7 @@ remarks:           table view with sections.
    
     if([segue.identifier isEqualToString:@"ShowNewActivity"]){
         PoiSearchVC *controller = (PoiSearchVC *)segue.destinationViewController;
+        controller.frommenu = false;
         controller.delegate = self;
         controller.Activity = [[ActivityRLM alloc] init];
         controller.newitem = true;
@@ -1527,6 +1373,7 @@ remarks:           table view with sections.
         UIButton * button=(UIButton*)sender;
         DiaryDatesNSO *dd = self.sectionheaderdaystitle[button.tag];
         PoiSearchVC *controller = (PoiSearchVC *)segue.destinationViewController;
+        controller.frommenu = false;
         controller.delegate = self;
         controller.Activity = [[ActivityRLM alloc] init];
         controller.newitem = true;
@@ -1572,22 +1419,7 @@ remarks:           table view with sections.
         }
         controller.ActivityItem = nil;
         controller.activitystate = [NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex];
-    } else if([segue.identifier isEqualToString:@"ShowWeatherForecastView"]) {
-        WeatherVCViewController *controller = (WeatherVCViewController *)segue.destinationViewController;
-        controller.delegate = self;
-        controller.realm = self.realm;
-        if ([sender isKindOfClass: [UIButton class]]) {
-            UIView * cellView=(UIView*)sender;
-            while ((cellView= [cellView superview])) {
-                if([cellView isKindOfClass:[ActivityListCell class]]) {
-                    ActivityListCell *cell = (ActivityListCell*)cellView;
-                    NSIndexPath *indexPath = [self.CollectionViewActivities indexPathForCell:cell];
-                    controller.ActivityItem = [self.activitycollection objectAtIndex:indexPath.row];
-                    controller.realm = self.realm;
-                }
-            }
-        }
-    }
+    } 
 }
 
 
@@ -1740,104 +1572,26 @@ remarks:           table view with sections.
         
         /* Present Diary view */
 
-        [self PresentAssistantView :@"ActivityListVC-Diary" :@"Activity Diary"];
         
         self.ButtonShare.hidden = true;
         self.TableViewDiary.hidden = false;
         [self.TableViewDiary reloadData];
         self.CollectionViewActivities.hidden = true;
        
-        [self.ButtonSwapMainView setImage:[UIImage systemImageNamed:@"square.grid.2x2"] forState:UIControlStateNormal];
+        [self.ButtonSwapMainView setImage:[UIImage systemImageNamed:@"squareshape.split.2x2"] forState:UIControlStateNormal];
+        [self.ButtonSwapMainView setTitle:@"Grid" forState:UIControlStateNormal];
 
     } else {
         
         /* Present Grid view */
-        
-        [self PresentAssistantView :@"ActivityListVC-Grid" :@"Activity Grid"];
               
         self.ButtonShare.hidden = false;
         self.TableViewDiary.hidden = true;
         [self.CollectionViewActivities reloadData];
         self.CollectionViewActivities.hidden = false;
-        [self.ButtonSwapMainView setImage:[UIImage systemImageNamed:@"calendar"] forState:UIControlStateNormal];
-       
+        [self.ButtonSwapMainView setImage:[UIImage systemImageNamed:@"list.bullet.rectangle"] forState:UIControlStateNormal];
+        [self.ButtonSwapMainView setTitle:@"Detail" forState:UIControlStateNormal];
     }
-}
-
-/*
-created date:      12/01/2020
-last modified:     12/01/2020
-remarks:
-*/
--(void) PresentAssistantView :(NSString*)ViewName :(NSString*) Title {
-   
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",ViewName] firstObject];
-
-    if ([assist.State integerValue] == 1) {
-
-        NSString *helpContent;
-        CGFloat helperHeight = 300.0f;
-        
-        if ([ViewName isEqualToString:@"ActivityListVC-Grid"]) {
-         helperHeight = 550.0f;
-        }
-
-        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, helperHeight)];
-
-
-        if ([ViewName isEqualToString:@"ActivityListVC-Grid"]) {
-            helperView.tag = 101;
-            helpContent = @"This view provides a visualisation of activities contained within the selected Trip. Pressing the (+) icon will require you to add an associated Point Of Interest before an editor is presented to create a new activity.\n\nThere are planned activities and actual ones.  Prior your trip you can create many planned activities, these are ordered by the date/time. When the trip is ongoing using the Actual switch either use the same planned items created  transforming them into actual activities or create further new ones.\n\nPinching and zooming the grid of Activities allows you to increase/decrease the size the activity items.\nYou may delete existing activities as well by pressing the red trash icon.  Long depress of an activity item shows the date detail and if a Point Of Interest has weather report enabled - tapping the dog ear expands the weather report.  If planned activities are in view and trip contains a Point of Interest with weather reports enabled, a weather button is shown.  Pressing it requests a current Weather report.\n\nLastly there is a Share button that can allow you to share on social media or email the Trip activities.";
-            
-        } else {
-            helperView.tag = 100;
-            helpContent = @"This view presents the activities as a diary by date within the current Trip.  Pressing the (+) icon against any date heading will open an editor to create a new activity (firstly requiring you to add a Point Of Interest) - by default the dates will contain the whole day of the date you chose.\n\nOnce again there are planned activities and actual ones.  Prior your trip you can create many planned activities, ordered by the date/time chosen. When the trip is ongoing you can select the Actual option instead and select either a planned item or create a further new one.";
-            
-        }
-          
-        helperView.backgroundColor = [UIColor labelColor];
-        
-        helperView.layer.cornerRadius=8.0f;
-        helperView.layer.masksToBounds=YES;
-        
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        title.text = Title;
-        title.textAlignment = NSTextAlignmentCenter;
-        [helperView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [helperView addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, helperView.bounds.size.height - 100);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
-
-        helpText.text = helpContent;
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [helperView addSubview:helpText];
-
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:button];
-        
-        [self.view addSubview:helperView];
-    }
-    
 }
 
 /*
@@ -1898,7 +1652,7 @@ remarks:
 
 /*
  created date:      15/03/2019
- last modified:     22/08/2019
+ last modified:     06/03/2021
  remarks:           Added completion block as image rendered too soon after reload data.
                     CustomCollectionView is custom subclass of UICollectionView.
                     https://stackoverflow.com/questions/16071503/how-to-tell-when-uitableview-has-completed-reloaddata
@@ -1906,7 +1660,7 @@ remarks:
 - (IBAction)shareButtonPressed:(id)sender {
     /* tweet break selected */
     
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Share highlights of Trip\n%@", self.Trip.name] message:@"Send an ePostcard or Share on active Social Media with pre-selected activities."
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:[NSString stringWithFormat:@"Share highlights of Trip\n%@", self.Trip.name] message:@"Send an ePostcard or Share on active Social Media feed with pre-selected activities."
                                                             preferredStyle:UIAlertControllerStyleAlert];
     
     [alert.view setTintColor:[UIColor labelColor]];
@@ -1927,7 +1681,6 @@ remarks:
 
                                                                         TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
                                                                         cropViewController.delegate = self;
-
 
                                                                         [cropViewController setTitle:@"Social Media - Set Picture size"];
 
@@ -2017,13 +1770,19 @@ remarks:            Response from mail Composer.  Handles with a reload of colle
 
 /*
 created date:      11/09/2019
-last modified:     11/09/2019
+last modified:     06/03/2021
 remarks:           User dismisses action to send ePostcard or Tweet.
 */
 - (void)cropViewController:(TOCropViewController *)cropViewController didFinishCancelled:(BOOL)cancelled  {
    
-    [cropViewController dismissViewControllerAnimated:YES completion:NULL];
+    if (@available(iOS 14, *)) {
+        [cropViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        cropViewController.transitioningDelegate = nil;
+        
+    }
     
+    [cropViewController dismissViewControllerAnimated:YES completion:NULL];
+
     dispatch_async(dispatch_get_main_queue(), ^{
         self.tweetview = false;
         [self LoadActivityData :[NSNumber numberWithInteger:self.SegmentState.selectedSegmentIndex]];
@@ -2035,7 +1794,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
 
 /*
  created date:      22/08/2019
- last modified:     21/01/2020
+ last modified:     06/03/2021
  remarks:           User manually resizes image of collectionview made by system.  This method handles
                     what should do depending on title passed in.  (email or tweet)
  */
@@ -2047,7 +1806,14 @@ remarks:           User dismisses action to send ePostcard or Tweet.
         isTweet = true;
     }
     
+    if (@available(iOS 14, *)) {
+        [cropViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        cropViewController.transitioningDelegate = nil;
+        
+    }
+    
     [cropViewController dismissViewControllerAnimated:YES completion:NULL];
+
     
     if (isTweet) {
         
@@ -2061,7 +1827,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
             TripType = @"itinerary";
         }
         
-        NSString *postText = [NSString stringWithFormat:@"%@ trip %@, generated in @trHippoApp ",self.Trip.name, TripType];
+        NSString *postText = [NSString stringWithFormat:@"%@ trip %@, generated with @Trips_App ",self.Trip.name, TripType];
         UIImage *postImage = image;
         NSArray *postItems = @[postText, postImage];
         
@@ -2136,146 +1902,5 @@ remarks:           User dismisses action to send ePostcard or Tweet.
     
 }
 
-/*
-created date:      24/06/2019
-last modified:     27/08/2019
-remarks:           
-*/
-- (IBAction)WeatherRequestPressed:(id)sender {
-    
-    [self.ActivityView startAnimating];
-    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate date]];
-
-    
-    if ([self checkInternet]) {
-        
-        [self.EffectsViewWaiting setHidden:false];
-        
-        __block int PoiCounter = 1;
-        for (ActivityRLM *activity in self.activitycollection) {
-            
-            if ([activity.poi.IncludeWeather intValue] == 1) {
-                
-                /* we only want to update the forecast if it is older than 1 hour */
-                RLMResults <WeatherRLM*> *weatherresult = [activity.poi.weather objectsWhere:@"timedefition='currently'"];
-                NSNumber *maxtime = [weatherresult maxOfProperty:@"time"];
-                
-                NSTimeInterval timestamp = [[NSDate date] timeIntervalSince1970];
-                NSNumber *now = [NSNumber numberWithDouble: timestamp];
-                
-                if (([maxtime doubleValue] + 3600 < [now doubleValue]) || maxtime == nil) {
-                    
-                    /* clean up previous data */
-                    if (maxtime != nil) {
-                        [self.realm transactionWithBlock:^{
-                            [self.realm deleteObjects:activity.poi.weather];
-                        }];
-                    }
-                    NSString *url = [NSString stringWithFormat:@"https://api.darksky.net/forecast/d339db567160bdd560169ea4eef3ee5a/%@,%@?exclude=minutely,flags,alerts&units=uk2", activity.poi.lat, activity.poi.lon];
-                    
-                    [self fetchFromDarkSkyApi:url withDictionary:^(NSDictionary *data) {
-                        
-                        dispatch_sync(dispatch_get_main_queue(), ^(void){
-                            
-                            WeatherRLM *weather = [[WeatherRLM alloc] init];
-                            NSDictionary *JSONdata = [data objectForKey:@"currently"];
-                            weather.icon = [NSString stringWithFormat:@"weather-%@",[JSONdata valueForKey:@"icon"]];
-                            weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[JSONdata valueForKey:@"icon"]];
-                            weather.summary = [JSONdata valueForKey:@"summary"];
-                            double myDouble = [[JSONdata valueForKey:@"temperature"] doubleValue];
-                            NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                            [fmt setPositiveFormat:@"0.#"];
-                            weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-                            weather.timedefition = @"currently";
-                            weather.time = [JSONdata valueForKey:@"time"];
-                            
-                            [self.realm transactionWithBlock:^{
-                                [activity.poi.weather addObject:weather];
-                            }];
-                            
-                            NSDictionary *JSONHourlyData = [data objectForKey:@"hourly"];
-                            NSArray *dataHourly = [JSONHourlyData valueForKey:@"data"];
-                            
-                            for (NSMutableDictionary *item in dataHourly) {
-                                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                                weather.summary = [item valueForKey:@"summary"];
-                                double myDouble = [[item valueForKey:@"temperature"] doubleValue];
-                                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                                [fmt setPositiveFormat:@"0.#"];
-                                weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-                                weather.timedefition = @"hourly";
-                                weather.time = [item valueForKey:@"time"];
-                                
-                                [self.realm transactionWithBlock:^{
-                                    [activity.poi.weather addObject:weather];
-                                }];
-                            }
-                            NSDictionary *JSONDailyData = [data objectForKey:@"daily"];
-                            NSArray *dataDaily = [JSONDailyData valueForKey:@"data"];
-                            
-                            for (NSMutableDictionary *item in dataDaily) {
-                                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                                weather.summary = [item valueForKey:@"summary"];
-                                double tempLow = [[item valueForKey:@"temperatureLow"] doubleValue];
-                                double tempHigh = [[item valueForKey:@"temperatureHigh"] doubleValue];
-                                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                                [fmt setPositiveFormat:@"0.#"];
-                                weather.temperature = [NSString stringWithFormat:@"Lowest %@ °C, Highest %@ °C",[fmt stringFromNumber:[NSNumber numberWithFloat:tempLow]], [fmt stringFromNumber:[NSNumber numberWithFloat:tempHigh]]];
-                                weather.timedefition = @"daily";
-                                weather.time = [item valueForKey:@"time"];
-                                
-                                [self.realm transactionWithBlock:^{
-                                    [activity.poi.weather addObject:weather];
-                                }];
-                            }
-                            
-                            if (PoiCounter == self.activitycollection.count) {
-                                /* after looping through, we fall back into the segue task of presenting next view controller */
-                                [self.ButtonWeatherRequest setEnabled:false];
-                                [self.CollectionViewActivities reloadData];
-                                [self.EffectsViewWaiting setHidden:true];
-                                
-                               // [controller setModalPresentationStyle:UIModalPresentationFullScreen];
-                               // [self presentViewController:controller animated:YES completion:nil];
-                                //[cell.ActivityIndicatorView stopAnimating];
-                            } else {
-                                PoiCounter ++;
-                            }
-                        });
-                    }];
-                } else {
-                    if (PoiCounter == self.activitycollection.count) {
-                        //[controller setModalPresentationStyle:UIModalPresentationFullScreen];
-                        //[self presentViewController:controller animated:YES completion:nil];
-                        [self.ButtonWeatherRequest setEnabled:false];
-                        [self.CollectionViewActivities reloadData];
-                        [self.EffectsViewWaiting setHidden:true];
-                        [self.ActivityView stopAnimating];
-                        //[cell.ActivityIndicatorView stopAnimating];
-                    } else {
-                        PoiCounter ++;
-                    }
-                }
-            } else {
-                if (PoiCounter == self.activitycollection.count) {
-                    //[controller setModalPresentationStyle:UIModalPresentationFullScreen];
-                    [self.ButtonWeatherRequest setEnabled:false];
-                    [self.CollectionViewActivities reloadData];
-                    [self.EffectsViewWaiting setHidden:true];
-                    [self.ActivityView stopAnimating];
-                    //[self presentViewController:controller animated:YES completion:nil];
-                    //[cell.ActivityIndicatorView stopAnimating];
-                } else {
-                    PoiCounter ++;
-                }
-            }
-        }
-    }
-    
-}
 
 @end

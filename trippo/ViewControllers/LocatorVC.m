@@ -129,7 +129,7 @@ MKLocalSearchResponse *results;
 -(void)helperViewButtonPressed :(id)sender {
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"LocatorVC"] firstObject];
-    NSLog(@"%@",assist);
+    //NSLog(@"%@",assist);
     if ([assist.State integerValue] == 1) {
         [self.realm beginWriteTransaction];
         assist.State = [NSNumber numberWithInteger:0];
@@ -159,8 +159,6 @@ MKLocalSearchResponse *results;
         }
         [self.locationManager startUpdatingLocation];
         
-    } else {
-        NSLog(@"Nothing to do here!");
     }
     
 }
@@ -178,9 +176,8 @@ MKLocalSearchResponse *results;
     if ([self checkInternet]) {
 
         [geoCoder reverseGeocodeLocation: [[CLLocation alloc] initWithLatitude:self.locationManager.location.coordinate.latitude longitude:self.locationManager.location.coordinate.longitude] completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (error) {
-                NSLog(@"%@", [NSString stringWithFormat:@"%@", error.localizedDescription]);
-            } else {
+            if (!error) {
+                
                 AnnotationMK *anno = [[AnnotationMK alloc] init];
                 if ([placemarks count]>0) {
                     CLPlacemark *placemark = [placemarks firstObject];
@@ -275,9 +272,7 @@ remarks:
         
         
         [geoCoder reverseGeocodeLocation: [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude] completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (error) {
-                NSLog(@"%@", [NSString stringWithFormat:@"%@", error.localizedDescription]);
-            } else {
+            if (!error) {
                 
                 AnnotationMK *anno = [[AnnotationMK alloc] init];
 
@@ -708,7 +703,7 @@ remarks:
         for (ActivityRLM *activity in activities) {
             double Lat = [activity.poi.lat doubleValue];
             double Lon = [activity.poi.lon doubleValue];
-            NSLog(@"%@", activity.poi.name);
+            //NSLog(@"%@", activity.poi.name);
             minLatitude = fmin(Lat, minLatitude);
             maxLatitude = fmax(Lat, maxLatitude);
             minLongitude = fmin(Lon, minLongitude);

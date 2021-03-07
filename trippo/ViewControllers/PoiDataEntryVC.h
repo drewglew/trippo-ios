@@ -29,6 +29,8 @@
 #import "TOCropViewController.h"
 #import "AnnotationMK.h"
 #import "ActivityDataEntryVC.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import <CloudKit/CloudKit.h>
 
 
 @protocol PoiDataEntryDelegate <NSObject>
@@ -60,6 +62,7 @@
 @property (strong, nonatomic) ActivityRLM *ActivityItem;
 @property RLMRealm *realm;
 @property (strong, nonatomic) NSArray *TypeItems;
+
 @property (strong, nonatomic) NSMutableArray *CategoryItems;
 @property (strong, nonatomic) NSArray *TypeLabelItems;
 @property (strong, nonatomic) NSArray *TypeDistanceItems;
@@ -127,4 +130,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *LabelImageOptions;
 @property (strong, nonatomic) UISelectionFeedbackGenerator *feedback;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonDeleteImage;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonEditPhotoInfo;
+
 @end

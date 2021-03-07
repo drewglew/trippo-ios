@@ -17,17 +17,18 @@
 #import "ImageCollectionRLM.h"
 #import "TextFieldDatePicker.h"
 #import <MapKit/MapKit.h>
+#import "TOCropViewController.h"
 #import "AnnotationMK.h"
 #import "Reachability.h"
 #import "WeatherRLM.h"
 #import "PaymentListingVC.h"
 #import "SettingsRLM.h"
-
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @protocol ProjectDataEntryDelegate <NSObject>
 @end
 
-@interface ProjectDataEntryVC : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate, MKMapViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PaymentListingDelegate>
+@interface ProjectDataEntryVC : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextViewDelegate,UITextFieldDelegate, MKMapViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, PaymentListingDelegate,TOCropViewControllerDelegate>
 
 @property (strong, nonatomic) ProjectNSO *Project;
 @property TripRLM *Trip;

@@ -15,6 +15,7 @@
 int BlurredMainViewPresentedHeight;
 int BlurredImageViewPresentedHeight=60;
 int DocumentListingViewPresentedHeight = 250;
+bool UpdatedActivity = false;
 @implementation ActivityDataEntryVC
 @synthesize ImageViewPoi;
 @synthesize delegate;
@@ -141,13 +142,6 @@ int DocumentListingViewPresentedHeight = 250;
             [self.ButtonArriving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
             [self.ButtonLeaving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
             
-            // activity is done!
-            if (self.Activity.weather.count > 0) {
-                [self.ButtonUpdateActualWeather setEnabled:FALSE];
-            } else if (self.Activity.poi.IncludeWeather == 0) {
-                self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
-                [self.ViewUpdateActualWeather setHidden:TRUE];
-            }
         }
         self.toggleNotifyArrivingFlag = [self.Activity.geonotification intValue];
         self.toggleNotifyLeavingFlag = [self.Activity.geonotifycheckout intValue];
@@ -222,13 +216,9 @@ int DocumentListingViewPresentedHeight = 250;
             self.GeoWarningLabelHeightConstraint.constant = 75.0f;
             [self.ButtonArriving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
             [self.ButtonLeaving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
-            //[self.view layoutIfNeeded];
         }
         
-        self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
-        [self.ViewUpdateActualWeather setHidden:TRUE];
-        
-        [self.SwitchTweet setOn:false];
+        [self.SwitchTweet setOn:TRUE];
         [self.ButtonPayment setEnabled:false];
         
         [self LoadPoiData];
@@ -366,115 +356,9 @@ int DocumentListingViewPresentedHeight = 250;
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
     NSString *ViewName = [NSString stringWithFormat:@"%@~%@",@"ActivityDataEntryVC",self.Activity.state];
-    
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@", ViewName] firstObject];
-
-    if ([assist.State integerValue] == 1) {
-    
-        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 475)];
-        helperView.backgroundColor = [UIColor labelColor];
-        
-        helperView.layer.cornerRadius=8.0f;
-        helperView.layer.masksToBounds=YES;
-        
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        if ([self.Activity.state integerValue] == 0) {
-            title.text = @"Activity Idea";
-        } else {
-            title.text = @"Actual Activity";
-        }
-        title.textAlignment = NSTextAlignmentCenter;
-        [helperView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, 10, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [helperView addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 375);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
-
-        if ([self.Activity.state integerValue] == 0) {
-            helpText.text = @"This screen allows entries that are just ideas.  The start and end dates entered here may adjust the main Trip timeframe if they are outside the original boundary & will differ depending on how you landed on this screen.  Notes and Reference as well as Activity Idea name can be entered here.  If you have a travel guide and wish to copy some text you may scan content using OCR technology - the source must be in clear font and it is recommended the page is placed very flat using quality lighting. \n\nThe Photos page allows multiple photos to be added.  These photos might be from leaflets, books or your own photo collection.\n\nThe Documents page by default includes any Wikipedia document that was attached to the Point Of Interest.  Other documents can also be added manually, such as PDF received on email or directly from a website address.";
-        } else {
-             helpText.text = @"The Settings page firstly allows the App to send a notification when the phone enters or leaves the proximity of the Point of Interest location. This is useful when travelling as the notification itself is able to generate an Actual activity with the logged time of arrival when it is convenient to update the App. It is important to make sure Location settings for trHippo are enabled. Next on the Settings page is a switch to determine if activity is shared via Tweet or E-Postcard as  you might not wish to place every activity into the shared highlights.\n\nThe Road Sign icon in the option bar allows us to evaluate how we expect to travel by road to this activity location from either our current location or another activity using either Google Maps or Apple Maps. (depends on what is installed on the device).\n\nThere is also a Credit Card icon which provides an option to view, insert or edit any costs associated to this activity.";
-        }
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [helperView addSubview:helpText];
-
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:button];
-        
-        UIButton *buttonNext = [UIButton buttonWithType:UIButtonTypeSystem];
-        buttonNext.frame = CGRectMake(helperView.bounds.size.width - 40.0, helperView.bounds.size.height - 40, 35.0, 35.0); // x,y,width,height
-        [buttonNext setImage:[UIImage systemImageNamed:@"chevron.right.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [buttonNext setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [buttonNext addTarget:self action:@selector(helperViewNextButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:buttonNext];
-        [self.view addSubview:helperView];
-    }
 }
 
-/*
- created date:      12/01/2020
- last modified:     12/01/2020
- remarks:
- */
--(void)helperViewButtonPressed :(id)sender {
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    
-    NSString *ViewName = [NSString stringWithFormat:@"%@~%@",@"ActivityDataEntryVC",self.Activity.state];
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@", ViewName] firstObject];
-    NSLog(@"%@",assist);
-    if ([assist.State integerValue] == 1) {
-        [self.realm beginWriteTransaction];
-        assist.State = [NSNumber numberWithInteger:0];
-        [self.realm commitWriteTransaction];
-    }
-    UIView *parentView = [(UIView *)sender superview];
-    [parentView setHidden:TRUE];
-    
-}
    
-/*
- created date:      12/01/2020
- last modified:     12/01/2020
- remarks:
- */
--(void)helperViewNextButtonPressed :(id)sender {
-    
-    UIView *parentView = [(UIView *)sender superview];
-
-    for(UIView *v in parentView.subviews)
-    {
-         if([v isKindOfClass:[UILabel class]])
-         {
-             if (((UILabel*)v).bounds.size.height != 24) {
-                 if ([self.Activity.state integerValue] == 0) {
-                 ((UILabel*)v).text=@"This is the actual activity screen. When creating a new Activity depending on how you arrived - you may have varying start and end dates.  The existing entries here are of activities that have either begun or have already happened.\n\nIf you selected an idea activity from the actual activity grid you will have an additional Check-In button that will allow you to automatically check-in using the current time.  Once an activity is with Checked In status, when reopening the activity the button now facilitates instant Check-Out.\n\nAs per the activity ideas screen, the Main page contains Notes, Point of interest detail and reference.  Additionally there is a Key Photo and Star ratings (1 to 5) that are averaged out inside the Point Of Interest.\n\nYou may also scan documents using OCR technology loading the text into the Notes as well as adding multiple photos and PDF documents.";
-                 } else {
-                 ((UILabel*)v).text=@"The Road Sign icon in the option bar allows us to evaluate how we expect to travel by road to this activity location from either our current location or a previous activity using Google Maps TM or Apple Maps. (depends on what is installed on the device).\n\nThere is also a Credit Card icon which provides an option to view, insert or edit any costs associated to this activity.\n\nThe Settings page allows the App to send a notification when the phone leaves the proximity of the Point of Interest location. As the actual activity exists already there is no requirement for Arrival notifications here.  Also upon the Settings page is a switch to determine if this activity is shared via Tweet or E-Postcard.\n\nIf the activity is using a Point of Interest that has the weather report enabled and the activity is finalised you may request the actual weather report while this activity began.";
-                 }
-             }
-         }
-    }
-    [sender setHidden:true];
-}
-
-
 
 /*
 created date:       15/08/2019
@@ -746,6 +630,8 @@ remarks:            Add wiki document into collection if possible.
     NSString *fileDirectory = [paths objectAtIndex:0];
     long ImageIndex = 0;
     for (ImageCollectionRLM *imgobject in self.Activity.images) {
+        
+        
         UIImage *image = [[UIImage alloc] init];
         NSString *dataFilePath = [fileDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
         NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
@@ -762,9 +648,11 @@ remarks:            Add wiki document into collection if possible.
         }
         if (imgobject.KeyImage) {
             self.SelectedImageKey = imgobject.key;
+            self.labelPhotoInfo.text = imgobject.info;
             self.SelectedImageReference = imgobject.ImageFileReference;
             self.SelectedImageIndex = [NSNumber numberWithLong:ImageIndex];
             self.ViewSelectedKey.hidden = false;
+            [self.ButtonKey setTintColor:[UIColor labelColor]];
             [self.ImagePicture setImage:image];
             [self.ImageViewKeyActivity setImage:image];
         }
@@ -956,9 +844,6 @@ remarks:
         bool AdjustTripStartDt = false;
         bool AdjustTripEndDt = false;
 
-       
-    
-    
         NSComparisonResult resulttripstartdt = [startdt compare:self.Trip.startdt];
         NSComparisonResult resulttripenddt = [enddt compare:self.Trip.enddt];
 
@@ -1146,6 +1031,7 @@ remarks:
         
         [self.realm beginWriteTransaction];
         [self.realm addObject:self.Activity];
+        UpdatedActivity = true;
         [self.realm commitWriteTransaction];
         [self dismissModalStack];
 
@@ -1239,6 +1125,7 @@ remarks:
                 }
             }
         }
+        UpdatedActivity = true;
         [self.Activity.realm commitWriteTransaction];
         [self dismissModalStack];
     }
@@ -1375,44 +1262,6 @@ remarks:
     }
 }
 
-/*
- created date:      30/04/2018
- last modified:     21/10/2018
- remarks:
- */
-- (IBAction)BackPressed:(id)sender {
-    if (self.newitem) {
-        /* manage the images if any exist */
-        if (self.Activity.images.count>0) {
-            /* delete all */
-            [self.realm transactionWithBlock:^{
-                [self.realm deleteObjects:self.Activity.images];
-            }];
-        }
-    } else {
-        if (self.Activity.images.count > 0) {
-            NSInteger count = [self.Activity.images count];
-            [self.realm beginWriteTransaction];
-            for (NSInteger index = (count - 1); index >= 0; index--) {
-                ImageCollectionRLM *imgobject = self.Activity.images[index];
-                if (imgobject.ImageFlaggedDeleted) {
-                    imgobject.ImageFlaggedDeleted = false;
-                    NSLog(@"undone deleted image");
-                } else if ([imgobject.ImageFileReference isEqualToString:@""] || imgobject.ImageFileReference==nil) {
-                    /* here we add the attachment to file system and dB */
-                    [self.realm deleteObject:imgobject];
-                    NSLog(@"undone new image");
-                } else if (imgobject.UpdateImage) {
-                    /* we might swap it out as user has replaced the original file */
-                    imgobject.UpdateImage = false;
-                    NSLog(@"undone updated image");
-                }
-            }
-            [self.realm commitWriteTransaction];
-        }
-    }
-    [self dismissModalStack];
-}
 
 /*
  created date:      19/03/2019
@@ -1585,7 +1434,7 @@ remarks:
 
 /*
  created date:      19/08/2018
- last modified:     30/03/2019
+ last modified:     02/03/2021
  remarks:
  */
 -(void)InsertActivityImage {
@@ -1607,6 +1456,7 @@ remarks:
     NSString *photoCloseToPoiOption = @"Choose own photos nearby";
     NSString *photoFromWikiOption = @"Choose photos from web";
     NSString *lastphotoOption = @"Select last photo taken";
+    NSString *lastPaste = @"Paste from Clipboard";
     
     UIAlertAction *cameraAction = [UIAlertAction actionWithTitle:cameraOption
                                                            style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -1708,6 +1558,52 @@ remarks:
                                                               }];
     
     
+    
+    
+    UIAlertAction *pasteFromClipboard = [UIAlertAction actionWithTitle:lastPaste
+                                    style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        
+                                    
+        
+                                    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+                                    NSData *data = [pasteboard dataForPasteboardType:(NSString *)kUTTypePNG];
+                                    
+                                    if (data==nil) {
+                                        data = [pasteboard dataForPasteboardType:(NSString *)kUTTypeJPEG];
+                                    }
+        
+                                    if (data!=nil) {
+
+                                        if (self.imagestate==1) {
+
+                                            UIImage *image = [UIImage imageWithData:data];
+                                            
+                                            self.imagestate = 5;
+                                            
+                                            TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+                                            cropViewController.delegate = self;
+                                            
+                                            [cropViewController setAspectRatioPreset:TOCropViewControllerAspectRatioPresetSquare];
+                                            
+                                            [self presentViewController:cropViewController animated:YES completion:nil];
+                                            
+                                        } else if (self.imagestate==2) {
+                                            
+                                            /* need to save the new image into file location on update */
+                                            UIImage *image = [UIImage imageWithData:data];
+                                            
+                                            
+                                            self.imagestate = 6;
+                                            
+                                            TOCropViewController *cropViewController = [[TOCropViewController alloc] initWithImage:image];
+                                            cropViewController.delegate = self;
+                                            
+                                            [self presentViewController:cropViewController animated:YES completion:nil];
+                                        }
+                                    }
+    }];
+    
+    
     UIAlertAction *lastphotoAction = [UIAlertAction actionWithTitle:lastphotoOption
                               style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
                                   PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
@@ -1794,6 +1690,7 @@ remarks:
     if (![self.Poi.wikititle isEqualToString:@""]) {
         [alert addAction:photoWikiAction];
     }
+    [alert addAction:pasteFromClipboard];
     [alert addAction:lastphotoAction];
     [alert addAction:cancelAction];
     
@@ -1842,11 +1739,13 @@ remarks:
             ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
             imgobject.key = [[NSUUID UUID] UUIDString];
             
-            
+
             if (self.Activity.images.count==0) {
                 imgobject.KeyImage = 1;
                 [self.ImagePicture setImage:chosenImage];
                 [self.ImageViewKeyActivity setImage:chosenImage];
+                self.labelPhotoInfo.text = @"Live Photo";
+                
             } else {
                 imgobject.KeyImage = 0;
             }
@@ -1878,29 +1777,78 @@ remarks:
 
 
 /*
- created date:      29/09/2018
- last modified:     29/09/2018
+ created date:      02/03/2021
+ last modified:     02/03/2021
  remarks:           TODO - is it worth presenting the black and white image?
  */
 - (void)cropViewController:(TOCropViewController *)cropViewController didCropToImage:(UIImage *)image withRect:(CGRect)cropRect angle:(NSInteger)angle
 {
-    G8Tesseract *tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng"];
-    tesseract.delegate = self;
-    
-    tesseract.image = [ToolBoxNSO convertImageToGrayScale :image];
-    
-    tesseract.maximumRecognitionTime = 20.0;
-    [tesseract recognize];
-    
-    if (!self.TextViewNotes.selectedTextRange.empty) {
-        // use selected position to obtain location where to add the text
-        [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[tesseract recognizedText]];
+
+    if (self.imagestate==5) {
+        ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
+        imgobject.key = [[NSUUID UUID] UUIDString];
+        
+        CGSize size = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
+
+        image = [ToolBoxNSO imageWithImage:image scaledToSize:size];
+        
+        if (self.Activity.images.count==0) {
+            imgobject.KeyImage = 1;
+        } else {
+            imgobject.KeyImage = 0;
+        }
+        
+        [self.realm beginWriteTransaction];
+        [self.Activity.images addObject:imgobject];
+        [self.realm commitWriteTransaction];
+        
+        [self.ActivityImageDictionary setObject:image forKey:imgobject.key];
+        //self.imagestate=0;
+        [self.CollectionViewActivityImages reloadData];
+        
+        self.imagestate=0;
+        
+    } else if (self.imagestate==6) {
+
+        CGSize size = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
+
+        image = [ToolBoxNSO imageWithImage:image scaledToSize:size];
+        
+        ImageCollectionRLM *imgobject = [self.Activity.images objectAtIndex:[self.SelectedImageIndex longValue]];
+        [self.ActivityImageDictionary setObject:image forKey:imgobject.key];
+        [self.realm beginWriteTransaction];
+        imgobject.UpdateImage = true;
+        [self.realm commitWriteTransaction];
+        //self.imagestate=0;
+        [self.CollectionViewActivityImages reloadData];
+        
+        self.imagestate=0;
+        
     } else {
-        // append to the end of the detail.
-        self.TextViewNotes.text = [NSString stringWithFormat:@"%@\n%@", self.TextViewNotes.text, [tesseract recognizedText]];
-    }
-    NSLog(@"%@", [tesseract recognizedText]);
     
+        G8Tesseract *tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng"];
+        tesseract.delegate = self;
+        
+        tesseract.image = [ToolBoxNSO convertImageToGrayScale :image];
+        
+        tesseract.maximumRecognitionTime = 20.0;
+        [tesseract recognize];
+        
+        if (!self.TextViewNotes.selectedTextRange.empty) {
+            // use selected position to obtain location where to add the text
+            [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[tesseract recognizedText]];
+        } else {
+            // append to the end of the detail.
+            self.TextViewNotes.text = [NSString stringWithFormat:@"%@\n%@", self.TextViewNotes.text, [tesseract recognizedText]];
+        }
+        NSLog(@"%@", [tesseract recognizedText]);
+    }
+        
+    if (@available(iOS 13, *)) {
+        [cropViewController setModalPresentationStyle:UIModalPresentationFullScreen];
+        cropViewController.transitioningDelegate = nil;
+        
+    }
     [cropViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -1925,6 +1873,7 @@ remarks:
             imgobject.KeyImage = 1;
             [self.ImagePicture setImage:img.Image];
             [self.ImageViewKeyActivity setImage:img.Image];
+            self.labelPhotoInfo.text = img.Description;
         } else {
             imgobject.KeyImage = 0;
         }
@@ -1966,7 +1915,7 @@ remarks:
     if (indexPath.row == NumberOfItems -1) {
         UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
               
-        cell.ImageActivity.image = [UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config];
+        cell.ImageActivity.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
         [cell.ImageActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
 
     } else {
@@ -1997,15 +1946,20 @@ remarks:
             self.SelectedImageReference = imgobject.ImageFileReference;
             self.SelectedImageIndex = [NSNumber numberWithLong:indexPath.row];
             if (imgobject.KeyImage==0) {
+                [self.ButtonKey setTintColor:[UIColor colorNamed:@"TrippoColor"]];
                 self.ViewSelectedKey.hidden = true;
             } else {
+                [self.ButtonKey setTintColor:[UIColor labelColor]];
                 self.ViewSelectedKey.hidden = false;
             }
             [self.ImagePicture setImage: [self.ActivityImageDictionary objectForKey: imgobject.key]];
+            self.labelPhotoInfo.text = imgobject.info;
             
             if (imgobject.ImageFlaggedDeleted==0) {
+                [self.ButtonDelete setTintColor:[UIColor redColor]];
                 self.ViewTrash.hidden = true;
             } else {
+                [self.ButtonDelete setTintColor:[UIColor labelColor]];
                 self.ViewTrash.hidden = false;
             }
             
@@ -2013,6 +1967,7 @@ remarks:
         else {
             ImageCollectionRLM *imgobject = [self.Activity.images objectAtIndex:indexPath.row];
             [self.ImagePicture setImage: [self.ActivityImageDictionary objectForKey: imgobject.key]];
+            self.labelPhotoInfo.text = imgobject.info;
         }
     }
 }
@@ -2062,6 +2017,11 @@ remarks:
             } completion:^(BOOL finished) {
                 self.ViewSelectedKey.hidden = showkeyview;
                 self.ViewTrash.hidden = showdeletedflag;
+                if (showdeletedflag) {
+                    [self.ButtonDelete setTintColor:[UIColor redColor]];
+                } else {
+                    [self.ButtonDelete setTintColor:[UIColor labelColor]];
+                }
             }];
             
         } else {
@@ -2071,6 +2031,11 @@ remarks:
             } completion:^(BOOL finished) {
                 self.ViewSelectedKey.hidden = showkeyview;
                 self.ViewTrash.hidden = showdeletedflag;
+                if (showdeletedflag) {
+                    [self.ButtonDelete setTintColor:[UIColor redColor]];
+                } else {
+                    [self.ButtonDelete setTintColor:[UIColor labelColor]];
+                }
             }];
         }
     } else if (self.ViewMain.hidden == false) {
@@ -2109,6 +2074,8 @@ remarks:
                 [self.realm beginWriteTransaction];
                 if (item.ImageFlaggedDeleted==0) {
                     
+                    [self.ButtonDelete setTintColor:[UIColor labelColor]];
+                    
                     self.ViewTrash.hidden = false;
                     item.ImageFlaggedDeleted = 1;
                     DeletedFlagEnabled = true;
@@ -2118,6 +2085,8 @@ remarks:
                 else {
                     self.ViewTrash.hidden = true;
                     item.ImageFlaggedDeleted = 0;
+                    
+                    [self.ButtonDelete setTintColor:[UIColor redColor]];
                 }
                 [self.realm commitWriteTransaction];
             }
@@ -2142,11 +2111,13 @@ remarks:
             if ([item.ImageFileReference isEqualToString:self.SelectedImageReference]) {
                 if (item.KeyImage==0) {
                     self.ViewSelectedKey.hidden = false;
+                    [self.ButtonKey setTintColor:[UIColor labelColor]];
                     item.KeyImage = 1;
                     KeyImageEnabled = true;
                     item.UpdateImage = true;
                 } else {
                     self.ViewSelectedKey.hidden = true;
+                    [self.ButtonKey setTintColor:[UIColor colorNamed:@"TrippoColor"]];
                     item.KeyImage = 0;
                     item.UpdateImage = true;
                 }
@@ -2829,112 +2800,7 @@ remarks:
     self.toggleNotifyLeavingFlag = [self setNotifyButtonToggle:self.ButtonLeaving :self.toggleNotifyLeavingFlag];
 }
 
-/*
- created date:      24/06/2019
- last modified:     27/08/2019
- remarks:           TODO!
- */
-- (IBAction)ButtonUpdateWeatherForActualPressed:(id)sender {
-
-
-    [self.ButtonUpdateActualWeather setEnabled:FALSE];
-    [self.ButtonUpdateActualWeather setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
     
-    NSTimeInterval timestamp = [self.Activity.startdt timeIntervalSince1970];
-    NSNumber *dt = [NSNumber numberWithInt: timestamp];
-    
-    
-    NSString *url = [NSString stringWithFormat:@"https://api.darksky.net/forecast/d339db567160bdd560169ea4eef3ee5a/%@,%@,%@?exclude=minutely,flags,alerts&units=uk2", self.Activity.poi.lat, self.Activity.poi.lon,dt];
-    
-    [self fetchFromDarkSkyApi:url withDictionary:^(NSDictionary *data) {
-        
-        dispatch_sync(dispatch_get_main_queue(), ^(void){
-            
-            WeatherRLM *weather = [[WeatherRLM alloc] init];
-            NSDictionary *JSONdata = [data objectForKey:@"currently"];
-            weather.icon = [NSString stringWithFormat:@"weather-%@",[JSONdata valueForKey:@"icon"]];
-            weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[JSONdata valueForKey:@"icon"]];
-            weather.summary = [JSONdata valueForKey:@"summary"];
-            double myDouble = [[JSONdata valueForKey:@"temperature"] doubleValue];
-            NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-            [fmt setPositiveFormat:@"0.#"];
-            weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-            weather.timedefition = @"currently";
-            weather.time = [JSONdata valueForKey:@"time"];
-            
-            [self.realm transactionWithBlock:^{
-                [self.Activity.weather addObject:weather];
-            }];
-            
-            NSDictionary *JSONHourlyData = [data objectForKey:@"hourly"];
-            NSArray *dataHourly = [JSONHourlyData valueForKey:@"data"];
-            
-            for (NSMutableDictionary *item in dataHourly) {
-                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                weather.summary = [item valueForKey:@"summary"];
-                double myDouble = [[item valueForKey:@"temperature"] doubleValue];
-                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                [fmt setPositiveFormat:@"0.#"];
-                weather.temperature = [NSString stringWithFormat:@"%@",[fmt stringFromNumber:[NSNumber numberWithFloat:myDouble]]];
-                weather.timedefition = @"hourly";
-                weather.time = [item valueForKey:@"time"];
-                
-                [self.realm transactionWithBlock:^{
-                    [self.Activity.weather addObject:weather];
-                }];
-            }
-            NSDictionary *JSONDailyData = [data objectForKey:@"daily"];
-            NSArray *dataDaily = [JSONDailyData valueForKey:@"data"];
-            
-            for (NSMutableDictionary *item in dataDaily) {
-                WeatherRLM *weather = [[WeatherRLM alloc] init];
-                weather.icon = [NSString stringWithFormat:@"weather-%@",[item valueForKey:@"icon"]];
-                weather.systemicon = [ToolBoxNSO getWeatherSystemImage:[item valueForKey:@"icon"]];
-                weather.summary = [item valueForKey:@"summary"];
-                double tempLow = [[item valueForKey:@"temperatureLow"] doubleValue];
-                double tempHigh = [[item valueForKey:@"temperatureHigh"] doubleValue];
-                NSNumberFormatter *fmt = [[NSNumberFormatter alloc] init];
-                [fmt setPositiveFormat:@"0.#"];
-                weather.temperature = [NSString stringWithFormat:@"Lowest %@ °C, Highest %@ °C",[fmt stringFromNumber:[NSNumber numberWithFloat:tempLow]], [fmt stringFromNumber:[NSNumber numberWithFloat:tempHigh]]];
-                weather.timedefition = @"daily";
-                weather.time = [item valueForKey:@"time"];
-                
-                [self.realm transactionWithBlock:^{
-                    [self.Activity.weather addObject:weather];
-                }];
-            }
-            
-        });
-    }];
-}
-    
-
-/*
- created date:      24/06/2019
- last modified:     24/06/2019
- remarks:           This procedure handles the call to the web service and returns a dictionary back to GetExchangeRates method.
- */
--(void)fetchFromDarkSkyApi:(NSString *)url withDictionary:(void (^)(NSDictionary* data))dictionary{
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest  requestWithURL:[NSURL URLWithString:url]];
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    
-    
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:
-                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                      NSDictionary *dicData = [NSJSONSerialization JSONObjectWithData:data
-                                                                                              options:0
-                                                                                                error:NULL];
-                                      dictionary(dicData);
-                                  }];
-    [task resume];
-}
-
 /*
  created date:      24/06/2019
  last modified:     24/06/2019
@@ -2953,5 +2819,100 @@ remarks:
     
 }
 
+/*
+ created date:      03/03/2021
+ last modified:     03/03/2021
+ remarks:  Should provide alertview with possibility for user to edit photo label.
+ */
+- (IBAction)ButtonEditPhotoInfoPressed:(id)sender {
+    
+    UIAlertController *alert = [UIAlertController
+                                  alertControllerWithTitle:@"Edit information to selected photo"
+                                  message:@"Provide metadata"
+                                  preferredStyle:UIAlertControllerStyleAlert];
+
+    UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction * action) {
+                                                
+        for (ImageCollectionRLM *imgObject in self.Activity.images) {
+            if ([imgObject.key isEqualToString:self.SelectedImageKey]) {
+                UITextField *PhotoRemark = alert.textFields[0];
+                [self.Activity.realm beginWriteTransaction];
+                imgObject.info = PhotoRemark.text;
+                [self.Activity.realm commitWriteTransaction];
+                self.labelPhotoInfo.text = PhotoRemark.text;
+            }
+            NSLog(@"%@",imgObject);
+        }
+    }];
+        
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
+                                                handler:^(UIAlertAction * action) {
+                                                        [alert dismissViewControllerAnimated:YES completion:nil];
+                                                }];
+
+    [alert addAction:ok];
+    [alert addAction:cancel];
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Remark";
+        [textField setFont:[UIFont systemFontOfSize:16]];
+        [textField setKeyboardType:UIKeyboardTypeAlphabet];
+        textField.text = self.labelPhotoInfo.text;
+        [textField setClearButtonMode:UITextFieldViewModeAlways];
+    }];
+    [self presentViewController:alert animated:YES completion:nil];
+    alert.view.tintColor = [UIColor colorNamed:@"MenuFGColor"];
+
+}
+
+/*
+ created date:      28/04/2018
+ last modified:     04/03/2021
+ remarks:           Used to be back button.
+ */
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    if (!UpdatedActivity) {
+        [self dismissedWithoutUpdate];
+    }
+}
+
+/*
+ created date:      04/03/2021
+ last modified:     04/03/2021
+ remarks:
+ */
+-(void)dismissedWithoutUpdate {
+    if (self.newitem) {
+        /* manage the images if any exist */
+        if (self.Activity.images.count>0) {
+            /* delete all */
+            [self.realm transactionWithBlock:^{
+                [self.realm deleteObjects:self.Activity.images];
+            }];
+        }
+    } else {
+        if (self.Activity.images.count > 0) {
+            NSInteger count = [self.Activity.images count];
+            [self.realm beginWriteTransaction];
+            for (NSInteger index = (count - 1); index >= 0; index--) {
+                ImageCollectionRLM *imgobject = self.Activity.images[index];
+                if (imgobject.ImageFlaggedDeleted) {
+                    imgobject.ImageFlaggedDeleted = false;
+                    NSLog(@"undone deleted image");
+                } else if ([imgobject.ImageFileReference isEqualToString:@""] || imgobject.ImageFileReference==nil) {
+                    /* here we add the attachment to file system and dB */
+                    [self.realm deleteObject:imgobject];
+                    NSLog(@"undone new image");
+                } else if (imgobject.UpdateImage) {
+                    /* we might swap it out as user has replaced the original file */
+                    imgobject.UpdateImage = false;
+                    NSLog(@"undone updated image");
+                }
+            }
+            [self.realm commitWriteTransaction];
+        }
+    }
+}
 
 @end

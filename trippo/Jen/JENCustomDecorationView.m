@@ -126,7 +126,7 @@
     UIBezierPath *path = self.ortogonalConnection ?
     [self orthogonalConnectionsPath] :
     [self directConnectionsPath];
-    [[UIColor labelColor] set];
+    [[UIColor colorNamed:@"TrippoColor"] set];
     path.lineWidth = 1.0;
     [path stroke];
 }

@@ -108,7 +108,10 @@ CGFloat TripScale = 4.14f;
 }
 
 
-
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.delegate didDismissPresentingViewController];
+}
 
 /*
  created date:      11/01/2020
@@ -409,15 +412,7 @@ CGFloat TripScale = 4.14f;
 
 
 
-/*
- created date:      29/04/2018
- last modified:     29/04/2018
- remarks:            .
- */
-- (IBAction)BackPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:Nil];
 
-}
 
 /*
  created date:      29/04/2018

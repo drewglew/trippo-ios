@@ -21,7 +21,7 @@
 
 
 @implementation TravelPlanVC
-
+BOOL _mapNeedsPadding;
 /*
  created date:      19/07/2019
  last modified:     19/01/2020
@@ -81,14 +81,14 @@
     UILabel *lbl= [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.ButtonJourneySideButton.frame.size.width,self.ButtonJourneySideButton.frame.size.height)];
     lbl.transform = CGAffineTransformMakeRotation(M_PI / 2);
     lbl.text = @"journey";
-    lbl.textColor =[UIColor colorNamed:@"PoiType-BGColor"];
+    lbl.textColor =[UIColor labelColor];
     lbl.backgroundColor =[UIColor clearColor];
     [self.ButtonJourneySideButton addSubview:lbl];
     
     lbl= [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.ButtonMapSideButton.frame.size.width,self.ButtonMapSideButton.frame.size.height)];
     lbl.transform = CGAffineTransformMakeRotation(M_PI / 2);
     lbl.text = @"map";
-    lbl.textColor = [UIColor colorNamed:@"PoiType-FGColor"];
+    lbl.textColor = [UIColor colorNamed:@"TrippoColor"];
     lbl.backgroundColor =[UIColor clearColor];
     [self.ButtonMapSideButton addSubview:lbl];
     
@@ -112,74 +112,15 @@
     
     self.DistanceFromPointTableView.delegate = self;
     self.DistanceFromPointTableView.rowHeight = 75;
-    
-    
-    /* new block 20200111 */
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"TravelPlanVC"] firstObject];
-
-    if ([assist.State integerValue] == 1) {
-    
-        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 450)];
-        helperView.backgroundColor = [UIColor labelColor];
-        
-        helperView.layer.cornerRadius=8.0f;
-        helperView.layer.masksToBounds=YES;
-        
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        title.text = @"Trip Travel Tree";
-        title.textAlignment = NSTextAlignmentCenter;
-        [helperView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, 10, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [helperView addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 350);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
-
-        helpText.text = @"This screen provides another prospective of the Trip.  You may zoom in and out using the +/- selectors.  Pressing on a node provides further options.  The (...) button expands the detail of the activity; (o) allows us to calculate all trip activity distances from this activities location; (+) to insert an activity that will fit within the date range of the selected and finally the arrow pointing diagonally informs the journey calculator the intension is to return to its parent node instead of travelling directly to a sibling.\n\nThere are 2 tabbed pages that flow in & out of view when either of the tabs are pressed - The 'Journey' tab uses the Travel Tree to generate an itinerary.  You can select form of transport by tapping through the vehicle icon on each row. Pressing the Calculate button generates distances between each activity leg for road journeys.  Selecting the 'Map' tab presents projected route with total distance and travel time in hours if Trip has been calculated already.  The summary in turn can be saved to the Cost & Milage detail shown on the Trip detail.";
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [helperView addSubview:helpText];
-
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:button];
-        
-        [self.view addSubview:helperView];
-    }
+    self.MapView.delegate = self;
     
 }
 
-/*
- created date:      12/01/2020
- last modified:     12/01/2020
- remarks:
- */
--(void)helperViewButtonPressed :(id)sender {
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"TravelPlanVC"] firstObject];
-    NSLog(@"%@",assist);
-    if ([assist.State integerValue] == 1) {
-        [self.realm beginWriteTransaction];
-        assist.State = [NSNumber numberWithInteger:0];
-        [self.realm commitWriteTransaction];
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated{
+    if(_mapNeedsPadding){
+        _mapNeedsPadding = NO;
+        [self.MapView setVisibleMapRect:self.MapView.visibleMapRect edgePadding:UIEdgeInsetsMake(100, 20, 10, 10) animated:YES];
     }
-    UIView *parentView = [(UIView *)sender superview];
-    [parentView setHidden:TRUE];
-    
 }
 
 /*
@@ -293,6 +234,7 @@ nodeViewForModelNode:(id<JENTreeViewModelNode>)modelNode {
     self.treeview.invertedLayout            =  0;
     self.treeview.showSubviews              = false;
     self.treeview.showSubviewFrames         = false;
+    
     [self.treeview reloadData];
 
 }
@@ -456,11 +398,19 @@ nodeViewForModelNode:(id<JENTreeViewModelNode>)modelNode {
 
 /*
  created date:      27/07/2019
- last modified:     27/07/2019
+ last modified:     05/03/2021
  remarks:           Animations.
  */
 - (IBAction)MapSideButtonPressed:(id)sender {
     CGFloat ViewWidth =  (self.MapSidePanelView.frame.size.width - self.ButtonMapTabWidthConstraint.constant) * -1;
+    
+    NSArray *annotations = [self.MapView annotations];
+   
+    //[self.MapView showAnnotations:annotations animated:YES];
+    //self.MapView.camera.altitude *= 1.4;
+    _mapNeedsPadding = YES;
+    [self.MapView showAnnotations:annotations animated:YES];
+    
     if (self.MapSidePanelViewTrailingConstraint.constant == ViewWidth ) {
         [UIView animateWithDuration:0.25f
                          animations:^{
@@ -478,7 +428,7 @@ nodeViewForModelNode:(id<JENTreeViewModelNode>)modelNode {
                      
                      NSLog(@"%@ to %@ DISTANCE = %@",item.from.name, item.to.name, item.Distance);
                      
-                     if (item.TransportId == [NSNumber numberWithLong:0] || item.TransportId == nil) {
+                     if (item.TransportId == [NSNumber numberWithInt:0] || item.TransportId == [NSNumber numberWithInt:0]) {
                          if (item.Distance != nil) {
                              accumDistance += [item.Distance doubleValue];
                              accumExpectedTime += [item.ExpectedTravelTime longValue];
@@ -516,8 +466,9 @@ nodeViewForModelNode:(id<JENTreeViewModelNode>)modelNode {
                      maxLongitude = fmax(annotationLong, maxLongitude);
                  }
                  
+                 
                  // See function below
-                 [self setMapRegionForMinLat:minLatitude minLong:minLongitude maxLat:maxLatitude maxLong:maxLongitude];
+                //[self setMapRegionForMinLat:minLatitude minLong:minLongitude maxLat:maxLatitude maxLong:maxLongitude];
              }
 
          }];
@@ -638,7 +589,7 @@ remarks:
         pinView.canShowCallout = YES;
         
         UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-        [rightButton setImage:[UIImage systemImageNamed:@"smallcircle.circle.fill"] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage systemImageNamed:@"target"] forState:UIControlStateNormal];
 
         pinView.rightCalloutAccessoryView = rightButton;
     } else {
@@ -722,7 +673,11 @@ remarks:           Calculate the journey while passing the tree.
         JourneyRLM *item = [[JourneyRLM alloc] init];
         item.SequenceNo = [NSNumber numberWithInt:self.SequenceCounter];
         item.Route = [NSString stringWithFormat:@"%@ to %@",activityFrom.name, activityTo.name];
-        item.TransportId = activityTo.traveltransportid;
+        if (activityTo.traveltransportid==nil) {
+            item.TransportId = [NSNumber numberWithInt:0];
+        } else {
+            item.TransportId = activityTo.traveltransportid;
+        }
         item.from = activityFrom;
         item.to = activityTo;
         [self.itinerarycollection addObject:item];
@@ -741,16 +696,19 @@ remarks:           Calculate the journey while passing the tree.
     [self.JourneyActivityIndicator  startAnimating];
     
     
+    
     dispatch_group_t serviceGroup = dispatch_group_create();
 
     for (JourneyRLM *item in self.itinerarycollection) {
  
-        if ([item.Distance doubleValue] == 0.0f) {
+        //if ([item.Distance doubleValue] == 0.0f) {
             dispatch_group_enter(serviceGroup);
+            
             [self calculateDistance:item :true completionHandler:^{
                 dispatch_group_leave(serviceGroup);
             }];
-        }
+            
+        //}
     }
 
     dispatch_group_notify(serviceGroup,dispatch_get_main_queue(),^{
@@ -760,15 +718,14 @@ remarks:           Calculate the journey while passing the tree.
         [self.ItineraryTableView reloadData];
         [self.ButtonCalculate setHidden:true];
         [self.ButtonUpdateTripStats setHidden:false];
-       
+        
     });
-    
 }
 
 
 /*
 created date:      23/07/2019
-last modified:     24/08/2019
+last modified:     05/03/2021
 remarks:           Used by both the main itinerary listing that loads the map as well as the single point
                    distance called from the annotation 'Info' button inside the map.
 */
@@ -789,13 +746,11 @@ remarks:           Used by both the main itinerary listing that loads the map as
     request.destination = to;
     request.requestsAlternateRoutes = NO;
 
-    if (item.TransportId==nil) {
-        request.transportType = MKDirectionsTransportTypeAny;
-    } else if (item.TransportId==[NSNumber numberWithInt:1]) {
+    if (item.TransportId==[NSNumber numberWithLong:1]) {
         request.transportType = MKDirectionsTransportTypeWalking;
-    } else if (item.TransportId==[NSNumber numberWithInt:2] || item.TransportId==[NSNumber numberWithInt:3] || item.TransportId==[NSNumber numberWithInt:4]) {
+    } else if (item.TransportId==[NSNumber numberWithLong:2] || item.TransportId==[NSNumber numberWithLong:3] || item.TransportId==[NSNumber numberWithLong:5]) {
         request.transportType = MKDirectionsTransportTypeTransit;
-    } else if (item.TransportId==[NSNumber numberWithInt:0] || item.TransportId==[NSNumber numberWithInt:7]) {
+    } else if (item.TransportId==[NSNumber numberWithLong:0]) {
         request.transportType = MKDirectionsTransportTypeAutomobile;
     } else {
         request.transportType = MKDirectionsTransportTypeAny;
@@ -810,8 +765,10 @@ remarks:           Used by both the main itinerary listing that loads the map as
          } else {
              double Distance = 0.0f;
              long TravelTime = 0;
+            
              for (MKRoute *route in response.routes)
              {
+                 
                  Distance += route.distance;
                  TravelTime += (route.expectedTravelTime);
                  
@@ -858,11 +815,18 @@ remarks:           Used by both the main itinerary listing that loads the map as
 -(void) getTotalsForTrip {
     
     double accumDistance = 0.0f;
+    double accumPetrolDistance = 0.0f;
+    
     double accumExpectedTime = 0;
+    
     self.itin = [self.itinerarycollection mutableCopy];
     for (JourneyRLM *item in self.itinerarycollection) {
-        if (item.TransportId != [NSNumber numberWithLong:1] && item.TransportId != [NSNumber numberWithLong:2]) {
+        if (item.TransportId != [NSNumber numberWithLong:4] && item.TransportId != [NSNumber numberWithLong:6]) {
             if (item.Distance != nil) {
+                if (item.TransportId == [NSNumber numberWithLong:0]) {
+                    accumPetrolDistance += [item.Distance doubleValue];
+                    item.AccumPetrolDistance = [NSNumber numberWithDouble:accumPetrolDistance];
+                }
                 accumDistance += [item.Distance doubleValue];
                 accumExpectedTime += [item.ExpectedTravelTime longValue];
                 item.AccumDistance = [NSNumber numberWithDouble:accumDistance];
@@ -924,22 +888,25 @@ remarks:
         cell.LabelRoute.text = journey.Route;
         
         
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightRegular];
+        
+        [cell.TransportButton setContentMode:UIViewContentModeScaleAspectFit];
+        
+        
         if (journey.TransportId  == [NSNumber numberWithLong:1]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-walk"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"figure.walk" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:2]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-bus"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"bus.doubledecker.fill" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:3]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-train"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"tram" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:4]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-airplane"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"airplane" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:5]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-ship"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"s.circle" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:6]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-bicycle"] forState:UIControlStateNormal];
-        } else if (journey.TransportId  == [NSNumber numberWithLong:7]) {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-motorbike"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"bicycle" withConfiguration:config] forState:UIControlStateNormal];
         } else {
-            [cell.TransportButton setImage:[UIImage imageNamed:@"transport-car"] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"car" withConfiguration:config] forState:UIControlStateNormal];
         }
         
         
@@ -948,7 +915,7 @@ remarks:
         double accum = 0.0f;
         double accumExpectedTime = 0;
         for (JourneyRLM *item in subArray) {
-            if (item.TransportId != [NSNumber numberWithLong:1] && item.TransportId != [NSNumber numberWithLong:2]) {
+            if (item.TransportId != [NSNumber numberWithLong:4] && item.TransportId != [NSNumber numberWithLong:6]) {
                 accum += [item.Distance doubleValue];
                 accumExpectedTime += [item.ExpectedTravelTime longValue];
             }
@@ -980,31 +947,34 @@ remarks:
         cell.transportButtonTapHandler = ^{
             /*here*/
             
-            if ([journey.TransportId longValue] < 7)  {
+            NSLog(@"%@",journey);
+            
+            if ([journey.TransportId longValue] < 6)  {
                 journey.TransportId = [NSNumber numberWithLong:[journey.TransportId longValue] + 1];
             } else {
                 journey.TransportId = [NSNumber numberWithLong:0];
             }
             
+            [weakCell.TransportButton setContentMode:UIViewContentModeScaleAspectFit];
+            
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightRegular];
             
             if (journey.TransportId  == [NSNumber numberWithLong:1]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-walk"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"figure.walk" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:2]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-bus"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"bus.doubledecker.fill" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:3]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-train"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"tram" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:4]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-airplane"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"airplane" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:5]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-ship"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"s.circle" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:6]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-bicycle"] forState:UIControlStateNormal];
-            } else if (journey.TransportId  == [NSNumber numberWithLong:7]) {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-motorbike"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"bicycle" withConfiguration:config] forState:UIControlStateNormal];
             } else {
-                [weakCell.TransportButton setImage:[UIImage imageNamed:@"transport-car"] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"car" withConfiguration:config] forState:UIControlStateNormal];
             }
-           
+            
             self.ButtonCalculate.hidden = false;
             
             NSLog(@"Comment Button Tapped");
@@ -1112,16 +1082,6 @@ remarks:           Usual back button
 }
 
 
-
-/*
- created date:      20/07/2019
- last modified:     20/07/2019
- remarks:           Usual back button
- */
-- (IBAction)BackPressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:Nil];
-    
-}
 
 
 

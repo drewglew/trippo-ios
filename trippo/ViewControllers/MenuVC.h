@@ -19,13 +19,15 @@
 #import "SettingsRLM.h"
 #import "SettingsVC.h"
 #import "AssistantRLM.h"
+#import "Reachability.h"
+#import <CloudKit/CloudKit.h>
 
 #include <stdlib.h>
 
 @protocol MenuDelegate <NSObject>
 @end
 
-@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectDataEntryDelegate, ActivityListDelegate, LocatorDelegate, PoiDataEntryDelegate, NearbyListingDelegate, SettingsDelegate, MKMapViewDelegate>
+@interface MenuVC : UIViewController <UICollectionViewDelegate, UICollectionViewDataSource, ProjectListDelegate, ProjectDataEntryDelegate, ActivityListDelegate, LocatorDelegate, PoiDataEntryDelegate, NearbyListingDelegate, SettingsDelegate, MKMapViewDelegate, UITextFieldDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *ButtonProject;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPoi;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonInfo;
@@ -39,6 +41,7 @@
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedSharedPoi;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedSharedPoiHeader;
 @property (weak, nonatomic) IBOutlet TTTAttributedLabel *LabelFeaturedPoi;
+@property (weak, nonatomic) IBOutlet UIImageView *ImageViewSharedFeaturedPoi;
 
 
 
@@ -46,10 +49,11 @@
 @property (strong, nonatomic) RLMRealm *realm;
 @property (assign) bool SetReload;
 @property (strong, nonatomic) PoiRLM *FeaturedPoi;
+@property (strong, nonatomic) PoiRLM *FeaturedSharedPoi;
 @property (strong, nonatomic) SettingsRLM *Settings;
 @property (strong, nonatomic) NSMutableDictionary *TripImageDictionary;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *ActivityView;
-
+@property(nonatomic,strong) UIAlertAction *okAction;
 
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewPoi;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewTrip;
@@ -57,8 +61,11 @@
 @property (weak, nonatomic) IBOutlet UIView *ViewRegisterWarning;
 @property (weak, nonatomic) IBOutlet UIView *MainSurface;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonFeaturedPoi;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonSharedFeaturedPoi;
+
 @property (weak, nonatomic) IBOutlet UIButton *ButtonAllTrips;
 @property (strong, nonatomic) IBOutlet UIView *AssistantView;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonSharedPoiCloudDownload;
 
 
 

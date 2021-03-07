@@ -19,6 +19,7 @@
 #import "AssistantRLM.h"
 
 @protocol ProjectListDelegate <NSObject>
+- (void)didDismissPresentingViewController;
 @end
 
 @interface ProjectListVC : UIViewController <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, ActivityListDelegate, ProjectDataEntryDelegate>

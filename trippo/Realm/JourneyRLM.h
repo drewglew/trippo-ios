@@ -15,10 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property  NSString *Route;
 @property  NSNumber<RLMInt> *TransportId;
 @property  NSNumber<RLMDouble> *Distance;
+
 @property  NSNumber<RLMDouble> *ExpectedTravelTime;
 @property  NSNumber<RLMInt> *SequenceNo;
 @property  NSNumber<RLMDouble> *AccumExpectedTravelTime;
 @property  NSNumber<RLMDouble> *AccumDistance;
+@property  NSNumber<RLMDouble> *AccumPetrolDistance;
 @property  ActivityRLM *from;
 @property  ActivityRLM *to;
 @end

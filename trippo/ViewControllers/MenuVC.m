@@ -54,56 +54,20 @@ bool FirstLoad;
     
 }
 
--(void)PresentAssistantView {
-    /* new block 20200111 */
-    if (self.AssistantView == nil || [self.AssistantView isHidden]) {
-        self.AssistantView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 400)];
-        
-        self.AssistantView.backgroundColor = [UIColor labelColor];
-                
-        self.AssistantView.layer.cornerRadius=8.0f;
-        self.AssistantView.layer.masksToBounds=YES;
-
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18,  self.AssistantView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        title.text = @"Introduction";
-        title.textAlignment = NSTextAlignmentCenter;
-        [self.AssistantView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, self.AssistantView.bounds.size.height - 50, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [self.AssistantView  addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50,  self.AssistantView.bounds.size.width - 20, 300);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.text = @"Ciao, नमस्कार, Hallo, 你好, Hola, Здравствуйте, Welcome, Hej, Bonjour - I am your friendly travel assistant! I will appear the first time you experience each new view.  Inside Settings you can choose to see me again, if you missed details the first time round!\n\nBefore you can add content - you must goto 'Settings' to enter some basic details. Once this is added, returning to this menu you will be able to begin adding your own content such as your own Points of Interest as well as creating Trips.\n\nWhen trips exist - past, present or up and coming - they can be browsed here by swiping the circular trip items left or right.\n\nAll data is stored on your phone, no supporting backups are available in this first version.  As this is sensitive data it is important you know & trust where your data is.";
-         
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [self.AssistantView  addSubview:helpText];
-
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(self.AssistantView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.AssistantView addSubview:button];
-        [self.view addSubview:self.AssistantView];
-    }
+/*
+ created date:      01/03/2021
+ last modified:     07/03/2021
+ remarks:
+ */
+-(void)didDismissPresentingViewController {
+    [self LoadPoiDetail :[NSNumber numberWithInt:1]];
 }
+
 
 
 /*
  created date:      18/08/2018
- last modified:     12/01/2020
+ last modified:     03/03/2021
  remarks:
  */
 -(void)viewDidAppear:(BOOL)animated {
@@ -112,45 +76,64 @@ bool FirstLoad;
 
     self.ButtonFeaturedPoi.enabled = true;
     
+    [self.ButtonSharedFeaturedPoi setEnabled:true];
+    
     [self.ActivityView stopAnimating];
-    [self LoadFeaturedPoi];
+    [self LoadPoiDetail :[NSNumber numberWithInt:1]];
+    [self LoadPoiDetail :[NSNumber numberWithInt:2]];
+    
     
     self.alltripitems = [TripRLM allObjects];
-
     FirstLoad = false;
-    
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
     if (settings.count==0) {
         
-        [self PresentAssistantView];
+        UIAlertController *alertSettings = [UIAlertController alertControllerWithTitle:@"Before we begin!"
+                                                                            message:@"Points of interest items may be shared, so before you start creating your own please provide the name you would like referenced as the author."
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+
         
-        self.ButtonFeaturedPoi.enabled = false;
-        self.ButtonAllTrips.enabled = false;
-        self.ButtonProject.enabled = false;
-        self.ButtonPoi.enabled = false;
         
-        self.ViewRegisterWarning.hidden = false;
-        CABasicAnimation *animation =
-        [CABasicAnimation animationWithKeyPath:@"position"];
-        [animation setDuration:0.05];
-        [animation setRepeatCount:5];
-        [animation setAutoreverses:YES];
-        [animation setFromValue:[NSValue valueWithCGPoint:
-                                 CGPointMake([self.ViewRegisterWarning center].x - 20.0f, [self.ViewRegisterWarning center].y)]];
-        [animation setToValue:[NSValue valueWithCGPoint:
-                               CGPointMake([self.ViewRegisterWarning center].x + 20.0f, [self.ViewRegisterWarning center].y)]];
-        [[self.ViewRegisterWarning layer] addAnimation:animation forKey:@"position"];
-        self.Settings = nil;
+        self.okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                 style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction * action) {
+            
+        
+       
+       
+        UITextField *TextFieldAuthor = alertSettings.textFields[0];
+            
+        if (![TextFieldAuthor.text isEqualToString:@""]) {
+            
+            
+            self.Settings = [[SettingsRLM alloc] init];
+            self.Settings.userkey = [[NSUUID UUID] UUIDString];
+            self.Settings.username = TextFieldAuthor.text;
+            self.Settings.TripCellColumns = [NSNumber numberWithInt:3];
+            self.Settings.ActivityCellColumns = [NSNumber numberWithInt:3];
+            self.Settings.NodeScale = [NSNumber numberWithInt:60];
+            [self.realm beginWriteTransaction];
+            [self.realm addObject:self.Settings];
+            [self.realm commitWriteTransaction];
+        }
+    
+        }];
+        self.okAction.enabled = NO;
+        
+        [alertSettings addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.delegate = self;
+            [textField setKeyboardType:UIKeyboardTypeAlphabet];
+            [textField setAutocapitalizationType:UITextAutocapitalizationTypeWords];
+        }];
+
+        [alertSettings addAction:self.okAction];
+        [self presentViewController:alertSettings animated:YES completion:nil];
+        
+        
+        
     } else {
         self.Settings = settings[0];
-        
-        AssistantRLM *assist = [[self.Settings.AssistantCollection objectsWhere:@"ViewControllerName=%@",@"MenuVC"] firstObject];
-
-        if ([assist.State integerValue] == 1) {
-            [self PresentAssistantView];
-        }
-
         
         self.ButtonAllTrips.enabled = true;
         self.ButtonProject.enabled = true;
@@ -160,23 +143,13 @@ bool FirstLoad;
     
 }
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
 
-/*
- created date:      11/01/2020
- last modified:     12/01/2020
- remarks:
- */
--(void)helperViewButtonPressed :(id)sender {
-    [self.AssistantView setHidden:TRUE];
-    AssistantRLM *assist = [[self.Settings.AssistantCollection objectsWhere:@"ViewControllerName=%@",@"MenuVC"] firstObject];
-    NSLog(@"%@",assist);
-    if ([assist.State integerValue] == 1) {
-        [self.realm beginWriteTransaction];
-        assist.State = [NSNumber numberWithInteger:0];
-        [self.realm commitWriteTransaction];
-    }
-    [self.ActivityView setHidden:TRUE];
+    NSString *finalString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    [self.okAction setEnabled:(finalString.length >= 2)];
+    return YES;
 }
+
 
 /*
  created date:      15/08/2018
@@ -213,8 +186,11 @@ bool FirstLoad;
         lasttrip.defaulttimezonename = trip.defaulttimezonename;
         lasttrip.startdt = trip.startdt;
         lasttrip.enddt = trip.enddt;
+        lasttrip.images = trip.images;
     }
    
+    
+    
     if (lasttrip.itemgrouping==[NSNumber numberWithInt:1]) {
         TripRLM *trip = [TripRLM objectForPrimaryKey:lasttrip.key];
         [self RetrieveImageItem :trip :imagesDirectory];
@@ -234,6 +210,7 @@ bool FirstLoad;
         tripobject.startdt = trip.startdt;
         tripobject.enddt = trip.enddt;
         tripobject.itemgrouping = [NSNumber numberWithInt:2];
+        tripobject.images = trip.images;
         [self.selectedtripitems addObject:tripobject];
         found_active = true;
         [self RetrieveImageItem :trip :imagesDirectory];
@@ -268,6 +245,7 @@ bool FirstLoad;
         nexttrip.defaulttimezonename = trip.defaulttimezonename;
         nexttrip.startdt = trip.startdt;
         nexttrip.enddt = trip.enddt;
+        nexttrip.images = trip.images;
         nexttrip.itemgrouping = [NSNumber numberWithInt:4];
     }
     
@@ -286,6 +264,8 @@ bool FirstLoad;
         [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:emptytrip.key];
         [self.selectedtripitems addObject:emptytrip];
     }
+    
+    
 }
 
 /*
@@ -308,100 +288,136 @@ bool FirstLoad;
     }
 }
 
-
-
 /*
  created date:      18/08/2018
- last modified:     14/01/2020
+ last modified:     07/03/2021
  remarks:
  */
--(void) LoadFeaturedPoi {
-    
-    NSArray *types = [NSArray arrayWithObjects: @10,@11,@13,@14,@15,@17,@21,@23,@25,@26,@27,@30,@31,@32,@35,@37,@39,@40,@44,@49,@50,@52,@54,@55,@56,@57,nil];
-    
-  
-    NSSet *typeset = [[NSSet alloc] initWithArray:types];
-    
-    RLMResults *poicollection = [[PoiRLM allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"categoryid IN %@",typeset]];
-    
-    if (poicollection.count==0) {
-        self.FeaturedPoi = nil;
-        self.LabelFeaturedPoi.text = @"Blurry... Not enough Point of Interest items";
-        [self.ButtonFeaturedPoi setEnabled:false];
-        return;
-        
-    }
-    int featuredIndex = arc4random_uniform((int)poicollection.count);
-    self.FeaturedPoi = [poicollection objectAtIndex:featuredIndex];
-    
-    //self.LabelFeaturedPoi.text = [NSString stringWithFormat:@"In focus... %@", self.FeaturedPoi.name];
-    
-    NSURL *url = [self applicationDocumentsDirectory];
-    
-    NSData *pngData;
-    
-    if (self.FeaturedPoi.images.count > 0) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"KeyImage == %@", [NSNumber numberWithInt:1]];
-        RLMResults *filteredArray = [self.FeaturedPoi.images objectsWithPredicate:predicate];
-        
-        ImageCollectionRLM *keyimgobject;
-        
-        if (filteredArray.count==0) {
-            keyimgobject = [self.FeaturedPoi.images firstObject];
-        } else {
-            keyimgobject = [filteredArray firstObject];
-        }
-        NSURL *imagefile = [url URLByAppendingPathComponent:keyimgobject.ImageFileReference];
-        NSError *err;
-        pngData = [NSData dataWithContentsOfURL:imagefile options:NSDataReadingMappedIfSafe error:&err];
-        
-        if (pngData==nil) {
-            self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
-        } else {
-            [self.ImageViewFeaturedPoi setImage:[UIImage imageWithData:pngData]];
-        }
-        
-    } else {
-        self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
-    }
-    
-    //[self.FeaturedPoiMap removeAnnotations:self.FeaturedPoiMap.annotations];
-    
-    MKPointAnnotation *anno = [[MKPointAnnotation alloc] init];
-    anno.title = self.FeaturedPoi.name;
-    anno.subtitle = [NSString stringWithFormat:@"%@", self.FeaturedPoi.administrativearea];
-    
-    CLLocationCoordinate2D coord = CLLocationCoordinate2DMake([self.FeaturedPoi.lat doubleValue], [self.FeaturedPoi.lon doubleValue]);
-    
-    anno.coordinate = coord;
-    
-    //UIFont *font = [UIFont systemFontOfSize:20.0];
+-(void) LoadPoiDetail :(NSNumber *) sharedFlag {
     
     UIFont *font = [UIFont fontWithName:@"AmericanTypewriter" size:20.0f];
-    
     NSDictionary *attributes = @{NSBackgroundColorAttributeName:[UIColor secondarySystemBackgroundColor], NSForegroundColorAttributeName:[UIColor labelColor], NSFontAttributeName:font};
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString:@"Featured Local POI..." attributes:attributes];
-    self.LabelFeaturedPoiHeader.attributedText = string;
+    NSString *headerText;
+    NSString *detailText;
     
-    //self.LabelFeaturedPoiHeader.transform = CGAffineTransformMakeRotation(.34906585);
-    self.LabelFeaturedPoiHeader.transform = CGAffineTransformMakeRotation(.1);
+
+
+    NSArray *Types = [NSArray arrayWithObjects: @10,@11,@13,@14,@15,@16,@17,@21,@23,@25,@26,@27,@30,@31,@32,@35,@37,@39,@40,@44,@49,@50,@52,@54,@55,@56,@57,nil];
     
-    string = [[NSAttributedString alloc] initWithString:self.FeaturedPoi.name attributes:attributes];
+    NSArray *TypeNames = @[@"Accomodation",@"Airport",@"Astronaut",@"Bakery",@"Beer",@"Bicycle",@"Bridge",@"Car Hire",@"Car Park",@"Casino",@"Cave",@"Church",@"Cinema",@"City",@"City Park",@"Climbing Region",@"Club",@"Coastline",@"Concert Venue",@"Food and Wine",@"Football",@"Forest",@"Golf",@"Historic Location",@"Home",@"Lake",@"Lighthouse",@"City",@"Miscellaneous",@"Monument/Statue",@"Museum",@"National Park",@"Nature",@"Office",@"Petrol Station",@"Photography",@"Restaurant",@"River",@"Rugby",@"Safari",@"Scenary",@"School",@"Ship",@"Shopping",@"Skiing",@"Sports/Exercise",@"Swimming",@"Tennis Courts",@"Theatre",@"Theme Park",@"Tower",@"Train",@"Trekking",@"Venue",@"Village",@"Vineyard",@"Windmill",@"Zoo"
+        ];
     
-    self.LabelFeaturedPoi.attributedText = string;
-    self.LabelFeaturedPoi.transform = CGAffineTransformMakeRotation(-.1);
+    NSSet *typeset = [[NSSet alloc] initWithArray:Types];
     
-    string = [[NSAttributedString alloc] initWithString:@"Featured Shared POI..." attributes:attributes];
+    RLMResults *poicollection = [[PoiRLM allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"categoryid IN %@ AND poisharedflag = %@",typeset,sharedFlag]];
     
-    self.LabelFeaturedSharedPoiHeader.attributedText = string;
     
-    self.LabelFeaturedSharedPoiHeader.transform = CGAffineTransformMakeRotation(-.1);
+    if (poicollection.count==0) {
+        if ([sharedFlag intValue] == 1) {
+            self.FeaturedPoi = nil;
+            [self.ButtonFeaturedPoi setEnabled:false];
+            headerText = @"Featured POI item on device...";
+            detailText = @"Blurry... Not enough\nPoint of Interest items";
+            
+        } else {
+            self.FeaturedSharedPoi = nil;
+            [self.ButtonSharedFeaturedPoi setEnabled:false];
+            headerText = @"Featured Shared POI item on device...";
+            detailText = @"Blurry...\nTry pressing download from cloud";
+        }
+ 
+    } else {
+        // randomly select POI's from collection.
+        int featuredIndex = arc4random_uniform((int)poicollection.count);
+        int imageCount = 0;
+        
+        if ([sharedFlag intValue] == 1) {
+            self.FeaturedPoi = [poicollection objectAtIndex:featuredIndex];
+            imageCount = (int)self.FeaturedPoi.images.count;
+        } else {
+            self.FeaturedSharedPoi = [poicollection objectAtIndex:featuredIndex];
+            imageCount = (int)self.FeaturedSharedPoi.images.count;
+        }
+            
+        NSURL *url = [self applicationDocumentsDirectory];
+        
+        NSData *pngData;
+        
+        if (imageCount > 0) {
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"KeyImage == %@", [NSNumber numberWithInt:1]];
+            
+            RLMResults *filteredArray;
+            if ([sharedFlag intValue] == 1) {
+                filteredArray = [self.FeaturedPoi.images objectsWithPredicate:predicate];
+            } else {
+                filteredArray = [self.FeaturedSharedPoi.images objectsWithPredicate:predicate];
+            }
+            
+            ImageCollectionRLM *keyimgobject;
+            if (filteredArray.count==0) {
+                if ([sharedFlag intValue] == 1) {
+                    keyimgobject = [self.FeaturedPoi.images firstObject];
+                } else {
+                    keyimgobject = [self.FeaturedSharedPoi.images firstObject];
+                }
+            } else {
+                keyimgobject = [filteredArray firstObject];
+            }
+            
+            NSURL *imagefile = [url URLByAppendingPathComponent:keyimgobject.ImageFileReference];
+            NSError *err;
+            pngData = [NSData dataWithContentsOfURL:imagefile options:NSDataReadingMappedIfSafe error:&err];
+            
+            if (pngData==nil) {
+                if ([sharedFlag intValue] == 1) {
+                    self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
+                } else {
+                    self.ImageViewSharedFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
+                }
+            } else {
+                if ([sharedFlag intValue] == 1) {
+                    [self.ImageViewFeaturedPoi setImage:[UIImage imageWithData:pngData]];
+                } else {
+                    [self.ImageViewSharedFeaturedPoi setImage:[UIImage imageWithData:pngData]];
+                }
+            }
+            
+        } else {
+            if ([sharedFlag intValue] == 1) {
+                self.ImageViewFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
+            } else {
+                self.ImageViewSharedFeaturedPoi.image = [UIImage systemImageNamed:@"command"];
+            }
+        }
+        
+        if ([sharedFlag intValue] == 1) {
+            headerText = [NSString stringWithFormat:@"Featured %@ on Device...",[TypeNames objectAtIndex:[self.FeaturedPoi.categoryid longValue]]];
+            detailText = self.FeaturedPoi.name;
+            [self.ButtonFeaturedPoi setEnabled:true];
+        } else {
+            headerText = [NSString stringWithFormat:@"Featured %@... from the Cloud",[TypeNames objectAtIndex:[self.FeaturedSharedPoi.categoryid longValue]]];
+            detailText = self.FeaturedSharedPoi.name;
+            [self.ButtonSharedFeaturedPoi setEnabled:true];
+
+        }
+    }
     
-    string = [[NSAttributedString alloc] initWithString:@"Rome" attributes:attributes];
-    
-    self.LabelFeaturedSharedPoi.attributedText = string;
-  
-    self.LabelFeaturedSharedPoi.transform = CGAffineTransformMakeRotation(.1);
+    if ([sharedFlag intValue] == 1) {
+        self.LabelFeaturedPoiHeader.attributedText = [[NSAttributedString alloc] initWithString:headerText attributes:attributes];
+        self.LabelFeaturedPoiHeader.transform = CGAffineTransformMakeRotation(.1);
+        
+        self.LabelFeaturedPoi.attributedText = [[NSAttributedString alloc] initWithString:detailText attributes:attributes];
+        self.LabelFeaturedPoi.transform = CGAffineTransformMakeRotation(.1);
+        
+        
+    } else {
+        self.LabelFeaturedSharedPoiHeader.attributedText = [[NSAttributedString alloc] initWithString:headerText attributes:attributes];
+        self.LabelFeaturedSharedPoiHeader.transform = CGAffineTransformMakeRotation(.1);
+        
+        self.LabelFeaturedSharedPoi.attributedText = [[NSAttributedString alloc] initWithString:detailText attributes:attributes];
+        self.LabelFeaturedSharedPoi.transform = CGAffineTransformMakeRotation(.1);
+        
+    }
     
 }
 
@@ -435,6 +451,7 @@ remarks:
 
     if([segue.identifier isEqualToString:@"ShowPoiList"]){
         PoiSearchVC *controller = (PoiSearchVC *)segue.destinationViewController;
+        controller.frommenu = true;
         controller.delegate = self;
         controller.Project = nil;
         controller.Activity = nil;
@@ -449,22 +466,26 @@ remarks:
         controller.PointOfInterest = self.FeaturedPoi;
         controller.readonlyitem = true;
         controller.realm = self.realm;
+    } else if ([segue.identifier isEqualToString:@"ShowFeaturedSharedPoi"]){
+        PoiDataEntryVC *controller= (PoiDataEntryVC *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.PointOfInterest = self.FeaturedSharedPoi;
+        controller.readonlyitem = true;
+        controller.realm = self.realm;
     } else if ([segue.identifier isEqualToString:@"ShowSettings"]){
         SettingsVC *controller= (SettingsVC *)segue.destinationViewController;
         controller.delegate = self;
         controller.Settings = self.Settings;
         controller.realm = self.realm;
-    } else if([segue.identifier isEqualToString:@"ShowMeNearby"]){
+    } else if([segue.identifier isEqualToString:@"ShowNearbyMeFromMenu"]){
         NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
+        controller.frommenu = true;
         controller.delegate = self;
         controller.fromproject = false;
+        controller.realm = self.realm;
+        controller.PointOfInterest = nil;
     }
 }
-
-
-
-
-
 
 /*
  created date:      14/08/2018
@@ -501,17 +522,13 @@ remarks:
     ProjectListCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"projectCellId" forIndexPath:indexPath];
     TripRLM *trip = [self.selectedtripitems objectAtIndex:indexPath.row];
     cell.ImageViewProject.image = [self.TripImageDictionary objectForKey:trip.key];
-
+    
     cell.LabelProjectName.text = trip.name;
-    
-    //cell.LabelProjectName.text = trip.name;
-    
+        
     NSString *reference = @"";
-    //NSLog(@"itemgrouping=%@",trip.itemgrouping);
     
     if (trip.itemgrouping==[NSNumber numberWithInt:1]) {
         reference = @"Previous";
-        
     } else if (trip.itemgrouping==[NSNumber numberWithInt:2]) {
         reference = @"Active";
     } else if (trip.itemgrouping==[NSNumber numberWithInt:4]) {
@@ -520,8 +537,28 @@ remarks:
         reference = @"New";
     }
 
+    
     cell.LabelDateRange.text = reference;
     
+    
+    
+    if (trip.images.count>0) {
+        if ([trip.images[0].ImageFileReference isEqualToString:@""]) {
+            cell.ImageViewProject.layer.cornerRadius = 0;
+            cell.ImageViewProject.layer.borderWidth = 0.0f;
+            cell.ImageViewProject.layer.masksToBounds = YES;
+        } else {
+            cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.frame.size.width/2;
+            cell.ImageViewProject.layer.borderWidth = 0.0f;
+            cell.ImageViewProject.layer.borderColor = [UIColor whiteColor].CGColor;
+            cell.ImageViewProject.layer.masksToBounds = YES;
+        }
+
+    } else {
+        cell.ImageViewProject.layer.cornerRadius = 0;
+        cell.ImageViewProject.layer.borderWidth = 0.0f;
+        cell.ImageViewProject.layer.masksToBounds = YES;
+    }
     //TODO
     //cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 120) / 2;
     
@@ -620,6 +657,7 @@ remarks:
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     
     PoiSearchVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"PoiListingViewController"];
+    controller.frommenu = true;
     controller.delegate = self;
     controller.Project = nil;
     controller.Activity = nil;
@@ -661,6 +699,224 @@ remarks:
 }
 
 - (void)didCreatePoiFromProjectPassThru :(PoiRLM*)Object {
+    
+}
+
+
+
+/*
+ created date:      07/03/2021
+ last modified:     07/03/2021
+ remarks:           returns either the poi key of item obtained from cloud or empty string.
+ */
+-(NSString*) ObtainNewPoiKeyWithCompleteBlock:(void(^)(NSString * result))completeBlock {
+    if (self.checkInternet) {
+        CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.drew.trips"] publicCloudDatabase];
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"blockedflag = 1"];
+        CKQuery *query = [[CKQuery alloc] initWithRecordType:@"poi" predicate:predicate];
+        
+        CKQueryOperation *operation = [[CKQueryOperation alloc] initWithQuery:query];
+        operation.resultsLimit = 20;
+        NSArray *desiredKeys = [[NSArray alloc] initWithObjects:@"key",nil];
+        [operation setDesiredKeys:desiredKeys];
+   
+        NSMutableArray *cloudPois = [[NSMutableArray alloc] init];
+        
+        operation.recordFetchedBlock = ^(CKRecord *record) {
+            [cloudPois addObject:[record objectForKey: @"key"]];
+        };
+        operation.queryCompletionBlock = ^(CKQueryCursor *cursor, NSError *error) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                NSPredicate *predicateExclusion = [NSPredicate predicateWithFormat:@"key IN %@",cloudPois];
+                
+                RLMResults <PoiRLM*> *IgnorePoiObjects = [PoiRLM objectsWithPredicate:predicateExclusion];
+                
+                for (PoiRLM *p in IgnorePoiObjects) {
+                    if ([cloudPois containsObject:p.key]) {
+                        [cloudPois removeObject:p.key];
+                    }
+                }
+                if (cloudPois.count >0) {
+                    if (cloudPois.count == 1) {
+                        if (completeBlock) completeBlock([cloudPois firstObject]);
+                       
+                    } else {
+                        int featuredIndex = arc4random_uniform((int)cloudPois.count);
+                        if (completeBlock) completeBlock([cloudPois objectAtIndex:featuredIndex]);
+                    }
+                } else {
+                    if (completeBlock) completeBlock(@"no-items");
+                }
+                
+            });
+        };
+        [publicDB addOperation:operation];
+    } else {
+        if (completeBlock) completeBlock(@"no-inet");
+        //return @"no-inet";
+    }
+    return nil;
+}
+
+
+/*
+ created date:      06/03/2021
+ last modified:     07/03/2021
+ remarks:
+ */
+-(void) DownloadFeaturedSharedPoi {
+    
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+
+    
+    [self ObtainNewPoiKeyWithCompleteBlock:^(NSString *result) {
+        if (![result isEqualToString:@"no-items"] && ![result isEqualToString:@"no-inet"]) {
+            
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+            
+            spinner.frame = CGRectMake(round((self.ImageViewSharedFeaturedPoi.frame.size.width) / 2), round((self.ImageViewSharedFeaturedPoi.frame.size.height) / 2), 25, 25);
+            
+            CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.drew.trips"] publicCloudDatabase];
+            //NSPredicate *predicate = [NSPredicate predicateWithValue:YES];
+            NSPredicate *predicate = [NSPredicate predicateWithFormat:@"key = %@",result];
+            
+            CKQuery *query = [[CKQuery alloc] initWithRecordType:@"poi" predicate:predicate];
+               
+            [self.view addSubview:spinner];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [spinner startAnimating];
+            });
+
+            CKQueryOperation *operation = [[CKQueryOperation alloc] initWithQuery:query];
+            operation.resultsLimit = 1;
+            operation.recordFetchedBlock = ^(CKRecord *record) {
+                NSLog(@"RECORD RETURNED %@", record.recordID);
+                
+                RLMResults <PoiRLM*> *PoiResults = [PoiRLM objectsWhere:@"key=%@", [record objectForKey: @"key"]];
+                
+                if (PoiResults.count == 0) {
+                    PoiRLM *p = [self GetRecord :record];
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        // now add to points of interest!
+                        [self.realm  transactionWithBlock:^{
+                            [self.realm addObject:p];
+                        }];
+                        
+                    });
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    // TODO - set to the new item just loaded.
+                    
+                    [self.ButtonSharedPoiCloudDownload setImage:[UIImage systemImageNamed:@"checkmark.icloud" withConfiguration:config] forState:UIControlStateNormal];
+                    [self LoadPoiDetail :[NSNumber numberWithInt:2]];
+                });
+            };
+            operation.queryCompletionBlock = ^(CKQueryCursor *cursor, NSError *error) {
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [spinner stopAnimating];
+                });
+            };
+            
+            [publicDB addOperation:operation];
+     
+        } else {
+            if ([result isEqualToString:@"no-items"]) {
+                [self.ButtonSharedPoiCloudDownload setImage:[UIImage systemImageNamed:@"exclamationmark.icloud" withConfiguration:config] forState:UIControlStateNormal];
+            } else if ([result isEqualToString:@"no-inet"]) {
+                [self.ButtonSharedPoiCloudDownload setImage:[UIImage systemImageNamed:@"icloud.slash" withConfiguration:config] forState:UIControlStateNormal];
+            } else {
+                [self.ButtonSharedPoiCloudDownload setImage:[UIImage systemImageNamed:@"icloud.and.arrow.up" withConfiguration:config] forState:UIControlStateNormal];
+            }
+            [self LoadPoiDetail :[NSNumber numberWithInt:2]];
+        }
+    }];
+}
+
+/*
+ created date:      06/03/2021
+ last modified:     07/03/2021
+ */
+-(PoiRLM*)GetRecord :(CKRecord*) record {
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *imagesDirectory = [paths objectAtIndex:0];
+    
+    PoiRLM *poi = [[PoiRLM alloc] init];
+    poi.key = [record objectForKey: @"key"];
+    poi.name = [record objectForKey: @"name"];
+    poi.categoryid = [record objectForKey: @"categoryid"];
+    poi.authorkey = [record objectForKey: @"authorkey"];
+    poi.authorname = [record objectForKey: @"authorname"];
+    poi.country = [record objectForKey: @"country"];
+    poi.countrycode = [record objectForKey: @"countrycode"];
+    poi.createddt = [record objectForKey: @"createddt"];
+    poi.devicesharedby = [record objectForKey: @"device"];
+    poi.fullthoroughfare = [record objectForKey: @"fullthoroughfare"];
+    // [newPoiRecord setObject: @"en" = [record objectForKey: @"languagecode"];
+    poi.lat = [record objectForKey: @"lat"];
+    poi.lon = [record objectForKey: @"lon"];
+    poi.locality = [record objectForKey: @"locality"];
+    poi.modifieddt = [record objectForKey: @"modifieddt"];
+    poi.privatenotes = [record objectForKey: @"notes"];
+    poi.postcode = [record objectForKey: @"postcode"];
+    poi.radius = [record objectForKey: @"radius"];
+    poi.searchstring = [record objectForKey: @"searchstring"];
+    poi.subadministrativearea = [record objectForKey: @"subadministrativearea"];
+    poi.sublocality = [record objectForKey: @"sublocality"];
+    poi.wikititle = [record objectForKey: @"wikititle"];
+    poi.poisharedflag = [NSNumber numberWithInt:2];
+    
+    ImageCollectionRLM *i = [[ImageCollectionRLM alloc] init];
+    
+    i.info = [record objectForKey: @"imageinfo"];
+    i.key = [record objectForKey: @"imagekey"];
+    i.KeyImage = [NSNumber numberWithInt:1];
+    
+    CKAsset *asset = [record objectForKey:@"image"];
+    NSData *imageData = [NSData dataWithContentsOfURL:asset.fileURL];
+        
+    if (imageData != nil) {
+        i.ImageFileReference = [record objectForKey: @"imagefilepathname"];
+        NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",i.ImageFileReference]];
+        [imageData writeToFile:dataFilePath atomically:YES];
+        CGSize imagesize = CGSizeMake(100 , 100);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [AppDelegateDef.PoiBackgroundImageDictionary setObject:[ToolBoxNSO imageWithImage:[UIImage imageWithData:imageData] convertToSize:imagesize] forKey:poi.key];
+        });
+    }
+    [poi.images addObject:i];
+    return poi;
+}
+
+
+
+/*
+ created date:      06/03/2021
+ last modified:     06/03/2021
+ remarks:
+ */
+- (bool)checkInternet
+{
+    if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus]==NotReachable)
+    {
+        return false;
+    }
+    else
+    {
+        //connection available
+        return true;
+    }
+    
+}
+
+- (IBAction)ButtonDownloadFromiCloudPressed:(id)sender {
+    
+    [self DownloadFeaturedSharedPoi];
     
 }
 

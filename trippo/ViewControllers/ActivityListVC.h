@@ -25,13 +25,13 @@
 #import "MultiplierConstraint.h"
 #import "CustomCollectionView.h"
 #import "WeatherRLM.h"
-#import "WeatherVCViewController.h"
+
 
 
 @protocol ActivityListDelegate <NSObject>
 @end
 
-@interface ActivityListVC : UIViewController <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate,    UITextFieldDelegate, MFMailComposeViewControllerDelegate, ActivityDataEntryDelegate, TravelPlanDelegate, PaymentListingDelegate, PoiSearchDelegate, WeatherDelegate, TOCropViewControllerDelegate>
+@interface ActivityListVC : UIViewController <UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UITableViewDelegate,    UITextFieldDelegate, MFMailComposeViewControllerDelegate, ActivityDataEntryDelegate, TravelPlanDelegate, PaymentListingDelegate, PoiSearchDelegate, TOCropViewControllerDelegate>
 
 @property (assign) bool editmode;
 
@@ -70,8 +70,6 @@
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewStateIndicator;
 
 
-
-@property (weak, nonatomic) IBOutlet UIButton *ButtonWeatherRequest;
 @property (weak, nonatomic) IBOutlet UIVisualEffectView *EffectsViewWaiting;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *ActivityView;
 @property (weak, nonatomic) IBOutlet UIView *ViewLoading;

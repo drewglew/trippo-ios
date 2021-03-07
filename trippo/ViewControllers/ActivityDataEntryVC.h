@@ -31,6 +31,7 @@
 #import "DocumentsVC.h"
 #import "PoiPreviewVC.h"
 #import <WebKit/WebKit.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 @protocol ActivityDataEntryDelegate <NSObject>
 - (void)didUpdateActivityImages :(bool) ForceUpdate;
@@ -121,6 +122,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *LabelGeoWarningNotice;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *GeoWarningLabelHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *MainImageTrailingConstraint;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonKey;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonDelete;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *WikiViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonUpdateActualWeather;
@@ -140,6 +143,8 @@
 @property NSArray *timezones;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewStateIndicator;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewSettingsStateIndicator;
+@property (weak, nonatomic) IBOutlet UILabel *labelPhotoInfo;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonEditPhotoInfo;
 
 @end
 

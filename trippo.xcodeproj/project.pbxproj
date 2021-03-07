@@ -70,7 +70,6 @@
 		3A7D8ABB22B82B7A002DC657 /* WeatherRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7D8ABA22B82B7A002DC657 /* WeatherRLM.m */; };
 		3A81B509209D80B8005CABDA /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A81B508209D80B8005CABDA /* Photos.framework */; };
 		3A81B50C209D90CA005CABDA /* AlphaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A81B50B209D90CA005CABDA /* AlphaView.m */; };
-		3A85AD7A22BFBC15007965D8 /* WeatherVCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A85AD7922BFBC15007965D8 /* WeatherVCViewController.m */; };
 		3A85AD7D22BFE36E007965D8 /* WeatherCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A85AD7C22BFE36E007965D8 /* WeatherCell.m */; };
 		3A93FC88232D88A000CC1F5F /* country.json in Resources */ = {isa = PBXBuildFile; fileRef = 3A93FC87232D889F00CC1F5F /* country.json */; };
 		3A97DCA62250A66100B64D7C /* CustomCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A97DCA52250A66100B64D7C /* CustomCollectionView.m */; };
@@ -95,6 +94,7 @@
 		3AB915F520D1917B001A08A9 /* WikiVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB915F420D1917B001A08A9 /* WikiVC.m */; };
 		3AB915F720D1979F001A08A9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AB915F620D1979F001A08A9 /* WebKit.framework */; };
 		3ACDD0F4213858B00017E765 /* CountryRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3ACDD0F3213858AF0017E765 /* CountryRLM.m */; };
+		3AEBAC2225F3F4960090E57B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AEBAC2125F3F4950090E57B /* CloudKit.framework */; };
 		3AEE018F20A0B05700AE260E /* AnnotationMK.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEE018E20A0B05700AE260E /* AnnotationMK.m */; };
 		3AEE019220A0CBB100AE260E /* CountryNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEE019120A0CBB100AE260E /* CountryNSO.m */; };
 		3AF785C721308FFE00DD5A5B /* LoginVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785C621308FFE00DD5A5B /* LoginVC.m */; };
@@ -255,8 +255,6 @@
 		3A81B508209D80B8005CABDA /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		3A81B50A209D90CA005CABDA /* AlphaView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AlphaView.h; sourceTree = "<group>"; };
 		3A81B50B209D90CA005CABDA /* AlphaView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AlphaView.m; sourceTree = "<group>"; };
-		3A85AD7822BFBC15007965D8 /* WeatherVCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherVCViewController.h; sourceTree = "<group>"; };
-		3A85AD7922BFBC15007965D8 /* WeatherVCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherVCViewController.m; sourceTree = "<group>"; };
 		3A85AD7B22BFE36E007965D8 /* WeatherCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WeatherCell.h; sourceTree = "<group>"; };
 		3A85AD7C22BFE36E007965D8 /* WeatherCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WeatherCell.m; sourceTree = "<group>"; };
 		3A93FC87232D889F00CC1F5F /* country.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = country.json; path = ../../country.json; sourceTree = "<group>"; };
@@ -307,6 +305,7 @@
 		3AB915F620D1979F001A08A9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		3ACDD0F2213858AF0017E765 /* CountryRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountryRLM.h; sourceTree = "<group>"; };
 		3ACDD0F3213858AF0017E765 /* CountryRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountryRLM.m; sourceTree = "<group>"; };
+		3AEBAC2125F3F4950090E57B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		3AEE018D20A0B05700AE260E /* AnnotationMK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnnotationMK.h; sourceTree = "<group>"; };
 		3AEE018E20A0B05700AE260E /* AnnotationMK.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AnnotationMK.m; sourceTree = "<group>"; };
 		3AEE019020A0CBB100AE260E /* CountryNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountryNSO.h; sourceTree = "<group>"; };
@@ -335,6 +334,7 @@
 				3A12B8DA21010680006B621D /* SystemConfiguration.framework in Frameworks */,
 				3AB915F720D1979F001A08A9 /* WebKit.framework in Frameworks */,
 				3A81B509209D80B8005CABDA /* Photos.framework in Frameworks */,
+				3AEBAC2225F3F4960090E57B /* CloudKit.framework in Frameworks */,
 				D47E4EACCBB20FD32F6AC828 /* libPods-trippo.a in Frameworks */,
 				3A1446E2217B9AD800A9C2C8 /* libc++.tbd in Frameworks */,
 			);
@@ -479,8 +479,6 @@
 				3A046D502224621200EA26A9 /* DocumentsVC.m */,
 				3A523F602242CAD60073305D /* PoiPreviewVC.h */,
 				3A523F612242CAD60073305D /* PoiPreviewVC.m */,
-				3A85AD7822BFBC15007965D8 /* WeatherVCViewController.h */,
-				3A85AD7922BFBC15007965D8 /* WeatherVCViewController.m */,
 				3A6571DD22E247D20071E166 /* TravelPlanVC.h */,
 				3A6571DE22E247D20071E166 /* TravelPlanVC.m */,
 				3AB52F5C22E4D117000E9ED8 /* TravelPlanDetailVC.h */,
@@ -551,6 +549,7 @@
 		3A374F0B2093762E00E5A652 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AEBAC2125F3F4950090E57B /* CloudKit.framework */,
 				3A619FB222415ED40053E8B6 /* libz.tbd */,
 				3A98851E22403F5E00D19186 /* Security.framework */,
 				3A98851C22403F4D00D19186 /* UIKit.framework */,
@@ -839,7 +838,6 @@
 				3A3075DE21220446007D53C9 /* HCSStarRatingView.m in Sources */,
 				3AF785DF21319C8C00DD5A5B /* PoiRLM.m in Sources */,
 				3A13556222E36CF700449604 /* NodeNSO.m in Sources */,
-				3A85AD7A22BFBC15007965D8 /* WeatherVCViewController.m in Sources */,
 				3A7A95E22325363100DE5082 /* PaymentListCell.m in Sources */,
 				3A224CC92097950600075457 /* ActivityDataEntryVC.m in Sources */,
 				3A374F1E2093939400E5A652 /* LocatorVC.m in Sources */,
@@ -1046,7 +1044,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.9.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1067,7 +1065,7 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.trhippo2020;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drew.trips;
 				PRODUCT_NAME = trHippo;
 				SWIFT_VERSION = 3.2;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1094,7 +1092,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.1;
+				MARKETING_VERSION = 1.9.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1115,7 +1113,7 @@
 					"-framework",
 					"\"UIKit\"",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.trhippo2020;
+				PRODUCT_BUNDLE_IDENTIFIER = com.drew.trips;
 				PRODUCT_NAME = trHippo;
 				SWIFT_VERSION = 3.2;
 				TARGETED_DEVICE_FAMILY = 1;

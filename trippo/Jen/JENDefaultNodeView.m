@@ -43,6 +43,10 @@
         self.activityImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,NodeSize,NodeSize)];
         
         self.activityImageView.layer.cornerRadius = (self.activityImageView.bounds.size.width / 2);
+        self.activityImageView.layer.borderWidth = 1.0f;
+        self.activityImageView.layer.borderColor = [UIColor colorNamed:@"TrippoColor"].CGColor;
+        self.activityImageView.backgroundColor = [UIColor secondarySystemBackgroundColor];
+        
         self.activityImageView.clipsToBounds = YES;
        
         [self.activityImageView setImage:self.activityImage];
@@ -77,38 +81,50 @@
  
             UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
             moreButton.frame = CGRectMake(0.0, 0.0, NodeSize/3, NodeSize/3);
+            moreButton.backgroundColor = [UIColor secondarySystemBackgroundColor];
+            moreButton.layer.cornerRadius = 5.0;
+            moreButton.clipsToBounds = true;
             [moreButton addTarget:self action:@selector(MoreButtonPressed ) forControlEvents:UIControlEventTouchUpInside];
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3 weight:UIImageSymbolWeightThin scale:UIImageSymbolScaleSmall];
-            [moreButton setImage:[[UIImage systemImageNamed:@"ellipsis.circle.fill" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3 weight:UIImageSymbolWeightRegular scale:UIImageSymbolScaleSmall];
+            [moreButton setImage:[[UIImage systemImageNamed:@"command" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
-            moreButton.tintColor = [UIColor colorWithRed:218.0f/255.0f green:212.0f/255.0f blue:239.0f/255.0f alpha:1.0];
+            moreButton.tintColor = [UIColor colorNamed:@"TrippoColor"];
             [self.activityOptionView addSubview: moreButton];
 
             UIButton *singlePointOptionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             singlePointOptionButton.frame = CGRectMake(NodeSize - (NodeSize/3), NodeSize - (NodeSize/3), NodeSize/3, NodeSize/3);
+            singlePointOptionButton.backgroundColor = [UIColor secondarySystemBackgroundColor];
+            singlePointOptionButton.layer.cornerRadius = 5.0;
+            singlePointOptionButton.clipsToBounds = true;
             [singlePointOptionButton addTarget:self action:@selector(SinglePointOptionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
             
-            [singlePointOptionButton setImage:[[UIImage systemImageNamed:@"smallcircle.circle.fill" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+            [singlePointOptionButton setImage:[[UIImage systemImageNamed:@"target" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
-            singlePointOptionButton.tintColor = [UIColor colorWithRed:218.0f/255.0f green:212.0f/255.0f blue:239.0f/255.0f alpha:1.0];
+            singlePointOptionButton.tintColor = [UIColor colorNamed:@"TrippoColor"];
             [self.activityOptionView addSubview: singlePointOptionButton];
 
             UIButton *newOptionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             newOptionButton.frame = CGRectMake(0, NodeSize - (NodeSize/3), NodeSize/3, NodeSize/3);
+            newOptionButton.backgroundColor = [UIColor secondarySystemBackgroundColor];
+            newOptionButton.layer.cornerRadius = 5.0;
+            newOptionButton.clipsToBounds = true;
             [newOptionButton addTarget:self action:@selector(NewOptionButtonPressed ) forControlEvents:UIControlEventTouchUpInside];
             
-            [newOptionButton setImage:[[UIImage systemImageNamed:@"plus.circle.fill" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+            [newOptionButton setImage:[[UIImage systemImageNamed:@"plus" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
-            newOptionButton.tintColor =  [UIColor colorWithRed:218.0f/255.0f green:212.0f/255.0f blue:239.0f/255.0f alpha:1.0];
+            newOptionButton.tintColor =  [UIColor colorNamed:@"TrippoColor"];
             [self.activityOptionView addSubview: newOptionButton];
 
             UIButton *travelBackOptionButton = [UIButton buttonWithType:UIButtonTypeCustom];
             travelBackOptionButton.frame = CGRectMake(NodeSize - (NodeSize/3), 0, NodeSize/3, NodeSize/3);
+            travelBackOptionButton.backgroundColor = [UIColor secondarySystemBackgroundColor];
+            travelBackOptionButton.layer.cornerRadius = 5.0;
+            travelBackOptionButton.clipsToBounds = true;
             [travelBackOptionButton addTarget:self action:@selector(TravelBackOptionButtonPressed ) forControlEvents:UIControlEventTouchUpInside];
        
-            [travelBackOptionButton setImage:[[UIImage systemImageNamed:@"arrow.down.left.circle.fill" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+            [travelBackOptionButton setImage:[[UIImage systemImageNamed:@"arrow.turn.down.left" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
-            travelBackOptionButton.tintColor =  [UIColor colorWithRed:218.0f/255.0f green:212.0f/255.0f blue:239.0f/255.0f alpha:1.0];
+            travelBackOptionButton.tintColor =  [UIColor colorNamed:@"TrippoColor"];
             [self.activityOptionView addSubview: travelBackOptionButton];
                       
             double TravelBackIndicatorSize = 30.0f;
@@ -257,11 +273,12 @@ _travelBack = travelBack;
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     PoiSearchVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"PoiListingViewController"];
+    controller.frommenu = false;
     controller.delegate = self;
     controller.Activity = [[ActivityRLM alloc] init];
 
     controller.transformed = false;
-    [controller setModalPresentationStyle:UIModalPresentationOverFullScreen];
+    [controller setModalPresentationStyle:UIModalPresentationPageSheet];
     TravelPlanVC *currentTopVC = (TravelPlanVC*)[self currentTopViewController];
     controller.realm = currentTopVC.realm;
     [currentTopVC presentViewController:controller animated:YES completion:nil];
