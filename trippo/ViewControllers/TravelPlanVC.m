@@ -888,7 +888,7 @@ remarks:
         cell.LabelRoute.text = journey.Route;
         
         
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightThin];
         
         [cell.TransportButton setContentMode:UIViewContentModeScaleAspectFit];
         
@@ -902,7 +902,8 @@ remarks:
         } else if (journey.TransportId  == [NSNumber numberWithLong:4]) {
             [cell.TransportButton setImage:[UIImage systemImageNamed:@"airplane" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:5]) {
-            [cell.TransportButton setImage:[UIImage systemImageNamed:@"s.circle" withConfiguration:config] forState:UIControlStateNormal];
+            [cell.TransportButton setImage:[UIImage systemImageNamed:@"helm" withConfiguration:config] forState:UIControlStateNormal];
+            //[cell.TransportButton setImage:[UIImage systemImageNamed:@"s.circle" withConfiguration:config] forState:UIControlStateNormal];
         } else if (journey.TransportId  == [NSNumber numberWithLong:6]) {
             [cell.TransportButton setImage:[UIImage systemImageNamed:@"bicycle" withConfiguration:config] forState:UIControlStateNormal];
         } else {
@@ -957,7 +958,7 @@ remarks:
             
             [weakCell.TransportButton setContentMode:UIViewContentModeScaleAspectFit];
             
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightRegular];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50 weight:UIImageSymbolWeightThin];
             
             if (journey.TransportId  == [NSNumber numberWithLong:1]) {
                 [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"figure.walk" withConfiguration:config] forState:UIControlStateNormal];
@@ -968,7 +969,8 @@ remarks:
             } else if (journey.TransportId  == [NSNumber numberWithLong:4]) {
                 [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"airplane" withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:5]) {
-                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"s.circle" withConfiguration:config] forState:UIControlStateNormal];
+                [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"helm"
+                withConfiguration:config] forState:UIControlStateNormal];
             } else if (journey.TransportId  == [NSNumber numberWithLong:6]) {
                 [weakCell.TransportButton setImage:[UIImage systemImageNamed:@"bicycle" withConfiguration:config] forState:UIControlStateNormal];
             } else {

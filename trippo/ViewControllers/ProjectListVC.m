@@ -97,7 +97,7 @@ CGFloat TripScale = 4.14f;
 
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
         button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
         [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
         [button setTintColor: [UIColor secondarySystemBackgroundColor]];
         [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -273,13 +273,14 @@ CGFloat TripScale = 4.14f;
    
     if (indexPath.row == NumberOfItems -1) {
             
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
            
         cell.ImageViewProject.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
         [cell.ImageViewProject setTintColor: [UIColor colorNamed:@"TrippoColor"]];
         
         cell.isNewAccessor = true;
         cell.VisualEffectsViewBlur.hidden = true;
+        [cell.ImageViewProject setBackgroundColor:[UIColor clearColor]];
         
     } else {
         cell.trip = [self.tripcollection objectAtIndex:indexPath.row];
@@ -288,13 +289,11 @@ CGFloat TripScale = 4.14f;
         
         if (CGSizeEqualToSize(image.size, CGSizeZero)) {
             cell.ImageViewProject.image = [UIImage systemImageNamed:@"latch.2.case"];
-            
             [cell.ImageViewProject setTintColor: [UIColor systemBackgroundColor]];
             [cell.ImageViewProject setBackgroundColor:[UIColor colorNamed:@"TrippoColor"]];
-             
-            
         } else {
             cell.ImageViewProject.image = image;
+            [cell.ImageViewProject setBackgroundColor:[UIColor clearColor]];
         }
 
         if (cell.trip.startdt != nil) {
@@ -533,7 +532,7 @@ CGFloat TripScale = 4.14f;
 
 /*
  created date:      30/03/2019
- last modified:     30/03/2019
+ last modified:     28/03/2021
  remarks:
  */
 -(void)DeleteTrip: (id)sender {
@@ -562,7 +561,7 @@ CGFloat TripScale = 4.14f;
                                                                   dispatch_async(dispatch_get_main_queue(), ^{
                                                                       
                                                                       /* locate all activities */
-                                                                      RLMResults <ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"tripkey=%@",self.Trip.key];
+                                                                      RLMResults <ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"tripkey=%@",TripToDelete.key];
                                                                       
                                                                       /* remove any notifications attached */
                                                                       for (ActivityRLM* activity in activities) {

@@ -32,6 +32,8 @@ bool UpdatedPoi = false;
     CenterSelectedType = true;
     [super viewDidLoad];
     
+
+    
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     if (settings.count==0) {
         self.Settings = [[SettingsRLM alloc] init];
@@ -44,21 +46,29 @@ bool UpdatedPoi = false;
 
     self.PoiImageDictionary = [[NSMutableDictionary alloc] init];
 
+    NSLog(@"%@",self.PointOfInterest);
+    
     if (self.newitem && !self.fromnearby) {
         if (![self.PointOfInterest.name isEqualToString:@""]) {
             self.TextFieldTitle.text = self.PointOfInterest.name;
+            self.TextFieldWebsite.text = self.PointOfInterest.website;
             self.TextViewNotes.text = self.PointOfInterest.privatenotes;
         } else {
             self.TextViewNotes.text = self.PointOfInterest.privatenotes;
+            self.TextFieldWebsite.text = self.PointOfInterest.website;
         }
     } else if (self.fromnearby) {
         self.TextFieldTitle.text = self.PointOfInterest.name;
         self.TextViewNotes.text = self.PointOfInterest.privatenotes;
+        self.TextFieldWebsite.text = self.PointOfInterest.website;
         
         if (self.haswikimainimage) {
             
             ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
             imgobject.key = [[NSUUID UUID] UUIDString];
+            
+            self.SelectedImageKey = imgobject.key;
+            
             imgobject.KeyImage = 1;
             imgobject.info = self.WikiMainImageDescription;
             
@@ -81,7 +91,9 @@ bool UpdatedPoi = false;
         if (self.readonlyitem) {
             self.TextFieldTitle.enabled = false;
             [self.TextViewNotes setEditable:false];
+            self.TextFieldWebsite.enabled = false;
             self.CollectionViewPoiImages.scrollEnabled = true;
+            self.ButtonEditPhotoInfo.enabled = false;
         }
         
         [self LoadImageDataCollection];
@@ -89,6 +101,13 @@ bool UpdatedPoi = false;
         /* Text fields and Segment */
         self.TextViewNotes.text = self.PointOfInterest.privatenotes;
         self.TextFieldTitle.text = self.PointOfInterest.name;
+        self.TextFieldWebsite.text = self.PointOfInterest.website;
+    }
+    
+    if (!self.readonlyitem) {
+        [self addDoneToolBarToKeyboard:self.TextViewNotes];
+        [self addDoneToolBarForTextFieldToKeyboard: self.TextFieldTitle];
+        [self addDoneToolBarForTextFieldToKeyboard: self.TextFieldWebsite];
     }
     
     self.ImagePicture.frame = CGRectMake(0, 0, self.ScrollViewImage.frame.size.width, self.ScrollViewImage.frame.size.height);
@@ -97,7 +116,6 @@ bool UpdatedPoi = false;
     
     
     [self LoadCategoryData];
-
     [self LoadMapData];
 
     UILongPressGestureRecognizer* mapLongPressAddAnnotation = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(AddAnnotationToMap:)];
@@ -113,18 +131,12 @@ bool UpdatedPoi = false;
     self.CollectionViewTypes.delegate = self;
     // Do any additional setup after loading the view.
 
-    /*
-    self.TextFieldTitle.layer.cornerRadius=8.0f;
-    self.TextFieldTitle.layer.masksToBounds=YES;
-    self.TextFieldTitle.layer.borderColor=[[UIColor clearColor]CGColor];
-    self.TextFieldTitle.layer.borderWidth= 1.0f;
-     */
     
     // Map Distance Picker frame
-    self.ViewDistancePicker.layer.cornerRadius=8.0f;
+    self.ViewDistancePicker.layer.cornerRadius=5.0f;
     self.ViewDistancePicker.layer.masksToBounds=YES;
-    self.ViewDistancePicker.layer.borderColor=[[UIColor colorNamed:@"PoiFGColor"]CGColor];
-    self.ViewDistancePicker.layer.borderWidth= 1.5f;
+    self.ViewDistancePicker.layer.backgroundColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
+    // self.ViewDistancePicker.layer.borderWidth= 1.5f;
     
     
     self.TextViewNotes.layer.cornerRadius=8.0f;
@@ -137,23 +149,21 @@ bool UpdatedPoi = false;
     self.ViewTrash.layer.cornerRadius=28;
     self.ViewTrash.layer.masksToBounds=YES;
     
-    [self addDoneToolBarToKeyboard:self.TextViewNotes];
-    
-    [self addDoneToolBarForTextFieldToKeyboard: self.TextFieldTitle];
+
     
     self.TextFieldTitle.delegate = self;
+    self.TextFieldWebsite.delegate = self;
     self.TextViewNotes.delegate = self;
     
     
     if (self.checkInternet) {
         if ([self.PointOfInterest.countrycode isEqualToString:@""] || self.PointOfInterest.countrycode==nil) {
+            self.ButtonScan.hidden = true;
             self.ButtonGeo.hidden = false;
         }
         // TODO we need to check if Poi has missing data and that the internet is available...
         
     }
-    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.PointOfInterest.categoryid unsignedLongValue] inSection:0];
-    [self.CollectionViewTypes scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     
     
     
@@ -239,13 +249,13 @@ bool UpdatedPoi = false;
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    UIImage *ImageWiki;
-    if (![self.PointOfInterest.wikititle isEqualToString:@""]) {
-        ImageWiki = [UIImage imageNamed:@"WikiFilled"];
-    } else {
-        ImageWiki = [UIImage imageNamed:@"Wiki"];
-    }
-    self.ButtonWiki.imageView.image = [ImageWiki imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    //UIImage *ImageWiki;
+    //if (![self.PointOfInterest.wikititle isEqualToString:@""]) {
+    //    ImageWiki = [UIImage imageNamed:@"WikiFilled"];
+    //} else {
+    //ImageWiki = [UIImage imageNamed:@"Wiki"];
+    //}
+    //self.ButtonWiki.imageView.image = [ImageWiki imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
 }
 
@@ -348,13 +358,15 @@ bool UpdatedPoi = false;
 {
     [self.TextViewNotes resignFirstResponder];
     [self.TextFieldTitle resignFirstResponder];
+    [self.TextFieldWebsite resignFirstResponder];
+    
 
 }
 
 
 /*
  created date:      11/06/2018
- last modified:     28/03/2019
+ last modified:     24/03/2021
  remarks:
  */
 -(void) LoadCategoryData {
@@ -477,7 +489,8 @@ bool UpdatedPoi = false;
                              @"Village",
                              @"Vineyard",
                              @"Windmill",
-                             @"Zoo"
+                             @"Zoo",
+                             @"Cat-Camping"
                              ];
     
     self.TypeDistanceItems  = @[
@@ -538,11 +551,11 @@ bool UpdatedPoi = false;
                                 @1000, // @"Village", = 54
                                 @500, // @"Vineyard", = 55
                                 @1000, // @"Windmill", = 56
-                                @1000 // @"Zoo", = 57
+                                @1000, // @"Zoo", = 57,
+                                @1000 // @"Cat-Camping" = 58
                              ];
 
     self.LabelPoi.text = [self GetPoiLabelWithType:self.PointOfInterest.categoryid];
-    
     
     
     
@@ -555,7 +568,9 @@ bool UpdatedPoi = false;
         
         if (self.newitem) {
             self.PointOfInterest.poisharedflag = [NSNumber numberWithInt:1];
-            self.PointOfInterest.categoryid = [NSNumber numberWithLong:0];
+            if (self.PointOfInterest.categoryid == nil) {
+                self.PointOfInterest.categoryid = [NSNumber numberWithLong:0];
+            }
         }
         NSString *distanceFromTypeSelected = [NSString stringWithFormat:@"%@",[self.TypeDistanceItems objectAtIndex:[self.PointOfInterest.categoryid longValue]]];
         [self.PickerDistance selectRow:[self.DistancePickerItems indexOfObject: distanceFromTypeSelected] inComponent:0 animated:YES];
@@ -564,6 +579,10 @@ bool UpdatedPoi = false;
         NSString *distanceFromTypeSelected = [NSString stringWithFormat:@"%@",self.PointOfInterest.radius];
         [self.PickerDistance selectRow:[self.DistancePickerItems indexOfObject: distanceFromTypeSelected] inComponent:0 animated:YES];
     }
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.PointOfInterest.categoryid unsignedLongValue] inSection:0];
+    [self.CollectionViewTypes scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+    
 }
 
 /*
@@ -599,9 +618,9 @@ bool UpdatedPoi = false;
         pickerLabel = [[UILabel alloc] initWithFrame:frame];
         pickerLabel.textAlignment =NSTextAlignmentCenter;
         pickerLabel.backgroundColor = [UIColor clearColor];
-        pickerLabel.font = [UIFont fontWithName:@"System" size:10];
+        pickerLabel.font = [UIFont fontWithName:@"System" size:8];
     }
-    pickerLabel.textColor = [UIColor colorNamed:@"PoiFGColor"];
+    pickerLabel.textColor = [UIColor labelColor];
     pickerLabel.text = [self.DistancePickerItems objectAtIndex:row];
     return pickerLabel;
 }
@@ -827,7 +846,7 @@ remarks:
                                         alloc]initWithCircle:(MKCircle *)overlay];
 
         aRenderer.fillColor =  [UIColor colorNamed:@"TrippoColor"];
-        [aRenderer setAlpha:0.05];
+        [aRenderer setAlpha:0.25];
                                
         return aRenderer;
     }
@@ -878,12 +897,16 @@ remarks:
 
 /*
  created date:      28/04/2018
- last modified:     12/08/2018
+ last modified:     09/03/2021
  remarks:
  */
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.CollectionViewPoiImages) {
-        return self.PointOfInterest.images.count + 1;
+        if (self.readonlyitem) {
+            return self.PointOfInterest.images.count;
+        } else {
+            return self.PointOfInterest.images.count + 1;
+        }
     } else {
         return self.TypeItems.count;
     }
@@ -905,7 +928,7 @@ remarks:
         NSInteger NumberOfItems = self.PointOfInterest.images.count + 1;
         if (indexPath.row == NumberOfItems -1) {
        
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
                                  
             cell.ImagePoi.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
             [cell.ImagePoi setTintColor: [UIColor colorNamed:@"TrippoColor"]];
@@ -948,7 +971,6 @@ remarks:
             self.imagestate = 1;
             [self InsertPoiImage];
         } else {
-            
             if (!self.newitem) {
                 ImageCollectionRLM *imgobject = [self.PointOfInterest.images objectAtIndex:indexPath.row];
                 self.SelectedImageKey = imgobject.key;
@@ -964,16 +986,12 @@ remarks:
                 self.LabelPhotoInfo.text = imgobject.info;
                 if (imgobject.ImageFlaggedDeleted==0) {
                     self.ViewTrash.hidden = true;
-                   
                     [self.ButtonDeleteImage setTintColor:[UIColor redColor]];
                    
                 } else {
                      self.ViewTrash.hidden = false;
-                    
                     [self.ButtonDeleteImage setTintColor:[UIColor labelColor]];
-                   
                 }
-
             }
             else {
                 ImageCollectionRLM *imgobject = [self.PointOfInterest.images objectAtIndex:indexPath.row];
@@ -985,6 +1003,8 @@ remarks:
         if (!self.readonlyitem) {
             [self.realm beginWriteTransaction];
             self.PointOfInterest.categoryid = [NSNumber numberWithLong:indexPath.row];
+            
+            CenterSelectedType = true;
             
             NSString *distanceFromTypeSelected = [NSString stringWithFormat:@"%@",[self.TypeDistanceItems objectAtIndex:indexPath.row]];
             [self.PickerDistance selectRow:[self.DistancePickerItems indexOfObject: distanceFromTypeSelected] inComponent:0 animated:YES];
@@ -1006,11 +1026,11 @@ remarks:
     
     if (CenterSelectedType) {
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:[self.PointOfInterest.categoryid longValue] inSection:0];
-        [self.CollectionViewTypes scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically | UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+        [self.CollectionViewTypes scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredVertically | UICollectionViewScrollPositionCenteredHorizontally animated:YES];
         CenterSelectedType = false;
     }
 }
-
+ 
 /*
  created date:      10/06/2018
  last modified:     10/06/2018
@@ -1112,7 +1132,9 @@ remarks:
                                                                   
                                                                   controller.PointOfInterest = copiedpoi;
                                                                   
-                                                                  controller.distance = [self.TypeDistanceItems objectAtIndex:[self.PointOfInterest.categoryid longValue]];
+                                                                  controller.distance = self.PointOfInterest.radius;
+        
+                                                                  //controller.distance = [self.TypeDistanceItems objectAtIndex:[self.PointOfInterest.categoryid longValue]];
                                                                   
                                                                   controller.wikiimages = false;
                                                                   
@@ -1156,10 +1178,14 @@ remarks:
                                     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                                     NSData *data = [pasteboard dataForPasteboardType:(NSString *)kUTTypePNG];
                                     
-                                    if (data==nil) {
-                                        data = [pasteboard dataForPasteboardType:(NSString *)kUTTypeJPEG];
+                                    NSArray *types = UIPasteboardTypeListImage;
+                                    if ([pasteboard containsPasteboardTypes:types]) {
+                                        for (NSString *itemType in types) {
+                                            if ([pasteboard dataForPasteboardType:itemType]) {
+                                                data = [pasteboard dataForPasteboardType:(NSString *)itemType];
+                                            }
+                                        }
                                     }
-        
                                     if (data!=nil) {
 
                                         if (self.imagestate==1) {
@@ -1235,6 +1261,8 @@ remarks:
                                                         ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
                                                         imgobject.key = [[NSUUID UUID] UUIDString];
                                                         
+                                                        self.SelectedImageKey = imgobject.key;
+                                                        
                                                          UIImage *image = [ToolBoxNSO imageWithImage:result scaledToSize:size];
                                                         
                                                         if (self.PointOfInterest.images.count==0) {
@@ -1242,6 +1270,10 @@ remarks:
                                                         } else {
                                                             imgobject.KeyImage = 0;
                                                         }
+                                                        
+                                                        [self.ImagePicture setImage:image];
+                                                        [self.ImageViewKey setImage:image];
+                                                        //self.LabelPhotoInfo.text = imgobject.info;
                                                         
                                                         [self.realm beginWriteTransaction];
                                                         [self.PointOfInterest.images addObject:imgobject];
@@ -1322,14 +1354,16 @@ remarks:
             ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
             imgobject.key = [[NSUUID UUID] UUIDString];
             
+            self.SelectedImageKey = imgobject.key;
+            
             if (self.PointOfInterest.images.count==0) {
                 imgobject.KeyImage = 1;
-                [self.ImageViewKey setImage:chosenImage];
-                [self.ImagePicture setImage:chosenImage];
-                self.LabelPhotoInfo.text = @"Live Photo";
             } else {
                 imgobject.KeyImage = 0;
             }
+            [self.ImageViewKey setImage:chosenImage];
+            [self.ImagePicture setImage:chosenImage];
+            self.LabelPhotoInfo.text = @"Live Photo";
             
             [self.realm beginWriteTransaction];
             [self.PointOfInterest.images addObject:imgobject];
@@ -1369,7 +1403,7 @@ remarks:
     if (self.imagestate==5) {
         ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
         imgobject.key = [[NSUUID UUID] UUIDString];
-        
+        self.SelectedImageKey = imgobject.key;
         CGSize size = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
 
         image = [ToolBoxNSO imageWithImage:image scaledToSize:size];
@@ -1379,6 +1413,10 @@ remarks:
         } else {
             imgobject.KeyImage = 0;
         }
+        [self.ImageViewKey setImage:image];
+        [self.ImagePicture setImage:image];
+        imgobject.info = @"Pasted Photo";
+        self.LabelPhotoInfo.text = imgobject.info;
         
         [self.realm beginWriteTransaction];
         [self.PointOfInterest.images addObject:imgobject];
@@ -1406,26 +1444,7 @@ remarks:
         [self.CollectionViewPoiImages reloadData];
         
         self.imagestate=0;
-    } else {
-    
-        G8Tesseract *tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng"];
-        tesseract.delegate = self;
-        //tesseract.charWhitelist = @"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-?@$%&().,:;";
-
-        tesseract.image = [ToolBoxNSO convertImageToGrayScale :image];
-        tesseract.maximumRecognitionTime = 20.0;
-        [tesseract recognize];
-
-        if (!self.TextViewNotes.selectedTextRange.empty) {
-            // use selected position to obtain location where to add the text
-            [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[tesseract recognizedText]];
-        } else {
-            // append to the end of the detail.
-            self.TextViewNotes.text = [NSString stringWithFormat:@"%@\n%@", self.TextViewNotes.text, [tesseract recognizedText]];
-        }
-        
-        }
-        
+    } 
     
     if (@available(iOS 14, *)) {
         [cropViewController setModalPresentationStyle:UIModalPresentationFullScreen];
@@ -1489,8 +1508,13 @@ remarks:
 - (IBAction)ActionButtonPressed:(id)sender {
 
     if (self.newitem) {
+        
+        UIImage *keyimage = [[UIImage alloc] init];
+        
         /* manage the images if any exist */
         if (self.PointOfInterest.images.count>0) {
+        
+            
             
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *imagesDirectory = [paths objectAtIndex:0];
@@ -1501,6 +1525,11 @@ remarks:
 
             for (ImageCollectionRLM *imgobject in self.PointOfInterest.images) {
                 NSData *imageData =  UIImagePNGRepresentation([self.PoiImageDictionary objectForKey:imgobject.key]);
+                
+                if (imgobject.KeyImage) {
+                    keyimage = [self.PoiImageDictionary objectForKey:imgobject.key];
+                }
+                
                 NSString *filename = [NSString stringWithFormat:@"%@.png", imgobject.key];
                 NSString *filepathname = [dataPath stringByAppendingPathComponent:filename];
                 [imageData writeToFile:filepathname atomically:YES];
@@ -1512,6 +1541,7 @@ remarks:
         self.PointOfInterest.authorname = self.Settings.username;
         self.PointOfInterest.authorkey = self.Settings.userkey;
         self.PointOfInterest.name = self.TextFieldTitle.text;
+        self.PointOfInterest.website = self.TextFieldWebsite.text;
         self.PointOfInterest.privatenotes = self.TextViewNotes.text;
         self.PointOfInterest.modifieddt = [NSDate date];
         self.PointOfInterest.createddt = [NSDate date];
@@ -1531,6 +1561,13 @@ remarks:
             // standard funationality required for POI module
             if (self.fromnearby) {
                 [self.delegate didUpdatePoi:@"created" :self.PointOfInterest];
+                
+                if (keyimage!=nil) {
+                    CGSize imagesize = CGSizeMake(100 , 100);
+                    UIImage *thumbImage = [ToolBoxNSO imageWithImage:keyimage convertToSize:imagesize];
+                    [AppDelegateDef.PoiBackgroundImageDictionary setObject:thumbImage forKey:self.PointOfInterest.key];
+                }
+                
                 [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
             } else {
                 [self.delegate didCreatePoiFromProject :self.PointOfInterest];
@@ -1596,6 +1633,7 @@ remarks:
     } else {
         [self.realm beginWriteTransaction];
         self.PointOfInterest.name = self.TextFieldTitle.text;
+        self.PointOfInterest.website = self.TextFieldWebsite.text;
         self.PointOfInterest.privatenotes = self.TextViewNotes.text;
         self.PointOfInterest.modifieddt = [NSDate date];
         self.PointOfInterest.searchstring =  [NSString stringWithFormat:@"%@|%@|%@|%@|%@|%@|%@",self.PointOfInterest.name,self.PointOfInterest.administrativearea,self.PointOfInterest.subadministrativearea,self.PointOfInterest.postcode,self.PointOfInterest.locality,self.PointOfInterest.sublocality,self.PointOfInterest.country];
@@ -1614,6 +1652,8 @@ remarks:
         f.numberStyle = NSNumberFormatterDecimalStyle;
         self.PointOfInterest.radius = [f numberFromString:[self.DistancePickerItems objectAtIndex: [self.PickerDistance selectedRowInComponent:0]]];
         
+        [self.realm commitWriteTransaction];
+        
         if (self.PointOfInterest.images.count > 0) {
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *imagesDirectory = [paths objectAtIndex:0];
@@ -1621,39 +1661,47 @@ remarks:
             NSFileManager *fm = [NSFileManager defaultManager];
             [fm createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:nil];
             NSInteger count = [self.PointOfInterest.images count];
-            //bool NoKeyPhoto = true;
+            
+            
             /* loop through in reverse as it is easier to handle deletions in array */
             for (NSInteger index = (count - 1); index >= 0; index--) {
                 ImageCollectionRLM *imgobject = self.PointOfInterest.images[index];
+                NSLog(@"%@", imgobject);
                 if (imgobject.ImageFlaggedDeleted) {
                     /* else we are good to delete it */
-                    NSString *filepathname = [imagesDirectory stringByAppendingPathComponent:imgobject.ImageFileReference];
-                    NSError *error = nil;
-                    BOOL success = [fm removeItemAtPath:filepathname error:&error];
-                    if (!success || error) {
-                        NSLog(@"something failed in deleting unwanted data");
+                    if (imgobject.ImageFileReference!=nil) {
+                        NSString *filepathname = [imagesDirectory stringByAppendingPathComponent:imgobject.ImageFileReference];
+                        NSError *error = nil;
+                        BOOL success = [fm removeItemAtPath:filepathname error:&error];
+                        if (!success || error) {
+                            NSLog(@"something failed in deleting unwanted data");
+                        }
                     }
-                    [self.PointOfInterest.images removeObjectAtIndex:index];
+                    [self.realm transactionWithBlock:^{
+                        [self.PointOfInterest.images removeObjectAtIndex:index];
+                    }];
                 } else if ([imgobject.ImageFileReference isEqualToString:@""] || imgobject.ImageFileReference==nil) {
                     /* here we add the attachment to file system and dB */
-                    imgobject.NewImage = true;
                     NSData *imageData =  UIImagePNGRepresentation([self.PoiImageDictionary objectForKey:imgobject.key]);
                     NSString *filename = [NSString stringWithFormat:@"%@.png", imgobject.key];
                     NSString *filepathname = [dataPath stringByAppendingPathComponent:filename];
                     [imageData writeToFile:filepathname atomically:YES];
-                    imgobject.ImageFileReference = [NSString stringWithFormat:@"Images/%@/%@",self.PointOfInterest.key,filename];
+                    [self.realm transactionWithBlock:^{
+                        imgobject.NewImage = true;
+                        imgobject.ImageFileReference = [NSString stringWithFormat:@"Images/%@/%@",self.PointOfInterest.key,filename];
+                    }];
                     
                 } else if (imgobject.UpdateImage) {
                     /* we might swap it out as user has replaced the original file */
                     NSData *imageData =  UIImagePNGRepresentation([self.PoiImageDictionary objectForKey:imgobject.key]);
                     NSString *filepathname = [imagesDirectory stringByAppendingPathComponent:imgobject.ImageFileReference];
                     [imageData writeToFile:filepathname atomically:YES];
-                    imgobject.UpdateImage = false;
-                    
+                    [self.realm transactionWithBlock:^{
+                        imgobject.UpdateImage = false;
+                    }];
                 }
             }
             UpdatedPoi = true;
-            [self.realm commitWriteTransaction];
         }
         [self.delegate didUpdatePoi:@"modified" :self.PointOfInterest];
         [self dismissViewControllerAnimated:YES completion:Nil];
@@ -1688,10 +1736,13 @@ remarks:
         self.SwitchViewPhotoOptions.hidden=true;
         
         self.ButtonWiki.hidden=false;
+        
         self.ButtonSharePoi.hidden=true;
+        
         self.LabelImageOptions.hidden=true;
         if (self.checkInternet) {
             if ([self.PointOfInterest.countrycode isEqualToString:@""] || self.PointOfInterest.countrycode==nil) {
+                self.ButtonScan.hidden = true;
                 self.ButtonGeo.hidden = false;
             }
         }
@@ -1883,16 +1934,23 @@ remarks:
     
         ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
         imgobject.key = [[NSUUID UUID] UUIDString];
+        
+        self.SelectedImageKey = imgobject.key;
+        
+        
+        
         [self.PoiImageDictionary setObject:img.Image forKey:imgobject.key];
         
         if (self.PointOfInterest.images.count==0) {
             imgobject.KeyImage = 1;
-            [self.ImageViewKey setImage:img.Image];
-            [self.ImagePicture setImage:img.Image];
-            self.LabelPhotoInfo.text = img.Description;
         } else {
             imgobject.KeyImage = 0;
         }
+        
+        [self.ImageViewKey setImage:img.Image];
+        [self.ImagePicture setImage:img.Image];
+        self.LabelPhotoInfo.text = img.Description;
+        
         imgobject.info = img.Description;
         [self.realm beginWriteTransaction];
         [self.PointOfInterest.images addObject:imgobject];
@@ -2148,8 +2206,8 @@ remarks:
 -(void)addDoneToolBarToKeyboard:(UITextView *)textView
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
@@ -2162,8 +2220,8 @@ remarks:
 -(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
@@ -2455,6 +2513,7 @@ remarks:
 
 }
 
+
 /*
  created date:      28/07/2019
  last modified:     28/07/2019
@@ -2530,7 +2589,7 @@ remarks:
     }];
 
     [self presentViewController:alert animated:YES completion:nil];
-    alert.view.tintColor = [UIColor colorNamed:@"MenuFGColor"];
+    alert.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
     
     
 }
@@ -2543,236 +2602,344 @@ remarks:
  */
 - (IBAction)SharePressed:(id)sender {
     
-    //poisharedflag 0 = local
-    // 1 = shared
+    NSArray *Types = [NSArray arrayWithObjects: @10,@11,@13,@14,@15,@16,@17,@21,@23,@25,@26,@27,@30,@31,@32,@35,@37,@39,@40,@44,@49,@50,@52,@54,@55,@56,@57,nil];
     
-    // TODO - check type used.
-
-    /* only allow to be shared if I am the author of the POI! */
-    if ([self.Settings.userkey isEqualToString:self.PointOfInterest.authorkey]) {
+    
+    
+    if (![Types containsObject:self.PointOfInterest.categoryid]) {
         
-        // exporteddt is null on item that hasn't been
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+        self.ButtonSharePoi.enabled = false;
         
-        spinner.frame = CGRectMake(round((self.view.frame.size.width - 25) / 2), round((self.view.frame.size.height - 25) / 2), 25, 25);
-        
-        [self.view addSubview:spinner];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [spinner startAnimating];
-        });
-        
-        NSString *imageKey;
-        NSString *imageInfo;
-        NSString *dataFilePath;
-        NSString *imageFileRef;
-        bool imageFound = false;
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *imagesDirectory = [paths objectAtIndex:0];
-        for (ImageCollectionRLM *imageitem in self.PointOfInterest.images) {
-            if (imageitem.KeyImage) {
-                dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageitem.ImageFileReference]];
-                NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
-                if (pngData!=nil) {
-                    imageFound = true;
-                    imageKey = imageitem.key;
-                    imageFileRef = imageitem.ImageFileReference;
-                    imageInfo = imageitem.info;
+    } else {
+    
+        //poisharedflag 0 = local
+        // 1 = shared
+        /* only allow to be shared if I am the author of the POI! */
+        //if ([self.Settings.userkey isEqualToString:self.PointOfInterest.authorkey]) {
+            
+            // exporteddt is null on item that hasn't been
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleLarge];
+            
+            spinner.frame = CGRectMake(round((self.view.frame.size.width - 25) / 2), round((self.view.frame.size.height - 25) / 2), 25, 25);
+            
+            [self.view addSubview:spinner];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [spinner startAnimating];
+            });
+            
+            NSString *imageKey;
+            NSString *imageInfo;
+            NSString *dataFilePath;
+            NSString *imageFileRef;
+            bool imageFound = false;
+            
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *imagesDirectory = [paths objectAtIndex:0];
+            for (ImageCollectionRLM *imageitem in self.PointOfInterest.images) {
+                if (imageitem.KeyImage) {
+                    dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imageitem.ImageFileReference]];
+                    NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
+                    if (pngData!=nil) {
+                        imageFound = true;
+                        imageKey = imageitem.key;
+                        imageFileRef = imageitem.ImageFileReference;
+                        imageInfo = imageitem.info;
+                    }
                 }
             }
-        }
-        
-        if (imageFound) {
-            CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.drew.trips"] publicCloudDatabase];
-            CKRecordID *id = [[CKRecordID alloc] initWithRecordName:self.PointOfInterest.key];
             
-            CKAsset *asset = [[CKAsset alloc] initWithFileURL:[NSURL fileURLWithPath:dataFilePath]];
-            
-            [publicDB fetchRecordWithID:id
-            completionHandler:^(CKRecord *existingPoiRecord, NSError *error) {
+            if (imageFound) {
+                CKDatabase *publicDB = [[CKContainer containerWithIdentifier:@"iCloud.com.drew.trips"] publicCloudDatabase];
+                CKRecordID *id = [[CKRecordID alloc] initWithRecordName:self.PointOfInterest.key];
+                
+                CKAsset *asset = [[CKAsset alloc] initWithFileURL:[NSURL fileURLWithPath:dataFilePath]];
+                
+                [publicDB fetchRecordWithID:id
+                completionHandler:^(CKRecord *existingPoiRecord, NSError *error) {
 
-                if (error) {
-                    // new record
-                    NSLog(@"Cannot locate existing Point of Interest.  We need to create record");
-                    
-                    CKRecord *newPoiRecord = [[CKRecord alloc] initWithRecordType:@"poi" recordID:id];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [newPoiRecord setObject: self.PointOfInterest.key forKey: @"key"];
-                        [newPoiRecord setObject: [NSNumber numberWithInt:0] forKey: @"blockedflag"];
-                        [newPoiRecord setObject: self.PointOfInterest.name forKey: @"name"];
-                        [newPoiRecord setObject: self.PointOfInterest.categoryid forKey: @"categoryid"];
-                        [newPoiRecord setObject: self.Settings.userkey forKey: @"authorkey"];
-                        [newPoiRecord setObject: self.Settings.username forKey: @"authorname"];
-                        [newPoiRecord setObject: self.PointOfInterest.country forKey: @"country"];
-                        [newPoiRecord setObject: self.PointOfInterest.countrycode forKey: @"countrycode"];
-                        [newPoiRecord setObject: self.PointOfInterest.createddt forKey: @"createddt"];
-                        [newPoiRecord setObject: [[UIDevice currentDevice] name] forKey: @"device"];
-                        [newPoiRecord setObject: self.PointOfInterest.fullthoroughfare forKey: @"fullthoroughfare"];
-                        [newPoiRecord setObject: @"en" forKey: @"languagecode"];
-                        [newPoiRecord setObject: self.PointOfInterest.lat forKey: @"lat"];
-                        [newPoiRecord setObject: self.PointOfInterest.lon forKey: @"lon"];
-                        [newPoiRecord setObject: self.PointOfInterest.locality forKey: @"locality"];
-                        [newPoiRecord setObject: self.PointOfInterest.modifieddt forKey: @"modifieddt"];
-                        [newPoiRecord setObject: self.PointOfInterest.privatenotes forKey: @"notes"];
-                        [newPoiRecord setObject: self.PointOfInterest.postcode forKey: @"postcode"];
-                        [newPoiRecord setObject: self.PointOfInterest.radius forKey: @"radius"];
-                        [newPoiRecord setObject: self.PointOfInterest.searchstring forKey: @"searchstring"];
-                        [newPoiRecord setObject: self.PointOfInterest.subadministrativearea forKey: @"subadministrativearea"];
-                        [newPoiRecord setObject: self.PointOfInterest.sublocality forKey: @"sublocality"];
-                        [newPoiRecord setObject: self.PointOfInterest.wikititle forKey: @"wikititle"];
-                        [newPoiRecord setObject:asset forKey:@"image"];
-                        [newPoiRecord setObject: imageKey forKey:@"imagekey"];
-                        [newPoiRecord setObject: imageInfo forKey:@"imageinfo"];
-                        [newPoiRecord setObject: imageFileRef forKey:@"imagefilepathname"];
+                    if (error) {
+                        // new record
+                        NSLog(@"Cannot locate existing Point of Interest.  We need to create record");
                         
-                        [publicDB saveRecord:newPoiRecord completionHandler:^(CKRecord *Record, NSError *error){
-                            NSLog(@"create exiting record:%@",error);
-                            if (!error) {
-                                NSLog(@"Success!");
+                        CKRecord *newPoiRecord = [[CKRecord alloc] initWithRecordType:@"poi" recordID:id];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [newPoiRecord setObject: self.PointOfInterest.key forKey: @"key"];
+                            [newPoiRecord setObject: [NSNumber numberWithInt:0] forKey: @"blockedflag"];
+                            [newPoiRecord setObject: self.PointOfInterest.name forKey: @"name"];
+                            [newPoiRecord setObject: self.PointOfInterest.categoryid forKey: @"categoryid"];
+                            [newPoiRecord setObject: self.Settings.userkey forKey: @"authorkey"];
+                            [newPoiRecord setObject: self.Settings.username forKey: @"authorname"];
+                            [newPoiRecord setObject: self.PointOfInterest.country forKey: @"country"];
+                            [newPoiRecord setObject: self.PointOfInterest.countrycode forKey: @"countrycode"];
+                            [newPoiRecord setObject: self.PointOfInterest.createddt forKey: @"createddt"];
+                            [newPoiRecord setObject: [[UIDevice currentDevice] name] forKey: @"device"];
+                            [newPoiRecord setObject: self.PointOfInterest.fullthoroughfare forKey: @"fullthoroughfare"];
+                            [newPoiRecord setObject: @"en" forKey: @"languagecode"];
+                            [newPoiRecord setObject: self.PointOfInterest.lat forKey: @"lat"];
+                            [newPoiRecord setObject: self.PointOfInterest.lon forKey: @"lon"];
+                            [newPoiRecord setObject: self.PointOfInterest.locality forKey: @"locality"];
+                            [newPoiRecord setObject: self.PointOfInterest.modifieddt forKey: @"modifieddt"];
+                            [newPoiRecord setObject: self.PointOfInterest.privatenotes forKey: @"notes"];
+                            [newPoiRecord setObject: self.PointOfInterest.postcode forKey: @"postcode"];
+                            [newPoiRecord setObject: self.PointOfInterest.radius forKey: @"radius"];
+                            [newPoiRecord setObject: self.PointOfInterest.searchstring forKey: @"searchstring"];
+                            [newPoiRecord setObject: self.PointOfInterest.subadministrativearea forKey: @"subadministrativearea"];
+                            [newPoiRecord setObject: self.PointOfInterest.sublocality forKey: @"sublocality"];
+                            [newPoiRecord setObject: self.PointOfInterest.wikititle forKey: @"wikititle"];
+                            [newPoiRecord setObject:asset forKey:@"image"];
+                            [newPoiRecord setObject: imageKey forKey:@"imagekey"];
+                            [newPoiRecord setObject: imageInfo forKey:@"imageinfo"];
+                            [newPoiRecord setObject: imageFileRef forKey:@"imagefilepathname"];
+                            
+                            [publicDB saveRecord:newPoiRecord completionHandler:^(CKRecord *Record, NSError *error){
+                                NSLog(@"create exiting record:%@",error);
+                                if (!error) {
+                                    NSLog(@"Success!");
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [spinner stopAnimating];
+                                        UIAlertController * alertSuccess=   [UIAlertController
+                                                                             alertControllerWithTitle:@"Success!"
+                                                                             message:@"Uploaded new Point of Interest item to the Cloud, it is now in review."
+                                                                             preferredStyle:UIAlertControllerStyleAlert];
+                                        
+                                        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                                                   handler:^(UIAlertAction * action) {}];
+                                        
+                                        [alertSuccess addAction:ok];
+                                        [self presentViewController:alertSuccess animated:YES completion:nil];
+                                        alertSuccess.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
+                                        
+                                    });
+                                }
+                                else {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [spinner stopAnimating];
+                                    });
+                                    NSLog(@"Failure!\n%@", error);
+                                }
+                            }];
+                        });
+                    } else {
+                        // existing record
+                        NSLog(@"Found existing Point of Interest.  We need to update record");
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            NSDate *cloudLastModified = [existingPoiRecord objectForKey:@"modifieddt"];
+                            NSDate *localLastModified = self.PointOfInterest.modifieddt;
+                            
+                            NSComparisonResult result = [localLastModified compare:cloudLastModified];
+                            
+                            if (result != NSOrderedSame) {
+
+                                [existingPoiRecord setObject: self.PointOfInterest.key forKey: @"key"];
+                                [existingPoiRecord setObject: [NSNumber numberWithInt:3] forKey: @"blockedflag"];
+                                [existingPoiRecord setObject: self.PointOfInterest.name forKey: @"name"];
+                                [existingPoiRecord setObject: self.PointOfInterest.categoryid forKey: @"categoryid"];
+                                [existingPoiRecord setObject: self.Settings.userkey forKey: @"authorkey"];
+                                [existingPoiRecord setObject: self.Settings.username forKey: @"authorname"];
+                                [existingPoiRecord setObject: self.PointOfInterest.country forKey: @"country"];
+                                [existingPoiRecord setObject: self.PointOfInterest.countrycode forKey: @"countrycode"];
+                                [existingPoiRecord setObject: self.PointOfInterest.createddt forKey: @"createddt"];
+                                [existingPoiRecord setObject: [[UIDevice currentDevice] name] forKey: @"device"];
+                                [existingPoiRecord setObject: self.PointOfInterest.fullthoroughfare forKey: @"fullthoroughfare"];
+                                [existingPoiRecord setObject: @"en" forKey: @"languagecode"];
+                                [existingPoiRecord setObject: self.PointOfInterest.lat forKey: @"lat"];
+                                [existingPoiRecord setObject: self.PointOfInterest.lon forKey: @"lon"];
+                                [existingPoiRecord setObject: self.PointOfInterest.locality forKey: @"locality"];
+                                [existingPoiRecord setObject: self.PointOfInterest.modifieddt forKey: @"modifieddt"];
+                                [existingPoiRecord setObject: self.PointOfInterest.privatenotes forKey: @"notes"];
+                                [existingPoiRecord setObject: self.PointOfInterest.postcode forKey: @"postcode"];
+                                [existingPoiRecord setObject: self.PointOfInterest.radius forKey: @"radius"];
+                                [existingPoiRecord setObject: self.PointOfInterest.searchstring forKey: @"searchstring"];
+                                [existingPoiRecord setObject: self.PointOfInterest.subadministrativearea forKey: @"subadministrativearea"];
+                                [existingPoiRecord setObject: self.PointOfInterest.sublocality forKey: @"sublocality"];
+                                [existingPoiRecord setObject: self.PointOfInterest.wikititle forKey: @"wikititle"];
+                                [existingPoiRecord setObject:asset forKey:@"image"];
+                                [existingPoiRecord setObject:imageKey forKey:@"imagekey"];
+                                [existingPoiRecord setObject:imageInfo forKey:@"imageinfo"];
+                                [existingPoiRecord setObject:imageFileRef forKey: @"imagefilepathname"];
+                                
+                                [publicDB saveRecord:existingPoiRecord completionHandler:^(CKRecord *Record, NSError *error){
+                                        NSLog(@"save exiting record:%@",error);
+                                        if (!error) {
+                                            NSLog(@"Success!");
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                
+                                                [spinner stopAnimating];
+                                                
+                                                UIAlertController * alertSuccess=   [UIAlertController
+                                                                                     alertControllerWithTitle:@"Success!"
+                                                                                     message:@"Uploaded an update to existing Point of Interest in the Cloud. It in review."
+                                                                                     preferredStyle:UIAlertControllerStyleAlert];
+                                                
+                                                UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                                                           handler:^(UIAlertAction * action) {}];
+                                                
+                                                [alertSuccess addAction:ok];
+                                                [self presentViewController:alertSuccess animated:YES completion:nil];
+                                                alertSuccess.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
+                                            });
+                                        }
+                                        else {
+                                            dispatch_async(dispatch_get_main_queue(), ^{
+                                                [spinner stopAnimating];
+                                            });
+                                            NSLog(@"Failure!\n%@", error);
+                                        }
+                                }];
+                            } else {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     [spinner stopAnimating];
-                                    UIAlertController * alertSuccess=   [UIAlertController
-                                                                         alertControllerWithTitle:@"Success!"
-                                                                         message:@"Uploaded new Point of Interest item to the Cloud, it is now in review."
+                                    
+                                    UIAlertController * alertNoUpdate=   [UIAlertController
+                                                                         alertControllerWithTitle:@"Info!"
+                                                                         message:@"No modifications have been made to the Point of Interest since it was last uploaded."
                                                                          preferredStyle:UIAlertControllerStyleAlert];
                                     
                                     UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction * action) {}];
                                     
-                                    [alertSuccess addAction:ok];
-                                    [self presentViewController:alertSuccess animated:YES completion:nil];
-                                    alertSuccess.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
-                                    
+                                    [alertNoUpdate addAction:ok];
+                                    [self presentViewController:alertNoUpdate animated:YES completion:nil];
+                                    alertNoUpdate.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
                                 });
                             }
-                            else {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [spinner stopAnimating];
-                                });
-                                NSLog(@"Failure!\n%@", error);
-                            }
-                        }];
-                    });
-                } else {
-                    // existing record
-                    NSLog(@"Found existing Point of Interest.  We need to update record");
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSDate *cloudLastModified = [existingPoiRecord objectForKey:@"modifieddt"];
-                        NSDate *localLastModified = self.PointOfInterest.modifieddt;
-                        
-                        NSComparisonResult result = [localLastModified compare:cloudLastModified];
-                        
-                        if (result != NSOrderedSame) {
+                                
+                        });
+                    }
+                }];
+                
+            } else {
+                /* no key image to share! */
+                UIAlertController * alertNoImage=   [UIAlertController
+                                                     alertControllerWithTitle:@"Info!"
+                                                     message:@"No image was found with teh Point of Interest.  Please add one before sharing"
+                                                     preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction * action) {}];
+                
+                [alertNoImage addAction:ok];
+                [self presentViewController:alertNoImage animated:YES completion:nil];
+                alertNoImage.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
+            }
+        /*
 
-                            [existingPoiRecord setObject: self.PointOfInterest.key forKey: @"key"];
-                            [existingPoiRecord setObject: [NSNumber numberWithInt:3] forKey: @"blockedflag"];
-                            [existingPoiRecord setObject: self.PointOfInterest.name forKey: @"name"];
-                            [existingPoiRecord setObject: self.PointOfInterest.categoryid forKey: @"categoryid"];
-                            [existingPoiRecord setObject: self.Settings.userkey forKey: @"authorkey"];
-                            [existingPoiRecord setObject: self.Settings.username forKey: @"authorname"];
-                            [existingPoiRecord setObject: self.PointOfInterest.country forKey: @"country"];
-                            [existingPoiRecord setObject: self.PointOfInterest.countrycode forKey: @"countrycode"];
-                            [existingPoiRecord setObject: self.PointOfInterest.createddt forKey: @"createddt"];
-                            [existingPoiRecord setObject: [[UIDevice currentDevice] name] forKey: @"device"];
-                            [existingPoiRecord setObject: self.PointOfInterest.fullthoroughfare forKey: @"fullthoroughfare"];
-                            [existingPoiRecord setObject: @"en" forKey: @"languagecode"];
-                            [existingPoiRecord setObject: self.PointOfInterest.lat forKey: @"lat"];
-                            [existingPoiRecord setObject: self.PointOfInterest.lon forKey: @"lon"];
-                            [existingPoiRecord setObject: self.PointOfInterest.locality forKey: @"locality"];
-                            [existingPoiRecord setObject: self.PointOfInterest.modifieddt forKey: @"modifieddt"];
-                            [existingPoiRecord setObject: self.PointOfInterest.privatenotes forKey: @"notes"];
-                            [existingPoiRecord setObject: self.PointOfInterest.postcode forKey: @"postcode"];
-                            [existingPoiRecord setObject: self.PointOfInterest.radius forKey: @"radius"];
-                            [existingPoiRecord setObject: self.PointOfInterest.searchstring forKey: @"searchstring"];
-                            [existingPoiRecord setObject: self.PointOfInterest.subadministrativearea forKey: @"subadministrativearea"];
-                            [existingPoiRecord setObject: self.PointOfInterest.sublocality forKey: @"sublocality"];
-                            [existingPoiRecord setObject: self.PointOfInterest.wikititle forKey: @"wikititle"];
-                            [existingPoiRecord setObject:asset forKey:@"image"];
-                            [existingPoiRecord setObject:imageKey forKey:@"imagekey"];
-                            [existingPoiRecord setObject:imageInfo forKey:@"imageinfo"];
-                            [existingPoiRecord setObject:imageFileRef forKey: @"imagefilepathname"];
-                            
-                            [publicDB saveRecord:existingPoiRecord completionHandler:^(CKRecord *Record, NSError *error){
-                                    NSLog(@"save exiting record:%@",error);
-                                    if (!error) {
-                                        NSLog(@"Success!");
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            
-                                            [spinner stopAnimating];
-                                            
-                                            UIAlertController * alertSuccess=   [UIAlertController
-                                                                                 alertControllerWithTitle:@"Success!"
-                                                                                 message:@"Uploaded an update to existing Point of Interest in the Cloud. It in review."
-                                                                                 preferredStyle:UIAlertControllerStyleAlert];
-                                            
-                                            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                                                       handler:^(UIAlertAction * action) {}];
-                                            
-                                            [alertSuccess addAction:ok];
-                                            [self presentViewController:alertSuccess animated:YES completion:nil];
-                                            alertSuccess.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
-                                        });
-                                    }
-                                    else {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [spinner stopAnimating];
-                                        });
-                                        NSLog(@"Failure!\n%@", error);
-                                    }
-                            }];
-                        } else {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [spinner stopAnimating];
-                                
-                                UIAlertController * alertNoUpdate=   [UIAlertController
-                                                                     alertControllerWithTitle:@"Info!"
-                                                                     message:@"No modifications have been made to the Point of Interest since it was last uploaded."
-                                                                     preferredStyle:UIAlertControllerStyleAlert];
-                                
-                                UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                                           handler:^(UIAlertAction * action) {}];
-                                
-                                [alertNoUpdate addAction:ok];
-                                [self presentViewController:alertNoUpdate animated:YES completion:nil];
-                                alertNoUpdate.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
-                            });
-                        }
-                            
-                    });
-                }
-            }];
-            
         } else {
-            /* no key image to share! */
-            UIAlertController * alertNoImage=   [UIAlertController
+        
+           
+            UIAlertController * alertWarning=   [UIAlertController
                                                  alertControllerWithTitle:@"Info!"
-                                                 message:@"No image was found with teh Point of Interest.  Please add one before sharing"
+                                                 message:@"Sorry, you do not have access rights to share a point of interest from another author."
                                                  preferredStyle:UIAlertControllerStyleAlert];
             
             UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
                                                        handler:^(UIAlertAction * action) {}];
             
-            [alertNoImage addAction:ok];
-            [self presentViewController:alertNoImage animated:YES completion:nil];
-            alertNoImage.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
+            [alertWarning addAction:ok];
+            [self presentViewController:alertWarning animated:YES completion:nil];
+            alertWarning.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
         }
-
-    } else {
-    
-        /* not your Point of Interest to share */
-        UIAlertController * alertWarning=   [UIAlertController
-                                             alertControllerWithTitle:@"Info!"
-                                             message:@"Sorry, you do not have access rights to share a point of interest from another author."
-                                             preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction * action) {}];
-        
-        [alertWarning addAction:ok];
-        [self presentViewController:alertWarning animated:YES completion:nil];
-        alertWarning.view.tintColor = [UIColor colorNamed:@"TrippoColor"];
+    */
     }
 }
+
+
+/*
+ created date:      31/07/2021
+ last modified:     31/07/2021
+ remarks:
+ */
+- (IBAction)DirectionsPressed:(id)sender {
+    self.locationManager = [[CLLocationManager alloc]init];
+    self.locationManager.delegate = self;
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+    
+    if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        [self.locationManager requestWhenInUseAuthorization];
+    }
+    [self.locationManager startUpdatingLocation];
+    [self MapEngineSelection:nil :self.PointOfInterest];
+}
+
+/*
+ created date:      31/07/2021
+ last modified:     31/07/2021
+ remarks:
+ */
+-(void) MapEngineSelection :(PoiRLM*) from :(PoiRLM*) to {
+    
+    NSString *messageText = [[NSString alloc] init];
+    
+    if (from == nil) {
+        messageText = [NSString stringWithFormat:@"Choose the map you wish to present and calculate selected route between your current position and %@", to.name];
+    }
+    
+    UIAlertController * alertPickMapEngine = [UIAlertController
+                                              alertControllerWithTitle:@"Which Map?"
+                                              message:messageText
+                                              preferredStyle:UIAlertControllerStyleAlert];
+    
+    
+    [alertPickMapEngine.view setTintColor:[UIColor labelColor]];
+    
+    UIAlertAction* actionApple = [UIAlertAction
+                                  actionWithTitle:@"Apple Maps"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction * action) {
+        
+        NSString* directionsURL;
+        if (from == nil) {
+            directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+        } else {
+            directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+        }
+        
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
+        }
+        
+        
+        
+    }];
+    
+    [alertPickMapEngine addAction:actionApple];
+    
+    UIAlertAction* actionGoogle = [UIAlertAction
+                                   actionWithTitle:@"Google Maps"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+        
+        NSString *directionsURL;
+        
+        if (from == nil) {
+            directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+        } else {
+            directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+        }
+        
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
+            
+        }
+        
+        
+    }];
+    
+    [alertPickMapEngine addAction:actionGoogle];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:^(UIAlertAction *action) {
+    }];
+    
+    [alertPickMapEngine addAction:cancelAction];
+    [self presentViewController:alertPickMapEngine animated:YES completion:nil];
+    
+}
+
+
 
 @end

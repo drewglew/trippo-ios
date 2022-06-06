@@ -20,7 +20,6 @@
 #import "HCSStarRatingView.h"
 #import "ImageNSO.h"
 #import "ActivityImageCell.h"
-#import <TesseractOCR/TesseractOCR.h>
 #import "TOCropViewController.h"
 #import "TextFieldDatePicker.h"
 #import "OptionButton.h"
@@ -37,7 +36,7 @@
 - (void)didUpdateActivityImages :(bool) ForceUpdate;
 @end
 
-@interface ActivityDataEntryVC : UIViewController <UISearchBarDelegate, UITableViewDelegate, MKMapViewDelegate, DirectionsDelegate, PaymentListingDelegate, DocumentsDelegate, UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource,UIImagePickerControllerDelegate, UINavigationControllerDelegate, ImagePickerDelegate, UIScrollViewDelegate,G8TesseractDelegate, TOCropViewControllerDelegate, PoiPreviewDelegate, UIScrollViewDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
+@interface ActivityDataEntryVC : UIViewController <UISearchBarDelegate, UITableViewDelegate, MKMapViewDelegate, DirectionsDelegate, PaymentListingDelegate, DocumentsDelegate, UITextViewDelegate,UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource,UIImagePickerControllerDelegate, UINavigationControllerDelegate, ImagePickerDelegate, UIScrollViewDelegate, TOCropViewControllerDelegate, PoiPreviewDelegate, UIScrollViewDelegate, CLLocationManagerDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 @property (nonatomic) UIImage *PoiImage;
 @property (assign) bool newitem;
 @property (assign) bool transformed;
@@ -81,6 +80,9 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *ButtonDirections;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPayment;
+@property (weak, nonatomic) IBOutlet UIButton *ButtonWebsite;
+
+
 @property (weak, nonatomic) IBOutlet UIButton *ButtonCancel;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonScan;
 
@@ -126,9 +128,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *ButtonDelete;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *WikiViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet UIButton *ButtonUpdateActualWeather;
-@property (weak, nonatomic) IBOutlet UIView *ViewUpdateActualWeather;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *ViewUpdateActualWeatherHeightConstraint;
 @property (strong, nonatomic)  CLLocationManager *locationManager;
 @property (weak, nonatomic) IBOutlet UIScrollView *ActivityScrollView;
 @property (weak, nonatomic) IBOutlet UIView *ActivityScrollViewContent;
@@ -145,6 +144,10 @@
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewSettingsStateIndicator;
 @property (weak, nonatomic) IBOutlet UILabel *labelPhotoInfo;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonEditPhotoInfo;
+@property (weak, nonatomic) IBOutlet UIImageView *imageViewDateRangeStatus;
+
+@property (weak, nonatomic) IBOutlet UILabel *labelDateRangeStatus;
+@property (weak, nonatomic) IBOutlet UILabel *labelConflictedActivity;
 
 @end
 

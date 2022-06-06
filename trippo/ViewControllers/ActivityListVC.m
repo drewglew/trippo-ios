@@ -52,6 +52,7 @@ CGFloat Scale = 4.14f;
          self.LabelProject.text =  [NSString stringWithFormat:@"Activities for %@", self.Trip.name];
     }
     
+   
    self.TypeItems = @[
                            @"Cat-Accomodation",
                            @"Cat-Airport",
@@ -354,9 +355,8 @@ CGFloat Scale = 4.14f;
     NSString *IdentityEndDate = [[NSString alloc] init];
 
     self.AllActivitiesInTrip = [ActivityRLM objectsWhere:@"tripkey = %@", self.Trip.key];
-    
-    NSString *whereClause = @"state==0";
 
+    NSString *whereClause = @"state==0";
     if (State==[NSNumber numberWithLong:0] || !self.tweetview) {
         
         if (self.tweetview) {
@@ -364,12 +364,8 @@ CGFloat Scale = 4.14f;
         }
         
         RLMResults<ActivityRLM*> *plannedactivities = [self.AllActivitiesInTrip objectsWhere:whereClause];
-        
-                       
-         
-        
+ 
         for (ActivityRLM* planned in plannedactivities) {
-            
             
             RLMResults <PaymentRLM*> *payments = [PaymentRLM objectsWhere:@"activitykey=%@", planned.key];
             
@@ -385,7 +381,7 @@ CGFloat Scale = 4.14f;
             
         }
         self.IdentityStartDt  = [plannedactivities minOfProperty:@"startdt"];
-        self.IdentityEndDt = [plannedactivities minOfProperty:@"enddt"];
+        self.IdentityEndDt = [plannedactivities maxOfProperty:@"enddt"];
     }
     
     /* next only for actual activities we search for those too and replace using dictionary any of them */
@@ -410,15 +406,12 @@ CGFloat Scale = 4.14f;
                     actual.hasactpayment = [NSNumber numberWithInt:0];
                 }
             }
-            
             [dataset setObject:actual forKey:actual.key];
             found = true;
-
-            
         }
         if (found) {
             self.IdentityStartDt  = [actualactivities minOfProperty:@"startdt"];
-            self.IdentityEndDt = [actualactivities minOfProperty:@"enddt"];
+            self.IdentityEndDt = [actualactivities maxOfProperty:@"enddt"];
         }
     }
     
@@ -431,6 +424,11 @@ CGFloat Scale = 4.14f;
     temp2 = [temp2 sortedArrayUsingDescriptors:@[sortDescriptorState,sortDescriptorStartDt]];
     self.activitycollection = [NSMutableArray arrayWithArray:temp2];
 
+    //ActivityRLM  *Earliest = [[self.activitycollection sortedResultsUsingKeyPath:@"startdt" ascending:TRUE] firstObject];
+    
+    //ActivityRLM  *Latest = [[self.activitycollection sortedResultsUsingKeyPath:@"enddt" ascending:FALSE] firstObject];
+    
+    
     if (self.IdentityStartDt == nil ||  [self.IdentityStartDt compare:self.Trip.startdt] == NSOrderedDescending) {
         self.IdentityStartDt = self.Trip.startdt;
     }
@@ -454,7 +452,7 @@ CGFloat Scale = 4.14f;
         a.identityenddate = [DateIdentityFormatter stringFromDate:activity.enddt];
         [diaryactivties addObject:a];
     }
-
+    
     self.sectionheaderdaystitle = [[NSMutableArray alloc] init];
     self.diarycollection = [[NSMutableArray alloc] init];
     
@@ -548,6 +546,30 @@ CGFloat Scale = 4.14f;
 }
 
 /*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(NSDate *)getMinDate {
+    ActivityRLM *Earliest = [[[ActivityRLM objectsWhere:@"tripkey = %@",self.Trip.key] sortedResultsUsingKeyPath:@"startdt" ascending:TRUE] firstObject];
+    NSLog(@"EARLIEST - %@",Earliest.startdt);
+    return Earliest.startdt;
+}
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(NSDate *)getMaxDate {
+    ActivityRLM *Latest = [[[ActivityRLM objectsWhere:@"tripkey = %@",self.Trip.key] sortedResultsUsingKeyPath:@"enddt" ascending:FALSE] firstObject];
+    NSLog(@"LATEST - %@",Latest.enddt);
+    return Latest.enddt;
+}
+
+
+
+/*
  created date:      01/09/2018
  last modified:     21/03/2019
  remarks:  Load all Activity images for Trip
@@ -592,7 +614,7 @@ CGFloat Scale = 4.14f;
         }
     }
     
-    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
 
     NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",imgobject.ImageFileReference]];
     NSData *pngData = [NSData dataWithContentsOfFile:dataFilePath];
@@ -632,13 +654,32 @@ CGFloat Scale = 4.14f;
 }
 */
 
+- (bool)checkInternet
+{
+    if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus]==NotReachable)
+    {
+        return false;
+    }
+    else
+    {
+        //connection available
+        return true;
+    }
+    
+}
+
 /*
  created date:      30/04/2018
- last modified:     31/08/2018
+ last modified:     10/08/2021
  remarks:
  */
 - (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return self.activitycollection.count + 1;;
+    
+    if (self.checkInternet) {
+        return self.activitycollection.count + 1;
+    } else {
+        return self.activitycollection.count;
+    }
 }
 
 /*
@@ -664,7 +705,7 @@ CGFloat Scale = 4.14f;
         if (self.tweetview) {
             cell.contentView.hidden = true;
         }
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
 
         cell.ImageViewActivity.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
         [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
@@ -676,8 +717,8 @@ CGFloat Scale = 4.14f;
         cell.ViewActiveBadge.hidden = true;
         cell.ViewActiveItem.backgroundColor = [UIColor clearColor];
     } else {
-        [cell.ImageViewActivity setBackgroundColor: [UIColor colorNamed:@"ActivityBGColor"]];
-        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"ActivityFGColor"]];
+        //[cell.ImageViewActivity setBackgroundColor: [UIColor colorNamed:@"ActivityBGColor"]];
+        [cell.ImageViewActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
         if (!self.editmode) {
             cell.ViewOverlay.hidden = false;
         } else {
@@ -1003,11 +1044,10 @@ remarks:
     UILabel* title = [[UILabel alloc] init];
     title.frame = CGRectMake(10, 10, tableView.frame.size.width - 50, 24);
 
+    headerView.backgroundColor = [UIColor colorNamed:@"TrippoColor"];
     //headerView.backgroundColor = [UIColor tertiarySystemBackgroundColor];
-    //headerView.backgroundColor = [UIColor colorNamed:@"TrippoColor"];
-    headerView.backgroundColor = [UIColor tertiarySystemBackgroundColor];
     title.textColor =  [UIColor labelColor];
-    //title.textColor = [UIColor colorNamed:@"UtilityColor"];
+    
     
     title.font = [UIFont systemFontOfSize:20 weight:UIFontWeightRegular];
     title.text = dd.daytitle;
@@ -1019,10 +1059,10 @@ remarks:
     button.frame = CGRectMake(tableView.frame.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
     button.tag = section;
     
-    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
     [button setImage:[UIImage systemImageNamed:@"plus" withConfiguration:config] forState:UIControlStateNormal];
 
-    [button setTintColor: [UIColor colorNamed:@"TrippoColor"]];
+    [button setTintColor: [UIColor labelColor]];
     
     [button addTarget:self action:@selector(sectionHeaderButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -1080,6 +1120,7 @@ remarks:
     ActivityDiaryCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ActivityDiaryCellId"];
     
     cell.activity = [[self.diarycollection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+   
     
     if (self.SegmentState.selectedSegmentIndex==1 && cell.activity.state==[NSNumber numberWithInteger:0]) {
         //cell.TextFieldStartDt.enabled = false;
@@ -1125,20 +1166,11 @@ remarks:
     cell.defaultTimeZone = self.Trip.defaulttimezonename;
     
     NSTimeZone *tz = [NSTimeZone timeZoneWithName:cell.activity.enddttimezonename];
-    
     cell.DatePickerEnd.timeZone = tz;
-
     cell.DatePickerEnd.date = cell.activity.enddt;
-    //cell.TextFieldStartDt.text = [self FormatPrettyTime :cell.activity.startdt :tz];
-    //cell.DatePickerEnd.delegate = self;
-    
-    //cell.TextFieldStartDt.delegate = self;
-    
+
     tz = [NSTimeZone timeZoneWithName:cell.activity.enddttimezonename];
-    //cell.TextFieldEndDt.text = [self FormatPrettyTime :cell.activity.enddt :tz];
-    //cell.TextFieldEndDt.delegate = self;
     cell.DatePickerStart.timeZone = tz;
-    //cell.DatePickerStart.delegate = self;
     cell.DatePickerStart.date = cell.activity.startdt;
 
     cell.DatePickerStart.maximumDate = cell.DatePickerEnd.date;
@@ -1174,57 +1206,6 @@ remarks:
 }
 
 
-
-/*
- created date:      25/02/2019
- last modified:     25/02/2019
- remarks:
- */
-/*
--(bool) textFieldShouldBeginEditing:(UITextField *)textField {
-    
-    if (self.TableViewDiary.allowsSelection) {
-        return true;
-    } else {
-        CGPoint buttonPosition = [textField convertPoint:CGPointZero toView:self.TableViewDiary];
-        NSIndexPath *indexPath = [self.TableViewDiary indexPathForRowAtPoint:buttonPosition];
-        ActivityDiaryCell *cell = [self.TableViewDiary cellForRowAtIndexPath:indexPath];
-        
-        if ([cell.TextFieldStartDt isFirstResponder] || [cell.TextFieldEndDt isFirstResponder]) {
-            return true;
-        }
-    }
-    return false;
-}
- */
-
-/*
- created date:      25/02/2019
- last modified:     17/08/2019
- remarks:
- */
-/*
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-
-    CGPoint buttonPosition = [textField convertPoint:CGPointZero toView:self.TableViewDiary];
-    NSIndexPath *indexPath = [self.TableViewDiary indexPathForRowAtPoint:buttonPosition];
-    ActivityDiaryCell *cell = [self.TableViewDiary cellForRowAtIndexPath:indexPath];
-    
-    cell.ActiveDtTextField = textField;
-    
-    if (textField == cell.TextFieldStartDt) {
-        cell.datePicker.timeZone = [NSTimeZone timeZoneWithName:cell.activity.startdttimezonename];
-        cell.datePicker.date = cell.startDt;
-     
-     } else if (textField == cell.TextFieldEndDt) {
-         cell.datePicker.timeZone = [NSTimeZone timeZoneWithName:cell.activity.enddttimezonename];
-         cell.datePicker.date = cell.endDt;
-     
-     }
-    [cell setSelected:YES animated:NO];
-}
-*/
 
 /*
  created date:      25/02/2019
@@ -1848,11 +1829,11 @@ remarks:           User dismisses action to send ePostcard or Tweet.
           
         [mail setSubject:[NSString stringWithFormat:@"ePostcard %@", self.Trip.name]];
         
-        [mail setMessageBody:@"Wish you were here! <br/><br/>(Generated using trHippo App for iOS)" isHTML:YES];
+        [mail setMessageBody:@"Wish you were here! <br/><br/>(Generated using Trips App for iOS)" isHTML:YES];
                                                     
         
         NSData *imageData = UIImageJPEGRepresentation(image, 0.9);
-        NSString *attachmentName = @"trHippo-collage.jpg";
+        NSString *attachmentName = @"trips-collage.jpg";
         [mail addAttachmentData:imageData mimeType:@"image/jpeg" fileName:attachmentName];
                                                                        
         [self presentViewController:mail animated:YES completion:NULL];
@@ -1884,23 +1865,7 @@ remarks:           User dismisses action to send ePostcard or Tweet.
     [task resume];
 }
 
-/*
- created date:      14/06/2019
- last modified:     14/06/2019
- */
-- (bool)checkInternet
-{
-    if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus] == NotReachable)
-    {
-        return false;
-    }
-    else
-    {
-        //connection available
-        return true;
-    }
-    
-}
+
 
 
 @end

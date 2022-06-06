@@ -18,4 +18,6 @@
 @synthesize PostCode;
 @synthesize Type;
 @synthesize PoiKey;
+@synthesize Website;
+@synthesize categoryid;
 @end

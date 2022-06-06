@@ -10,6 +10,22 @@
 
 @interface MenuVC () <PoiSearchDelegate, ProjectListDelegate>
 @property RLMNotificationToken *notification;
+
+typedef enum  {
+    PreviousItem=1,
+    CurrentItem=2,
+    CheckOutItem=3,
+    NewItem=4,
+    NextItem=5,
+    AnotherNewItem=6,
+    PoiListing=7,
+    TripsListing=8,
+    NearbyMeOption=9,
+    SettingsOption=10
+} MenuOptions;
+
+// 1=past/last; 2=now; 3=new (optional); 4=future/next; 5=new (optional)
+
 @end
 
 @implementation MenuVC
@@ -74,8 +90,7 @@ bool FirstLoad;
 
     [super viewDidAppear:animated];
 
-    self.ButtonFeaturedPoi.enabled = true;
-    
+    [self.ButtonFeaturedPoi setEnabled:true];
     [self.ButtonSharedFeaturedPoi setEnabled:true];
     
     [self.ActivityView stopAnimating];
@@ -180,7 +195,7 @@ bool FirstLoad;
     if (expiredTrips.count >0) {
         TripRLM* trip = [expiredTrips lastObject];
    
-        lasttrip.itemgrouping = [NSNumber numberWithInt:1];
+        lasttrip.itemgrouping = [NSNumber numberWithInt:PreviousItem];
         lasttrip.key = trip.key;
         lasttrip.name = trip.name;
         lasttrip.defaulttimezonename = trip.defaulttimezonename;
@@ -191,7 +206,7 @@ bool FirstLoad;
    
     
     
-    if (lasttrip.itemgrouping==[NSNumber numberWithInt:1]) {
+    if (lasttrip.itemgrouping==[NSNumber numberWithInt:PreviousItem]) {
         TripRLM *trip = [TripRLM objectForPrimaryKey:lasttrip.key];
         [self RetrieveImageItem :trip :imagesDirectory];
         [self.selectedtripitems addObject:lasttrip];
@@ -209,18 +224,40 @@ bool FirstLoad;
         tripobject.defaulttimezonename = trip.defaulttimezonename;
         tripobject.startdt = trip.startdt;
         tripobject.enddt = trip.enddt;
-        tripobject.itemgrouping = [NSNumber numberWithInt:2];
+        tripobject.itemgrouping = [NSNumber numberWithInt:CurrentItem];
         tripobject.images = trip.images;
         [self.selectedtripitems addObject:tripobject];
         found_active = true;
         [self RetrieveImageItem :trip :imagesDirectory];
     }
 
+    
+    /* todo - locate any activity that is the latest? */
+    
+    RLMResults<ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"startdt=enddt and state=1"];
+    
+    if (activities.count>0) {
+        sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO];
+        
+        ActivityRLM *a = [[activities sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]] firstObject];
+        TripRLM* checkout = [[TripRLM alloc] init];
+        checkout.key = a.key;
+        checkout.name = a.name;
+        checkout.defaulttimezonename = a.defaulttimezonename;
+        checkout.startdt = a.startdt;
+        checkout.enddt = a.enddt;
+        [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"arrow.left.to.line"] forKey:a.key];
+        checkout.itemgrouping = [NSNumber numberWithInt:CheckOutItem];
+        [self.selectedtripitems addObject:checkout];
+        
+    }
+    
+    
     /* optional new if no active trip found */
     if (!found_active) {
         TripRLM* emptytrip = [[TripRLM alloc] init];
         emptytrip.key = [[NSUUID UUID] UUIDString];
-        emptytrip.itemgrouping = [NSNumber numberWithInt:3];
+        emptytrip.itemgrouping = [NSNumber numberWithInt:NewItem];
         emptytrip.name = @"";
         [self.selectedtripitems addObject:emptytrip];
         [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:emptytrip.key];
@@ -246,10 +283,10 @@ bool FirstLoad;
         nexttrip.startdt = trip.startdt;
         nexttrip.enddt = trip.enddt;
         nexttrip.images = trip.images;
-        nexttrip.itemgrouping = [NSNumber numberWithInt:4];
+        nexttrip.itemgrouping = [NSNumber numberWithInt:NextItem];
     }
     
-    if (nexttrip.itemgrouping == [NSNumber numberWithInt:4]) {
+    if (nexttrip.itemgrouping == [NSNumber numberWithInt:NextItem]) {
         TripRLM *trip = [TripRLM objectForPrimaryKey:nexttrip.key];
         [self RetrieveImageItem :trip :imagesDirectory];
         [self.selectedtripitems addObject:nexttrip];
@@ -259,11 +296,45 @@ bool FirstLoad;
     if (found_active) {
         TripRLM* emptytrip = [[TripRLM alloc] init];
         emptytrip.key = [[NSUUID UUID] UUIDString];
-        emptytrip.itemgrouping = [NSNumber numberWithInt:5];;
+        emptytrip.itemgrouping = [NSNumber numberWithInt:AnotherNewItem];
         emptytrip.name = @"";
         [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:emptytrip.key];
         [self.selectedtripitems addObject:emptytrip];
     }
+    
+    
+    // now Poi
+    TripRLM* pois = [[TripRLM alloc] init];
+    pois.key = [[NSUUID UUID] UUIDString];
+    pois.itemgrouping = [NSNumber numberWithInt:PoiListing];
+    pois.name = @"";
+    [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"command"] forKey:pois.key];
+    [self.selectedtripitems addObject:pois];
+    
+    // now Trips
+    TripRLM* trips = [[TripRLM alloc] init];
+    trips.key = [[NSUUID UUID] UUIDString];
+    trips.itemgrouping = [NSNumber numberWithInt:TripsListing];
+    trips.name = @"";
+    [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case.fill"] forKey:trips.key];
+    [self.selectedtripitems addObject:trips];
+    
+    // now Nearby
+    TripRLM* nearby = [[TripRLM alloc] init];
+    nearby.key = [[NSUUID UUID] UUIDString];
+    nearby.itemgrouping = [NSNumber numberWithInt:NearbyMeOption];
+    nearby.name = @"";
+    [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"target"] forKey:nearby.key];
+    [self.selectedtripitems addObject:nearby];
+    
+    // now Settings
+    TripRLM* settings = [[TripRLM alloc] init];
+    settings.key = [[NSUUID UUID] UUIDString];
+    settings.itemgrouping = [NSNumber numberWithInt:SettingsOption];
+    settings.name = @"";
+    [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"gearshape.2"] forKey:settings.key];
+    [self.selectedtripitems addObject:settings];
+    
     
     
 }
@@ -287,6 +358,9 @@ bool FirstLoad;
         [self.TripImageDictionary setObject:[UIImage systemImageNamed:@"latch.2.case"] forKey:trip.key];
     }
 }
+
+
+
 
 /*
  created date:      18/08/2018
@@ -312,20 +386,19 @@ bool FirstLoad;
     RLMResults *poicollection = [[PoiRLM allObjects] objectsWithPredicate:[NSPredicate predicateWithFormat:@"categoryid IN %@ AND poisharedflag = %@",typeset,sharedFlag]];
     
     
+    
     if (poicollection.count==0) {
-        if ([sharedFlag intValue] == 1) {
+        if ([sharedFlag intValue] == 2) {
+            self.FeaturedSharedPoi = nil;
+            [self.ButtonSharedFeaturedPoi setEnabled:false];
+            headerText = @"Featured Shared POI item...";
+            detailText = @"Blurry...\nTry pressing download from cloud";
+        } else {
             self.FeaturedPoi = nil;
             [self.ButtonFeaturedPoi setEnabled:false];
             headerText = @"Featured POI item on device...";
             detailText = @"Blurry... Not enough\nPoint of Interest items";
-            
-        } else {
-            self.FeaturedSharedPoi = nil;
-            [self.ButtonSharedFeaturedPoi setEnabled:false];
-            headerText = @"Featured Shared POI item on device...";
-            detailText = @"Blurry...\nTry pressing download from cloud";
         }
- 
     } else {
         // randomly select POI's from collection.
         int featuredIndex = arc4random_uniform((int)poicollection.count);
@@ -390,15 +463,14 @@ bool FirstLoad;
             }
         }
         
-        if ([sharedFlag intValue] == 1) {
-            headerText = [NSString stringWithFormat:@"Featured %@ on Device...",[TypeNames objectAtIndex:[self.FeaturedPoi.categoryid longValue]]];
-            detailText = self.FeaturedPoi.name;
-            [self.ButtonFeaturedPoi setEnabled:true];
-        } else {
-            headerText = [NSString stringWithFormat:@"Featured %@... from the Cloud",[TypeNames objectAtIndex:[self.FeaturedSharedPoi.categoryid longValue]]];
+        if ([sharedFlag intValue] == 2) {
+            headerText = [NSString stringWithFormat:@"Shared Featured %@...",[TypeNames objectAtIndex:[self.FeaturedSharedPoi.categoryid longValue]]];
             detailText = self.FeaturedSharedPoi.name;
             [self.ButtonSharedFeaturedPoi setEnabled:true];
-
+        } else {
+            headerText = [NSString stringWithFormat:@"My Featured %@...",[TypeNames objectAtIndex:[self.FeaturedPoi.categoryid longValue]]];
+            detailText = self.FeaturedPoi.name;
+            [self.ButtonFeaturedPoi setEnabled:true];
         }
     }
     
@@ -412,10 +484,10 @@ bool FirstLoad;
         
     } else {
         self.LabelFeaturedSharedPoiHeader.attributedText = [[NSAttributedString alloc] initWithString:headerText attributes:attributes];
-        self.LabelFeaturedSharedPoiHeader.transform = CGAffineTransformMakeRotation(.1);
+        self.LabelFeaturedSharedPoiHeader.transform = CGAffineTransformMakeRotation(-.1);
         
         self.LabelFeaturedSharedPoi.attributedText = [[NSAttributedString alloc] initWithString:detailText attributes:attributes];
-        self.LabelFeaturedSharedPoi.transform = CGAffineTransformMakeRotation(.1);
+        self.LabelFeaturedSharedPoi.transform = CGAffineTransformMakeRotation(-.1);
         
     }
     
@@ -442,25 +514,14 @@ remarks:
 
 /*
  created date:      27/04/2018
- last modified:     13/01/2020
+ last modified:     07/03/2021
  remarks:           segue controls .
  */
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 
-    if([segue.identifier isEqualToString:@"ShowPoiList"]){
-        PoiSearchVC *controller = (PoiSearchVC *)segue.destinationViewController;
-        controller.frommenu = true;
-        controller.delegate = self;
-        controller.Project = nil;
-        controller.Activity = nil;
-        controller.realm = self.realm;
-    } else if([segue.identifier isEqualToString:@"ShowProjectList"]){
-        ProjectListVC *controller = (ProjectListVC *)segue.destinationViewController;
-        controller.delegate = self;
-        controller.realm = self.realm;
-    } else if ([segue.identifier isEqualToString:@"ShowFeaturedPoi"]){
+    if ([segue.identifier isEqualToString:@"ShowFeaturedPoi"]){
         PoiDataEntryVC *controller= (PoiDataEntryVC *)segue.destinationViewController;
         controller.delegate = self;
         controller.PointOfInterest = self.FeaturedPoi;
@@ -472,20 +533,10 @@ remarks:
         controller.PointOfInterest = self.FeaturedSharedPoi;
         controller.readonlyitem = true;
         controller.realm = self.realm;
-    } else if ([segue.identifier isEqualToString:@"ShowSettings"]){
-        SettingsVC *controller= (SettingsVC *)segue.destinationViewController;
-        controller.delegate = self;
-        controller.Settings = self.Settings;
-        controller.realm = self.realm;
-    } else if([segue.identifier isEqualToString:@"ShowNearbyMeFromMenu"]){
-        NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
-        controller.frommenu = true;
-        controller.delegate = self;
-        controller.fromproject = false;
-        controller.realm = self.realm;
-        controller.PointOfInterest = nil;
     }
 }
+
+
 
 /*
  created date:      14/08/2018
@@ -497,81 +548,92 @@ remarks:
 }
 
 
-/*
- created date:      28/02/2019
- last modified:     28/02/2019
- remarks:
-
- */
-
-/*
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return CGSizeMake(CGRectGetHeight(collectionView.frame) - 20, (CGRectGetHeight(collectionView.frame) - 20));
-}
-*/
 
 
 /*
  created date:      14/08/2018
- last modified:     06/01/2020
+ last modified:     07/03/2021
  remarks:
  */
 - (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
 
     ProjectListCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"projectCellId" forIndexPath:indexPath];
     TripRLM *trip = [self.selectedtripitems objectAtIndex:indexPath.row];
-    cell.ImageViewProject.image = [self.TripImageDictionary objectForKey:trip.key];
+    
+    if (trip.itemgrouping!=[NSNumber numberWithInt:CheckOutItem]) {
+        cell.ImageViewProject.tintColor = [UIColor systemBackgroundColor];
+        cell.ImageViewProject.image = [self.TripImageDictionary objectForKey:trip.key];
+        cell.ImageViewProject.transform = CGAffineTransformMakeRotation(0);
+        //cell.ImageViewProject.backgroundColor = [UIColor clearColor];
+        if (trip.images.count>0) {
+            if ([trip.images[0].ImageFileReference isEqualToString:@""]) {
+                cell.ImageViewProject.layer.cornerRadius = 0;
+                cell.ImageViewProject.layer.borderWidth = 0.0f;
+                cell.ImageViewProject.layer.masksToBounds = YES;
+            } else {
+                cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.frame.size.width/2;
+                cell.ImageViewProject.layer.borderWidth = 0.0f;
+                cell.ImageViewProject.layer.borderColor = [UIColor whiteColor].CGColor;
+                cell.ImageViewProject.layer.masksToBounds = YES;
+            }
+        } else {
+            
+            cell.ImageViewProject.layer.cornerRadius = 0;
+            cell.ImageViewProject.layer.borderWidth = 0.0f;
+            cell.ImageViewProject.layer.masksToBounds = YES;
+        }
+    } else {
+        cell.ImageViewProject.image = [self.TripImageDictionary objectForKey:trip.key];
+        cell.ImageViewProject.layer.cornerRadius = 0;
+        cell.ImageViewProject.layer.borderWidth = 0.0f;
+        cell.ImageViewProject.layer.masksToBounds = YES;
+        cell.ImageViewProject.tintColor = [UIColor systemRedColor];
+        cell.ImageViewProject.transform = CGAffineTransformMakeRotation(-.34906585);
+    }
     
     cell.LabelProjectName.text = trip.name;
         
     NSString *reference = @"";
-    
-    if (trip.itemgrouping==[NSNumber numberWithInt:1]) {
+ 
+    if (trip.itemgrouping==[NSNumber numberWithInt:PreviousItem]) {
         reference = @"Previous";
-    } else if (trip.itemgrouping==[NSNumber numberWithInt:2]) {
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:CurrentItem]) {
         reference = @"Active";
-    } else if (trip.itemgrouping==[NSNumber numberWithInt:4]) {
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:CheckOutItem]) {
+        reference = @"Check Out";
+        cell.LabelDateRange.textColor = [UIColor systemRedColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:NextItem]) {
         reference = @"Next";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:PoiListing]) {
+        reference = @"POI";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:TripsListing]) {
+        reference = @"Trips";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:NearbyMeOption]) {
+        reference = @"Nearby";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
+    } else if (trip.itemgrouping==[NSNumber numberWithInt:SettingsOption]) {
+        reference = @"Settings";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
     } else {
         reference = @"New";
+        cell.LabelDateRange.textColor = [UIColor systemBackgroundColor];
     }
-
-    
     cell.LabelDateRange.text = reference;
-    
-    
-    
-    if (trip.images.count>0) {
-        if ([trip.images[0].ImageFileReference isEqualToString:@""]) {
-            cell.ImageViewProject.layer.cornerRadius = 0;
-            cell.ImageViewProject.layer.borderWidth = 0.0f;
-            cell.ImageViewProject.layer.masksToBounds = YES;
-        } else {
-            cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.frame.size.width/2;
-            cell.ImageViewProject.layer.borderWidth = 0.0f;
-            cell.ImageViewProject.layer.borderColor = [UIColor whiteColor].CGColor;
-            cell.ImageViewProject.layer.masksToBounds = YES;
-        }
+   
 
-    } else {
-        cell.ImageViewProject.layer.cornerRadius = 0;
-        cell.ImageViewProject.layer.borderWidth = 0.0f;
-        cell.ImageViewProject.layer.masksToBounds = YES;
-    }
-    //TODO
-    //cell.ImageViewProject.layer.cornerRadius = ((self.MainSurface.bounds.size.height / 2) - 120) / 2;
-    
-    //cell.ImageViewProject.layer.cornerRadius = cell.ImageViewProject.bounds.size.height / 2;
-    //cell.ImageViewProject.layer.masksToBounds = true;
-    
+
     return cell;
 }
 
 
 /*
  created date:      15/08/2018
- last modified:     14/09/2019
+ last modified:     07/03/2021
  remarks:
  */
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -580,7 +642,8 @@ remarks:
         TripRLM *trip = [self.selectedtripitems objectAtIndex:indexPath.row];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
 
-        if (trip.itemgrouping==[NSNumber numberWithInt:3] || trip.itemgrouping==[NSNumber numberWithInt:5]) {
+        
+        if (trip.itemgrouping==[NSNumber numberWithInt:NewItem] || trip.itemgrouping==[NSNumber numberWithInt:AnotherNewItem]) {
             ProjectDataEntryVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ProjectDataEntryViewController"];
             controller.delegate = self;
             controller.Trip = [[TripRLM alloc] init];
@@ -588,22 +651,61 @@ remarks:
             controller.realm = self.realm;
             [controller setModalPresentationStyle:UIModalPresentationPageSheet];
             [self presentViewController:controller animated:YES completion:nil];
+        
+        } else if (trip.itemgrouping==[NSNumber numberWithInt:PoiListing]) {
+            // poi
+            PoiSearchVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"PoiListingViewController"];
+            controller.frommenu = true;
+            controller.delegate = self;
+            controller.Project = nil;
+            controller.Activity = nil;
+            controller.realm = self.realm;
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
+            [self presentViewController:controller animated:YES completion:nil];
+        
+        } else if (trip.itemgrouping==[NSNumber numberWithInt:TripsListing]) {
+            // trips
+            ProjectListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ProjectListViewController"];
+            controller.delegate = self;
+            controller.realm = self.realm;
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
+            [self presentViewController:controller animated:YES completion:nil];
+            
+        } else if (trip.itemgrouping==[NSNumber numberWithInt:NearbyMeOption]) {
+            // nearby
+            NearbyListingVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"NearbyListingViewController"];
+            controller.frommenu = true;
+            controller.delegate = self;
+            controller.isnearbyme = true;
+            controller.fromproject = false;
+            controller.realm = self.realm;
+            controller.PointOfInterest = nil;
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
+            [self presentViewController:controller animated:YES completion:nil];
+        } else if (trip.itemgrouping==[NSNumber numberWithInt:SettingsOption]) {
+            // settings
+            SettingsVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"SettingsViewController"];
+            controller.delegate = self;
+            controller.Settings = self.Settings;
+            controller.realm = self.realm;
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
+            [self presentViewController:controller animated:YES completion:nil];
+        } else if (trip.itemgrouping==[NSNumber numberWithInt:CheckOutItem]) {
+            
+            /* todo - just present the item for now */
+            NSDate *today = [NSDate date];
+            
+            ActivityRLM *a = [[ActivityRLM objectsWhere:@"key=%@ and state=1",trip.key] firstObject];
+            [self.realm beginWriteTransaction];
+            a.enddt = today;
+            [self.realm commitWriteTransaction];
+
         } else {
             ActivityListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityListViewController"];
             controller.delegate = self;
             controller.realm = self.realm;
             controller.Trip = trip;
             controller.TripImage = [self.TripImageDictionary objectForKey:trip.key];
-
-            /*
-             UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-             ActivityListVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityListViewController"];
-             controller.delegate = self;
-             controller.realm = self.realm;
-             controller.TripImage = cell.ImageViewProject.image;
-             controller.Trip = [self.tripcollection objectAtIndex:indexPath.row];
-            */
-            
             [controller setModalPresentationStyle:UIModalPresentationPageSheet];
             [self presentViewController:controller animated:YES completion:nil];
         }
@@ -623,16 +725,17 @@ remarks:
     NSIndexPath *indexPath;
     int index = 0;
     for (TripRLM *p in self.selectedtripitems) {
-        if (p.itemgrouping==[NSNumber numberWithInt:2] || p.itemgrouping==[NSNumber numberWithInt:3]) {
+        if (p.itemgrouping==[NSNumber numberWithInt:CurrentItem] || p.itemgrouping==[NSNumber numberWithInt:NewItem]) {
             indexPath = [NSIndexPath indexPathForItem:index inSection:0];
-        } else if (p.itemgrouping==[NSNumber numberWithInt:4] && indexPath==nil) {
+        } else if (p.itemgrouping==[NSNumber numberWithInt:NextItem] && indexPath==nil) {
             indexPath = [NSIndexPath indexPathForItem:index inSection:0];
         }
         index++;
     }
-    if (indexPath!=nil) {
+    /*if (indexPath!=nil) {
         [self.CollectionViewPreviewPanel scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
     }
+     */
     
 }
 
@@ -769,7 +872,7 @@ remarks:
  */
 -(void) DownloadFeaturedSharedPoi {
     
-    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
 
     
     [self ObtainNewPoiKeyWithCompleteBlock:^(NSString *result) {
@@ -882,8 +985,16 @@ remarks:
         
     if (imageData != nil) {
         i.ImageFileReference = [record objectForKey: @"imagefilepathname"];
+        /* first we need to create the image folder if it hasn't bee created before*/
+        NSString *dataPath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Images/%@",poi.key]];
+        
+        [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:nil];
+        
+        /* next we try and copy the image into the same folder we just created */
         NSString *dataFilePath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/%@",i.ImageFileReference]];
         [imageData writeToFile:dataFilePath atomically:YES];
+        
+        
         CGSize imagesize = CGSizeMake(100 , 100);
         dispatch_async(dispatch_get_main_queue(), ^{
             [AppDelegateDef.PoiBackgroundImageDictionary setObject:[ToolBoxNSO imageWithImage:[UIImage imageWithData:imageData] convertToSize:imagesize] forKey:poi.key];

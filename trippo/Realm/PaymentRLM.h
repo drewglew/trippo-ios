@@ -31,4 +31,4 @@
 @property RLMArray<ImageCollectionRLM *><ImageCollectionRLM> *images;
 @end
 
-RLM_ARRAY_TYPE(PaymentRLM)
+RLM_COLLECTION_TYPE(PaymentRLM)

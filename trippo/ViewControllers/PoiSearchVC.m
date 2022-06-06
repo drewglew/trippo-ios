@@ -33,7 +33,21 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     
     lastPoiSearchFooterFilterHeightConstant = self.FilterOptionHeightConstraint.constant;
     
-    
+    if ([SettingsRLM allObjects].count == 0 || !self.frommenu) { 
+        self.settings = nil;
+    } else {
+        self.settings = [[SettingsRLM allObjects] firstObject];
+        
+        if (![self.settings.mainpoifilterselectedtypes isEqualToString:@"ALL"]) {
+            self.applypoitypefilterfromsettings = true;
+            
+        }
+        if (![self.settings.mainpoifiltername isEqualToString:@""]) {
+            self.SearchBarPoi.searchTextField.text = self.settings.mainpoifiltername;
+        }
+        
+    }
+        
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, self.FilterOptionHeightConstraint.constant)];
     self.TableViewSearchPoiItems.tableFooterView = footerView;
     
@@ -43,6 +57,15 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
         //[self.SegmentPoiFilterList setTitle:@"Unused" forSegmentAtIndex:0];
         self.SegmentCountries.selectedSegmentIndex=1;
         self.SegmentCountries.enabled = false;
+        
+        NSLog(@"%@",self.settings.mainpoifilterstateindex);
+        
+        if (![self.settings.mainpoifilterstateindex isEqualToString:@""]) {
+            self.SegmentPoiFilterList.selectedSegmentIndex = [self.settings.mainpoifilterstateindex intValue];
+        } else {
+            self.SegmentPoiFilterList.selectedSegmentIndex = 1;
+        }
+        
         
     } else {
         // project is available
@@ -56,12 +79,17 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
             for (ActivityRLM *activityobj in activities) {
                 PoiRLM *poi = [PoiRLM objectForPrimaryKey:activityobj.poikey];
                 bool found=false;
-                for (NSString *country in self.countries) {
-                    if ([country isEqualToString:poi.countrycode]) {
-                        found=true;
-                        break;
+                if (poi.countrycode!=nil) {
+                    for (NSString *country in self.countries) {
+                        if (poi.countrycode!=nil && [country isEqualToString:poi.countrycode]) {
+                            found=true;
+                            break;
+                        }
                     }
+                } else {
+                    NSLog(@"%@", activityobj);
                 }
+                
                 if (!found) {
                     [self.countries addObject:poi.countrycode];
                 }
@@ -137,7 +165,8 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
                        @"Cat-Village",
                        @"Cat-Vineyard",
                        @"Cat-Windmill",
-                       @"Cat-Zoo"
+                       @"Cat-Zoo",
+                       @"Cat-Camping"
                        ];
     
     
@@ -153,6 +182,8 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     lpgr.delaysTouchesBegan = YES;
     [self.CollectionViewTypes addGestureRecognizer:lpgr];
     
+    
+    
     self.SegmentPoiFilterList.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentPoiFilterList setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     
@@ -164,25 +195,42 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
     self.SearchBarPoi.searchTextField.textColor = [UIColor colorNamed:@"TrippoColor"];
     
     [self addDoneToolBarForTextFieldToKeyboard:self.SearchBarPoi.searchTextField];
-    
-    /* new block 20200111 */
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    
-    
-    
 }
 
 /*
  created date:      01/03/2021
- last modified:     01/03/2021
+ last modified:     25/07/2021
  remarks:
  */
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     if (self.frommenu){
+
+        NSString *delimitedPoiTypesSelected = @"";
+        
+        bool TypesExcluded = false;
+        for (TypeNSO *type in self.PoiTypes) {
+            if (type.selected) {
+                delimitedPoiTypesSelected = [NSString stringWithFormat:@"%@,%@",delimitedPoiTypesSelected,type.categoryid];
+            } else {
+                TypesExcluded = true;
+            }
+        }
+        if (!TypesExcluded) {
+            delimitedPoiTypesSelected = @"ALL";
+        }
+        
+        [self.realm beginWriteTransaction];
+        self.settings.mainpoifiltername = self.SearchBarPoi.text;
+        self.settings.mainpoifilterselectedtypes = delimitedPoiTypesSelected;
+        self.settings.mainpoifilterstateindex = [NSString stringWithFormat:@"%ld",(long)self.SegmentPoiFilterList.selectedSegmentIndex];
+        [self.realm commitWriteTransaction];
+        
         [self.delegate didDismissPresentingViewController];
     }
 }
+
+
 
 
 /*
@@ -219,18 +267,19 @@ CGFloat lastPoiSearchFooterFilterHeightConstant;
 
 /*
 created date:      14/09/2019
-last modified:     14/09/2019
+last modified:     07/03/2021
 remarks:
 */
 -(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    //doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
                          nil];
+    
     [doneToolbar sizeToFit];
     textField.inputAccessoryView = doneToolbar;
 }
@@ -262,14 +311,17 @@ remarks:
 
 /*
  created date:      03/05/2018
- last modified:     23/06/2019
+ last modified:     06/06/2022
  remarks:           called twice???  Improved Poi Type processing
  */
 -(void)RefreshPoiFilteredData :(BOOL) UpdateTypes {
     
     self.poifilteredcollection = [PoiRLM allObjects];
     
-    if (self.SegmentPoiFilterList.selectedSegmentIndex != 1 && self.SegmentPoiFilterList.selectedSegmentIndex != 3) {
+    // unused or used
+    if (self.SegmentPoiFilterList.selectedSegmentIndex != 1 && self.SegmentPoiFilterList.selectedSegmentIndex != 3 &&
+        self.SegmentPoiFilterList.selectedSegmentIndex != 4
+            ) {
         /* get distinct poi items from activities */
         NSArray *keypaths  = [[NSArray alloc] initWithObjects:@"poikey", nil];
         
@@ -279,7 +331,6 @@ remarks:
         
         for (ActivityRLM *usedPois in used) {
             if (usedPois.name != nil) {
-                
                 [poiitems addObject:usedPois.poikey];
             }
         }
@@ -297,6 +348,9 @@ remarks:
             self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"key IN %@",typeset]];
             
         }
+        
+        
+        
     } else if (self.SegmentPoiFilterList.selectedSegmentIndex == 3) {
         //NSLog(@"visited");
         
@@ -311,8 +365,15 @@ remarks:
         }
         NSSet *typeset = [[NSSet alloc] initWithArray:poiitems];
         
+        
+        
         self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"key IN %@",typeset]];
         
+       
+        
+    } else if (self.SegmentPoiFilterList.selectedSegmentIndex == 4) {
+
+       
         
     }
 
@@ -323,7 +384,7 @@ remarks:
     
     // here we must apply in case isSearching is false and text is not ""... when we return from Poi Data Entry
     if (self.isSearching || (![self.SearchBarPoi.text isEqualToString:@""] && self.isSearching == false)) {
-        self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"searchstring CONTAINS %@",self.SearchBarPoi.text]];
+        self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"searchstring CONTAINS[c] %@",self.SearchBarPoi.text]];
     }
     
     
@@ -337,6 +398,7 @@ remarks:
         }
         
         if (self.PoiTypes.count>0) {
+            
             // need to process each selected to check counter if there are still Poi selected.
             // when adding new items, we need to check if the user has own mixed selection of types.
             bool isselected = false;
@@ -403,15 +465,40 @@ remarks:
         
             self.PoiTypes = [[NSMutableArray alloc] init];
             
-            for (id item in countedSet)
-            {
-                TypeNSO *type = [[TypeNSO alloc] init];
-                type.occurances = [NSNumber numberWithInteger:[countedSet countForObject:item]];
-                type.categoryid = item;
-                u_long number = [item unsignedLongValue];
-                type.imagename = [self.TypeItems objectAtIndex: number];
-                type.selected = true;
-                [self.PoiTypes addObject:type];
+            if (self.applypoitypefilterfromsettings) {
+                
+                NSArray *inititems = [self.settings.mainpoifilterselectedtypes componentsSeparatedByString:@","];
+                
+                for (id item in countedSet)
+                {
+                    TypeNSO *type = [[TypeNSO alloc] init];
+                    type.occurances = [NSNumber numberWithInteger:[countedSet countForObject:item]];
+                    type.categoryid = item;
+                    u_long number = [item unsignedLongValue];
+                    type.imagename = [self.TypeItems objectAtIndex: number];
+                    
+                    bool found = false;
+                    for (NSString *ii in inititems) {
+                        if ([[NSString stringWithFormat:@"%@",item] isEqualToString:ii]) {
+                            found = true;
+                        }
+                    }
+                    
+                    type.selected = found;
+                    [self.PoiTypes addObject:type];
+                }
+                self.applypoitypefilterfromsettings = false;
+            } else {
+                for (id item in countedSet)
+                {
+                    TypeNSO *type = [[TypeNSO alloc] init];
+                    type.occurances = [NSNumber numberWithInteger:[countedSet countForObject:item]];
+                    type.categoryid = item;
+                    u_long number = [item unsignedLongValue];
+                    type.imagename = [self.TypeItems objectAtIndex: number];
+                    type.selected = true;
+                    [self.PoiTypes addObject:type];
+                }
             }
             
             /* sort the list in the common order used */
@@ -440,11 +527,19 @@ remarks:
         self.poifilteredcollection = [self.poifilteredcollection objectsWithPredicate:[NSPredicate predicateWithFormat:@"categoryid IN %@",typeset]];
     }
 
-    self.poifilteredcollection = [self.poifilteredcollection sortedResultsUsingDescriptors:@[
-                                                       [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES],
-                                                       ]];
-    
-    
+
+    if (self.SegmentPoiFilterList.selectedSegmentIndex == 4) {
+        RLMSortDescriptor *sort = [RLMSortDescriptor sortDescriptorWithKeyPath:@"modifieddt" ascending:NO];
+        
+        self.poifilteredcollection = [self.poifilteredcollection sortedResultsUsingDescriptors:[NSArray arrayWithObject:sort]];
+
+    } else {
+        self.poifilteredcollection = [self.poifilteredcollection sortedResultsUsingDescriptors:@[
+                                                           [RLMSortDescriptor sortDescriptorWithKeyPath:@"name" ascending:YES],
+                                                           ]];
+       
+        
+    }
     
     
     
@@ -586,7 +681,7 @@ remarks:
 
 /*
  created date:      30/04/2018
- last modified:     18/11/2018
+ last modified:     07/03/2021
  remarks:
  */
 - (PoiListCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -606,8 +701,21 @@ remarks:
     
     cell.poi = poi;    
     cell.Name.text = poi.name;
+
+    if ([poi.poisharedflag intValue] == 2) {
+        cell.Name.textColor = [UIColor colorNamed:@"TrippoColor"];
+        cell.AdministrativeArea.textColor = [UIColor colorNamed:@"TrippoColor"];
+    } else {
+        cell.Name.textColor = [UIColor labelColor];
+        cell.AdministrativeArea.textColor = [UIColor labelColor];
+    }
+        
+    if (![poi.administrativearea containsString:@"(null)"]) {
+        cell.AdministrativeArea.text = poi.administrativearea;
+    } else {
+        cell.AdministrativeArea.text = @"";
+    }
     
-    cell.AdministrativeArea.text = poi.administrativearea;
     if (poi.countrycode != nil && ![poi.countrycode isEqualToString:@""]) {
         cell.LabelFlag.text = [self emojiFlagForISOCountryCode:poi.countrycode];
     }
@@ -625,7 +733,7 @@ remarks:
 
 /*
  created date:      03/05/2018
- last modified:     03/05/2018
+ last modified:     10/08/2021
  remarks:
  */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -651,21 +759,43 @@ remarks:
         [self presentViewController:controller animated:YES completion:nil];
        
     } else {
-        /* we select project and go onto it's activities! */
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        ActivityDataEntryVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityDataEntryViewController"];
-        controller.delegate = self;
-        controller.Activity = self.Activity;
-        controller.realm = self.realm;
-        controller.Poi = Poi;
-        NSLog(@"startdt = %@",self.TripItem.startdt);
-        controller.Trip = self.TripItem;
-        //controller.Activity.poi = Poi;
-        controller.deleteitem = false;
-        controller.transformed = self.transformed;
-        controller.newitem = true;
-        [controller setModalPresentationStyle:UIModalPresentationPageSheet];
-        [self presentViewController:controller animated:YES completion:nil];
+        
+        if ([Poi.countrycode isEqualToString:@""] || Poi.countrycode == nil) {
+            NSLog(@"Cannot add to Trip as missing data!");
+            
+            UIAlertController * alert = [UIAlertController
+                                         alertControllerWithTitle:@"Cannot add Point of Interest to Trip"
+                                         message:@"Please add GeoData to Point of Interest item as this is currently not set"
+                                         preferredStyle:UIAlertControllerStyleAlert];
+            
+            
+            [alert.view setTintColor:[UIColor labelColor]];
+            
+            UIAlertAction* okButton = [UIAlertAction
+                                       actionWithTitle:@"Ok"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction * action) {}];
+            
+            [alert addAction:okButton];
+            [self presentViewController:alert animated:YES completion:^{}];
+            
+        } else {
+            /* we select project and go onto it's activities! */
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            ActivityDataEntryVC *controller = [storyboard instantiateViewControllerWithIdentifier:@"ActivityDataEntryViewController"];
+            controller.delegate = self;
+            controller.Activity = self.Activity;
+            controller.realm = self.realm;
+            controller.Poi = Poi;
+            NSLog(@"startdt = %@",self.TripItem.startdt);
+            controller.Trip = self.TripItem;
+            //controller.Activity.poi = Poi;
+            controller.deleteitem = false;
+            controller.transformed = self.transformed;
+            controller.newitem = true;
+            [controller setModalPresentationStyle:UIModalPresentationPageSheet];
+            [self presentViewController:controller animated:YES completion:nil];
+        }
     }
 }
 
@@ -847,6 +977,7 @@ remarks:
         NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
         controller.delegate = self;
         controller.frommenu = false;
+        controller.isnearbyme = false;
         if (self.TripItem == nil) {
             controller.fromproject = false;
         }
@@ -867,13 +998,13 @@ remarks:
                 }
             }
         }
-    } else if([segue.identifier isEqualToString:@"ShowNearbyMe"])
-    {
+    } else if([segue.identifier isEqualToString:@"ShowNearbyMe"]) {
         NearbyListingVC *controller = (NearbyListingVC *)segue.destinationViewController;
         controller.frommenu = false;
         controller.delegate = self;
         controller.realm = self.realm;
         controller.PointOfInterest = nil;
+        controller.isnearbyme = true;
         if (self.TripItem == nil) {
             controller.fromproject = false;
         }
@@ -882,6 +1013,15 @@ remarks:
             controller.ActivityItem = self.Activity;
             controller.fromproject = true;
         }
+    } else if([segue.identifier isEqualToString:@"ShowPoiMap"]) {
+        
+        PoiMapVC *controller = (PoiMapVC *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.realm = self.realm;
+        
+        
+        controller.poifilteredcollection = self.poifilteredcollection;
+        
     }
     
 }
@@ -1065,6 +1205,7 @@ remarks:
 }
 
 - (void)didDismissPresentingViewController {
+
 }
 
 

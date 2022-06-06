@@ -14,12 +14,12 @@
 
 @implementation NearbyListingVC
 CGFloat lastNearbyListingFooterFilterHeightConstant;
-bool runOnce = true;
+bool runOnce;
 
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    
+    runOnce = true;
     if (![ToolBoxNSO HasTopNotch]) {
         self.HeaderHeightConstraint.constant = 70.0f;
     }
@@ -43,10 +43,10 @@ bool runOnce = true;
     self.TableViewNearbyPoi.delegate = self;
     self.TableViewNearbyPoi.rowHeight = 100;
     
-    self.ViewLoading.layer.cornerRadius=8.0f;
+    self.ViewLoading.layer.cornerRadius=5.0f;
     self.ViewLoading.layer.masksToBounds=YES;
-    self.ViewLoading.layer.borderWidth = 1.0f;
-    self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
+    //self.ViewLoading.layer.borderWidth = 1.0f;
+    //self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
     self.SegmentFilterType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentFilterType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
     self.SegmentImageEnabler.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
@@ -128,7 +128,7 @@ bool runOnce = true;
  */
 -(void) LoadNearbyPoiItemsData {
     
-    if (runOnce || self.PointOfInterest!=nil) {
+    if (runOnce) {
         runOnce = false;
  
         self.nearbyitems = [[NSMutableArray alloc] init];
@@ -199,7 +199,7 @@ bool runOnce = true;
                     }
                     poi.Coordinates = CLLocationCoordinate2DMake([[item valueForKey:@"lat"] doubleValue], [[item valueForKey:@"lon"] doubleValue]);
                     poi.PageId = [item valueForKey:@"pageid"];
-//boo
+
                     [self.nearbyitems addObject:poi];
                 }
             }
@@ -383,7 +383,8 @@ bool runOnce = true;
     NSMeasurementFormatter *formatter = [[NSMeasurementFormatter alloc] init];
     formatter.locale = [NSLocale currentLocale];
     
-    
+    UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
+
     
     NSMeasurement *distance = [[NSMeasurement alloc] initWithDoubleValue:[item.dist doubleValue] unit:NSUnitLength.meters];
 
@@ -393,13 +394,41 @@ bool runOnce = true;
     cell.LabelType.text = item.type;
     
     if (item.Image == nil) {
-        [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"target"]];
-        [cell.ImageViewThumbPhoto setTintColor:[UIColor systemBackgroundColor]];
+        [cell.ImageViewThumbPhoto setImage:[UIImage systemImageNamed:@"target" withConfiguration:config]];
+        //[cell.ImageViewThumbPhoto setTintColor:[UIColor systemBackgroundColor]];
     } else {
         [cell.ImageViewThumbPhoto setImage:[ToolBoxNSO imageWithImage:item.Image scaledToSize:cell.ImageViewThumbPhoto.frame.size]];
     }
     return cell;
 }
+
+
+/*
+ created date:      31/07/2021
+ last modified:     31/07/2021
+ remarks:           segue controls.
+ */
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    
+    
+    if([segue.identifier isEqualToString:@"ShowNearbyMap"]) {
+        
+        NearbyMapVC *controller = (NearbyMapVC *)segue.destinationViewController;
+        controller.delegate = self;
+        controller.realm = self.realm;
+        controller.isnearbyme = self.isnearbyme;
+        controller.PointOfInterest = self.PointOfInterest;
+        controller.nearbyitems = self.nearbyitems;
+        controller.viewTitle = [NSString stringWithFormat:@"%@ : map",self.LabelNearby.text];
+        if ([self.SegmentImageEnabler selectedSegmentIndex] == 1) {
+            controller.hasimages = true;
+        } else {
+            controller.hasimages = false;
+        }
+            
+    }
+}
+
 
 
 
@@ -413,7 +442,7 @@ bool runOnce = true;
     
     if ([self checkInternet]) {
         
-        tableView.allowsSelection = NO;
+        //tableView.allowsSelection = NO;
         
         static NSString *IDENTIFIER = @"NearbyCellId";
         
@@ -649,6 +678,7 @@ bool runOnce = true;
 - (IBAction)SegmentLanguageChanged:(id)sender {
     
     if ([self checkInternet]) {
+        runOnce = true;
         [self LoadNearbyPoiItemsData];
     }
 }
@@ -705,6 +735,7 @@ bool runOnce = true;
  remarks:
  */
 - (IBAction)SegmentFilterTypeChanged:(id)sender {
+    runOnce = true;
     [self LoadNearbyPoiItemsData];
 }
 

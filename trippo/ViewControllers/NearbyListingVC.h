@@ -14,13 +14,14 @@
 #import "PoiDataEntryVC.h"
 #import "Reachability.h"
 #import "PoiRLM.h"
+#import "NearbyMapVC.h"
 
 @protocol NearbyListingDelegate <NSObject>
 - (void)didUpdatePoi :(NSString*)Method :(PoiRLM*)Object;
 - (void)didDismissPresentingViewController;
 @end
 
-@interface NearbyListingVC : UIViewController <UITableViewDelegate, CLLocationManagerDelegate, PoiDataEntryDelegate> 
+@interface NearbyListingVC : UIViewController <UITableViewDelegate, CLLocationManagerDelegate, PoiDataEntryDelegate, NearbyMapDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *TableViewNearbyPoi;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentWikiLanguageOption;
 @property (weak, nonatomic) IBOutlet UILabel *LabelNearby;
@@ -39,6 +40,7 @@
 @property (weak, nonatomic) IBOutlet UIView *ViewLoading;
 @property (assign) bool fromproject;
 @property (assign) bool frommenu;
+@property (assign) bool isnearbyme;
 @property (strong, nonatomic) TripRLM *TripItem;
 @property (strong, nonatomic) ActivityRLM *ActivityItem;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPaneResize;

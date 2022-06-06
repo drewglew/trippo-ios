@@ -30,4 +30,4 @@
 @property ExchangeRateRLM *exchangerate;
 @end
 
-RLM_ARRAY_TYPE(ExpenseRLM)
+RLM_COLLECTION_TYPE(ExpenseRLM)

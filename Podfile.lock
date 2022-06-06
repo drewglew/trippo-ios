@@ -1,26 +1,22 @@
 PODS:
-  - Realm (4.3.1):
-    - Realm/Headers (= 4.3.1)
-  - Realm/Headers (4.3.1)
-  - TesseractOCRiOS (5.0.1)
-  - TOCropViewController (2.5.2)
+  - Realm (10.20.1):
+    - Realm/Headers (= 10.20.1)
+  - Realm/Headers (10.20.1)
+  - TOCropViewController (2.6.0)
 
 DEPENDENCIES:
   - Realm
-  - TesseractOCRiOS
   - TOCropViewController
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - Realm
-    - TesseractOCRiOS
     - TOCropViewController
 
 SPEC CHECKSUMS:
-  Realm: 31dc40934081ef740f60feedc46d88473cbfeb40
-  TesseractOCRiOS: 2c189465f86abb030d0c5141c90da9705b647854
-  TOCropViewController: e9da34f484aedd4e5d5a8ab230ba217cfe16c729
+  Realm: fac5ecd031fcb81171627b74944c885662d4b266
+  TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
 
-PODFILE CHECKSUM: 9e9a6e4b4b28680fa415888aa0b7f4d931275573
+PODFILE CHECKSUM: 426c810156907a82b26b34c70f7c3b02406d77c9
 
 COCOAPODS: 1.10.1

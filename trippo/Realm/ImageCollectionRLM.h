@@ -19,4 +19,4 @@
 @property (assign) bool ImageFlaggedDeleted;
 @end
 
-RLM_ARRAY_TYPE(ImageCollectionRLM)
+RLM_COLLECTION_TYPE(ImageCollectionRLM)

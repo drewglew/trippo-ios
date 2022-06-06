@@ -81,7 +81,7 @@ public:
     void set_size(size_t new_size);
 
     /// \param new_size Specifies the new buffer size.
-    /// \param copy_begin, copy_end Specifies a range of element
+    /// \param copy_begin copy_end Specifies a range of element
     /// values to be retained. \a copy_end must be less than, or equal
     /// to size().
     ///
@@ -161,6 +161,13 @@ public:
     /// Callers should call `size()` prior to releasing the buffer to know the
     /// usable/logical size.
     REALM_NODISCARD Buffer<T, Allocator> release() noexcept;
+
+    friend void swap(AppendBuffer& a, AppendBuffer& b) noexcept
+    {
+        using std::swap;
+        swap(a.m_buffer, b.m_buffer);
+        swap(a.m_size, b.m_size);
+    }
 
 private:
     util::Buffer<T, Allocator> m_buffer;

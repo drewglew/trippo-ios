@@ -14,6 +14,7 @@
 
 @implementation ProjectDataEntryVC
 @synthesize delegate;
+NSNumber *activitesCount;
 //BOOL loadedActualWeatherData = false;
 //BOOL loadedPlannedWeatherData = false;
 
@@ -25,6 +26,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self configureMapView];
+    
+    activitesCount = [NSNumber numberWithUnsignedLong:[[ActivityRLM objectsWhere:@"tripkey = %@",self.Trip.key] count]];
+    
     self.timezones = [NSTimeZone knownTimeZoneNames];
     
     self.StartDtTimeZonePicker = [[UIPickerView alloc] initWithFrame:CGRectZero];
@@ -44,7 +49,6 @@
         [self.ButtonAction setTitle:@"Update" forState:UIControlStateNormal];
         [self LoadExistingData];
         self.updatedimage = false;
- 
     }
 
     [self addDoneToolBarToKeyboard:self.TextViewNotes];
@@ -60,72 +64,61 @@
     self.ViewSummary.layer.cornerRadius=8.0f;
     self.ViewSummary.layer.masksToBounds=YES;
     
-    NSDate *startOfToday = [[NSDate alloc] init];
-    
     NSTimeZone *defaultTimeZone = [NSTimeZone defaultTimeZone];
     
+    NSDate *startOfToday = [self dateWithDate:[NSDate date] Hour:0 Minute:0 Second:0];
+    NSDate *endOfToday = [self dateWithDate:[NSDate date] Hour:23 Minute:59 Second:0];
     
     /* if a new trip, set both start & end dates to today at 00:00  */
     if (self.newitem) {
-        
-        
-        
         self.DatePickerStart.date = startOfToday;
+        self.DatePickerStart.maximumDate = endOfToday;
         self.DatePickerStart.timeZone = defaultTimeZone;
         self.StartDtTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
-        
-        self.DatePickerEnd.date = startOfToday;
+        self.DatePickerEnd.date = endOfToday;
+        self.DatePickerEnd.minimumDate = startOfToday;
         self.DatePickerEnd.timeZone = defaultTimeZone;
         self.EndDtTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
-        
         self.DefaultTimeZoneNameTextField.text = [NSString stringWithFormat:@"%@",[defaultTimeZone name]];
-        
-        
-        
         self.startDt = startOfToday;
-        self.endDt = startOfToday;
+        self.endDt = endOfToday;
         self.Trip.startdt = startOfToday;
-        self.Trip.enddt = startOfToday;
-        
-        
-        
+        self.Trip.enddt = endOfToday;
     } else {
         self.startDt = self.Trip.startdt;
-        self.endDt = self.Trip.enddt;
+        
         self.DatePickerStart.date = self.Trip.startdt;
+        self.endDt = self.Trip.enddt;
+        
         self.DatePickerEnd.date = self.Trip.enddt;
         
-        
+        if ([activitesCount intValue] == 0) {
+            self.DatePickerStart.maximumDate = self.DatePickerEnd.date;
+            self.DatePickerEnd.minimumDate = self.DatePickerStart.date;
+        } else {
+            self.DatePickerStart.maximumDate = [self getMinDate];
+            self.DatePickerEnd.minimumDate = [self getMaxDate];
+        }
         
     }
-    
-    //[self.datePicker addTarget:self action:@selector(onDatePickerValueChanged:) forControlEvents:UIControlEventValueChanged];
 
-    [self.DatePickerStart addTarget:self action:@selector(onDatePickerStartValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.DatePickerStart addTarget:self action:@selector(datePickerStartDismissed:) forControlEvents:UIControlEventEditingDidEnd]; // method to respond to changes in the picker value
     
-    [self.DatePickerEnd addTarget:self action:@selector(onDatePickerEndValueChanged:) forControlEvents:UIControlEventValueChanged];
-    /*
-    [self.DatePickerStart addTarget:self action:@selector(onDatePickerStartTouchedUp:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.DatePickerEnd addTarget:self action:@selector(onDatePickerEndTouchedUp:) forControlEvents:UIControlEventTouchUpInside];
-    */
+    [self.DatePickerEnd addTarget:self action:@selector(datePickerEndDismissed:) forControlEvents:UIControlEventEditingDidEnd];
     
     /* add toolbar control for 'Done' option */
+    
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-   // [toolBar setTintColor:[UIColor grayColor]];
-    
-    [toolBar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
-    
-    UIBarButtonItem *doneBtn=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(HidePickers)];
-    UIBarButtonItem *space=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    [toolBar setItems:[NSArray arrayWithObjects:space,doneBtn, nil]];
 
+    UIBarButtonItem *doneBtn=[[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(HidePickers)];
     
+    UIBarButtonItem *space=[[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
-    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    [toolBar setItems:[NSArray arrayWithObjects:space,doneBtn, nil]];
     
-    [cal setTimeZone:defaultTimeZone];
-    startOfToday = [cal startOfDayForDate:[NSDate date]];
+    //NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    //[cal setTimeZone:defaultTimeZone];
+    //startOfToday = [cal startOfDayForDate:[NSDate date]];
 
     self.StartDtTimeZoneNameTextField.inputView = self.StartDtTimeZonePicker;
     [self.StartDtTimeZoneNameTextField setInputAccessoryView:toolBar];
@@ -142,76 +135,115 @@
     anIndex=[self.timezones indexOfObject:self.DefaultTimeZoneNameTextField.text];
     [self.DefaultDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
-    
-    /* extend features on the input view of the text field for start dt */
-    
-    /*self.TextFieldStartDt.inputView = self.datePicker;
-    self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
-    [self.TextFieldStartDt setInputAccessoryView:toolBar];
-
-    self.TextFieldEndDt.inputView = self.datePicker;
-    self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
-    [self.TextFieldEndDt setInputAccessoryView:toolBar];
-     */
-     
-    /* add toolbar control for 'Done' option */
-    
-    
-    
-    /* set map annotations by default to planned */
-    //[self constructWeatherMapPointData :false];
-    
     [self registerForKeyboardNotifications];
     
-    /* new block 20200111 */
-    // RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    
-    //AssistantRLM *assist = [[settings[0].AssistantCollection objectsWhere:@"ViewControllerName=%@",@"ProjectDataEntryVC"] firstObject];
+   
+}
+
+
 /*
-    if ([assist.State integerValue] == 1) {
+ created date:      23/03/2021
+ last modified:     23/03/2021
+ remarks:
+ */
+-(void) configureMapView {
     
-        UIView* helperView = [[UIView alloc] initWithFrame:CGRectMake(10, 100, self.view.frame.size.width - 20, 350)];
-        helperView.backgroundColor = [UIColor labelColor];
-        
-        helperView.layer.cornerRadius=8.0f;
-        helperView.layer.masksToBounds=YES;
-        
-        UILabel* title = [[UILabel alloc] init];
-        title.frame = CGRectMake(10, 18, helperView.bounds.size.width - 20, 24);
-        title.textColor =  [UIColor secondarySystemBackgroundColor];
-        title.font = [UIFont systemFontOfSize:22 weight:UIFontWeightThin];
-        title.text = @"Trip Details";
-        title.textAlignment = NSTextAlignmentCenter;
-        [helperView addSubview:title];
-        
-        UIImageView *logo = [[UIImageView alloc] init];
-        logo.frame = CGRectMake(10, helperView.bounds.size.height - 50, 80, 40);
-        logo.image = [UIImage imageNamed:@"Trippo"];
-        [helperView addSubview:logo];
-        
-        UILabel* helpText = [[UILabel alloc] init];
-        helpText.frame = CGRectMake(10, 50, helperView.bounds.size.width - 20, 250);
-        helpText.textColor =  [UIColor secondarySystemBackgroundColor];
-        helpText.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
-        helpText.numberOfLines = 0;
-        helpText.adjustsFontSizeToFitWidth = YES;
-        helpText.minimumScaleFactor = 0.5;
+    //self.MapView.userTrackingMode = MKUserTrackingModeFollow;
 
-        helpText.text = @"From the Trip Details you are able to provide Title, Photo to be used in Trip Log and Duration.\n\nTime Zone settings are only relevant when travelling far away from home.\n\nHere you are also able to view specific details about the trip including costs and milage as well as locations of the activities contained on a map of the region.";
-        helpText.textAlignment = NSTextAlignmentLeft;
-        [helperView addSubview:helpText];
+    [self.MapView registerClass:[CustomAnnotationView class] forAnnotationViewWithReuseIdentifier:MKMapViewDefaultAnnotationViewReuseIdentifier];
+    [self.MapView registerClass:[ClusterAnnotationView class] forAnnotationViewWithReuseIdentifier:MKMapViewDefaultClusterAnnotationViewReuseIdentifier];
+}
 
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-        button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
-        [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
-        [button setTintColor: [UIColor secondarySystemBackgroundColor]];
-        [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [helperView addSubview:button];
-        
-        [self.view addSubview:helperView];
+
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(NSDate *)getMinDate {
+    ActivityRLM *Earliest = [[[ActivityRLM objectsWhere:@"tripkey = %@",self.Trip.key] sortedResultsUsingKeyPath:@"startdt" ascending:TRUE] firstObject];
+    NSLog(@"EARLIEST - %@",Earliest.startdt);
+    return Earliest.startdt;
+}
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(NSDate *)getMaxDate {
+    ActivityRLM *Latest = [[[ActivityRLM objectsWhere:@"tripkey = %@",self.Trip.key] sortedResultsUsingKeyPath:@"enddt" ascending:FALSE] firstObject];
+    NSLog(@"LATEST - %@",Latest.enddt);
+    return Latest.enddt;
+}
+
+
+
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+- (NSDate *)dateWithDate:(NSDate *)date Hour:(NSInteger)hour Minute:(NSInteger)minute Second:(NSInteger)second {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:NSCalendarUnitDay | NSCalendarUnitMonth | NSCalendarUnitYear fromDate:date];
+    components.hour = hour;
+    components.minute = minute;
+    components.second = second;
+    return [calendar dateFromComponents:components];
+}
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(void)datePickerStartDismissed:(id)sender{
+    
+    if (self.newitem || [activitesCount intValue] == 0) {
+        self.DatePickerEnd.minimumDate = self.DatePickerStart.date;
     }
-    */
+    self.startDt =  self.DatePickerStart.date;
+    [self dismissPicker];
+}
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:
+ */
+-(void)datePickerEndDismissed:(id)sender{
+    if (self.newitem || [activitesCount intValue] == 0) {
+        self.DatePickerStart.maximumDate = self.DatePickerEnd.date;
+    }
+    self.endDt =  self.DatePickerEnd.date;
+    [self dismissPicker];
+}
+
+/*
+ created date:      10/03/2021
+ last modified:     10/03/2021
+ remarks:           Add additional validation here
+*/
+-(void)dismissPicker {
+    // do we place the date validation here or on the action button?
+    
+    // only if we are modifying an existing Trip
+    if (!self.newitem) {
+        
+        //scan all the trips contained.  get the earliest start date and the latest end date.
+        // trip needs to fit inside these bounds.
+        
+        // might need to be done to set the values in the first instance (similar to how we set max/min on new Trip)
+        
+        // should the dates here match all activities attached (planned & actual)  YES
+        
+       
+        
+        
+    }
 }
 
 /*
@@ -254,7 +286,7 @@
 
 /*
  created date:      07/04/2019
- last modified:     15/08/2019
+ last modified:     10/03/2021
  remarks:
  */
 - (void)pickerView:(UIPickerView *)thePickerView
@@ -262,29 +294,31 @@
        inComponent:(NSInteger)component {
      
     
+    NSCalendar *cal = [[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    [cal setTimeZone:[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text]];
+
     if (thePickerView == self.StartDtTimeZonePicker) {
         self.StartDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
         self.DatePickerStart.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-        //self.TextFieldStartDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.startDt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@" "]];
+        [cal setTimeZone:[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text]];
+        self.DatePickerStart.date = [cal startOfDayForDate:self.DatePickerStart.date];
         
     } else if (thePickerView == self.EndDtTimeZonePicker) {
         self.EndDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
         self.DatePickerEnd.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
-       
-        //self.TextFieldEndDt.text = [NSString stringWithFormat:@"%@", [self FormatPrettyDate :self.endDt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@" "]];
+        [cal setTimeZone:[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text]];
+        self.DatePickerEnd.date = [cal startOfDayForDate:self.DatePickerEnd.date];
         
     } else {
         self.DefaultTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
-    }
-    
+    }    
 }
-
 
 -(void)addDoneToolBarToKeyboard:(UITextView *)textView
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
@@ -300,8 +334,9 @@
 -(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
+    
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
@@ -366,20 +401,7 @@
     self.TripScrollView.contentInset = contentInsets;
     self.TripScrollView.scrollIndicatorInsets = contentInsets;
 }
-/*
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    self.ActiveTextField = textField;
-    
-    if (textField == self.TextFieldStartDt) {
-        self.datePicker.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-        self.datePicker.date = self.startDt;
-    } else if (textField == self.TextFieldEndDt) {
-        self.datePicker.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
-        self.datePicker.date = self.endDt;
-    }
-}
-*/
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     self.ActiveTextField = nil;
@@ -403,58 +425,13 @@
 }
 
 
-/*
- created date:      14/06/2019
- last modified:     14/06/2019
- remarks:           This procedure handles the call to the web service and returns a dictionary back to GetExchangeRates method.
- */
-/*
--(void)fetchFromDarkSkyApi:(NSString *)url withDictionary:(void (^)(NSDictionary* data))dictionary{
-    
-    NSMutableURLRequest *request = [NSMutableURLRequest  requestWithURL:[NSURL URLWithString:url]];
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
-    
-    
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request
-                                            completionHandler:
-                                  ^(NSData *data, NSURLResponse *response, NSError *error) {
-                                      NSDictionary *dicData = [NSJSONSerialization JSONObjectWithData:data
-                                                                                              options:0
-                                                                                                error:NULL];
-                                      dictionary(dicData);
-                                  }];
-    [task resume];
-}
-*/
- 
-/*
- created date:      14/06/2019
- last modified:     14/06/2019
- */
-/*
-- (bool)checkInternet
-{
-    if ([[Reachability reachabilityForInternetConnection]currentReachabilityStatus] == NotReachable)
-    {
-        return false;
-    }
-    else
-    {
-        //connection available
-        return true;
-    }
-    
-}
-*/
 
 /*
 created date:      14/06/2019
 last modified:     11/01/2020
 remarks:
 */
-- (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>) annotation {
+/*- (MKAnnotationView *) mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>) annotation {
     
      MKMarkerAnnotationView *pinView = (MKMarkerAnnotationView *)[mapView dequeueReusableAnnotationViewWithIdentifier:@"pinView"];
     
@@ -475,7 +452,7 @@ remarks:
     }
     
     return pinView;
-}
+}*/
 
 
 /*
@@ -490,7 +467,7 @@ remarks:
     CLLocationDegrees minLongitude = DBL_MAX;
     CLLocationDegrees maxLongitude = -DBL_MAX;
     
-    for (AnnotationMK *annotation in annotations) {
+    for (MKPointAnnotation *annotation in annotations) {
         double annotationLat = annotation.coordinate.latitude;
         double annotationLong = annotation.coordinate.longitude;
         minLatitude = fmin(annotationLat, minLatitude);
@@ -567,8 +544,6 @@ remarks:
  */
 - (void)HidePickers
 {
-    //[self.TextFieldStartDt resignFirstResponder];
-   // [self.TextFieldEndDt resignFirstResponder];
     [self.StartDtTimeZoneNameTextField resignFirstResponder];
     [self.EndDtTimeZoneNameTextField resignFirstResponder];
     
@@ -621,66 +596,8 @@ remarks:
 }
 
 
-/*
- created date:      28/02/2021
- last modified:     28/02/2021
- remarks:
- */
-- (void)onDatePickerStartValueChanged:(UIDatePicker *)datePicker
-{
-    NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-    //NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
-    
-    self.startDt = datePicker.date;
-    self.ActiveTextField.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
 
 
-    NSComparisonResult result = [datePicker.date compare:self.endDt];
-
-    switch (result)
-    {
-        case NSOrderedDescending:
-            NSLog(@"%@ is in future from %@", datePicker.date, self.endDt);
-            self.endDt = datePicker.date;
-            //self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-            break;
-        case NSOrderedAscending: NSLog(@"%@ is in past from %@", datePicker.date, self.endDt); break;
-        case NSOrderedSame: NSLog(@"%@ is the same as %@", datePicker.date, self.endDt); break;
-        default: NSLog(@"erorr dates %@, %@", datePicker.date, self.endDt); break;
-    }
-}
-
-/*
- created date:      28/02/2021
- last modified:     28/02/2021
- remarks:
- */
-- (void)onDatePickerEndValueChanged:(UIDatePicker *)datePicker
-{
-    //NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-    NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
-    
-
-    self.endDt = datePicker.date;
-    self.TextFieldEndDt.text = [self FormatPrettyDate:datePicker.date :timeZoneEndDp :@" "];
-    
-    NSComparisonResult result = [datePicker.date compare: self.startDt];
-    
-    switch (result)
-    {
-        case NSOrderedAscending:
-            NSLog(@"%@ is in future from %@", self.datePicker.date, self.startDt);
-            self.startDt = datePicker.date;
-            //self.TextFieldStartDt.text = [self FormatPrettyDate:datePicker.date :timeZoneStartDp :@" "];
-            break;
-        case NSOrderedDescending:
-            NSLog(@"%@ is in past from %@", self.startDt, datePicker.date);
-            
-            break;
-        case NSOrderedSame: NSLog(@"%@ is the same as %@", self.startDt, datePicker.date); break;
-        default: NSLog(@"erorr dates %@, %@", self.startDt, datePicker.date); break;
-    }
-}
 
 
 
@@ -785,16 +702,9 @@ remarks:
     } else {
         [self.ImageViewProject setImage:[UIImage systemImageNamed:@"latch.2.case"]];
     }
+    
+    [self constructMapPointData :false];
 }
-/*
-- (NSString *)stringFromTimeInterval:(NSNumber*)interval {
-    long ti = [interval longValue];
-    long seconds = ti % 60;
-    long minutes = (ti / 60) % 60;
-    long hours = (ti / 3600);
-    return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
-}
-*/
 
 /*
  created date:      29/04/2018
@@ -1342,11 +1252,11 @@ remarks:
 
 /*
  created date:      12/06/2019
- last modified:     11/01/2020
- remarks:           Loads weather data from API and distributes across the annotations on the map.
+ last modified:     23/03/2021
+ remarks:           Loads across the annotations on the map.
  */
-/*
--(void) constructWeatherMapPointData :(bool)IsActual {
+
+-(void) constructMapPointData :(bool)IsActual {
     
     [self.MapView removeAnnotations:self.MapView.annotations];
 
@@ -1361,55 +1271,50 @@ remarks:
         ActivitiesByState = [[ActivityRLM objectsWhere:@"tripkey = %@ and state = 0",self.Trip.key] distinctResultsUsingKeyPaths:keypaths];
     }
 
-    __block NSDate *updatedTime;
     __block int PoiCounter = 0;
     for (ActivityRLM *activity in ActivitiesByState) {
 
-        AnnotationMK *annotation = [[AnnotationMK alloc] init];
+        MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
         annotation.coordinate = CLLocationCoordinate2DMake([activity.poi.lat doubleValue], [activity.poi.lon doubleValue]);
         annotation.title = activity.name;
-        annotation.PoiKey = activity.poi.key;
+        //annotation.PoiKey = activity.poi.key;
         if (IsActual) {
             annotation.subtitle = @"Actual";
-            annotation.Type = @"marker-actual";
+            //annotation.Type = @"marker-actual";
         } else {
             annotation.subtitle = @"Planned";
-            annotation.Type = @"marker-planned";
+            //annotation.Type = @"marker-planned";
         }
         
         [self.MapView addAnnotation:annotation];
         PoiCounter ++;
    
         if (PoiCounter == ActivitiesByState.count) {
-            
-            //NSDateFormatter *dateFormatter = [[NSDateFormatter alloc]init];
-            //[dateFormatter setDateFormat:@"dd/MM/yyyy HH:mm"];
-            //self.LabelWeatherLastUpdatedAt.text = [NSString stringWithFormat:@"Weather data from DarkSky last updated at\n %@",[dateFormatter stringFromDate:updatedTime]];
             [self zoomToAnnotationsBounds :self.MapView.annotations];
         }
     }
 }
-*/
+
 
 
 
 /*
  created date:      15/06/2019
- last modified:     23/06/2019
+ last modified:     23/03/2021
  remarks:
  */
-/*
+
 - (IBAction)SegmentAnnotationsChanged:(id)sender {
     
     [self.MapView removeAnnotations:self.MapView.annotations];
     
     if (self.SegmentAnnotations.selectedSegmentIndex == 0) {
-        [self constructWeatherMapPointData :false];
+        [self constructMapPointData :false];
     } else if (self.SegmentAnnotations.selectedSegmentIndex == 1) {
-        [self constructWeatherMapPointData :true];
+        [self constructMapPointData :true];
     }
 }
-*/
+
 
 - (IBAction)StartDateTimeZoneEditingDidBegin:(id)sender {
 

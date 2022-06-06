@@ -18,6 +18,9 @@
     NSString *PostCode;
     NSString *Type;
     NSString *PoiKey;
+    NSString *Website;
+    NSNumber *categoryid;
+    UIImage *image;
 }
 @property (nonatomic) NSString *AdministrativeArea;
 @property (nonatomic) NSString *SubAdministrativeArea;
@@ -30,4 +33,7 @@
 @property (nonatomic) NSString *Type;
 @property (nonatomic) NSString *PoiKey;
 @property (nonatomic) NSString *ActivityCompondKey;
+@property (nonatomic) NSString *Website;
+@property (nonatomic) NSNumber *categoryid;
+@property (nonatomic) UIImage *image;
 @end

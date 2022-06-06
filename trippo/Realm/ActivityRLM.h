@@ -50,4 +50,4 @@
 @property RLMArray<WeatherRLM *><WeatherRLM> *weather;
 @end
 
-RLM_ARRAY_TYPE(ActivityRLM)
+RLM_COLLECTION_TYPE(ActivityRLM)

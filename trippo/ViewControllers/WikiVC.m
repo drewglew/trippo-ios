@@ -67,10 +67,10 @@ CGFloat WikiFooterFilterHeightConstant;
     WikiFooterFilterHeightConstant = self.FooterWithSegmentConstraint.constant;
     self.webView.hidden=false;
     // Do any additional setup after loading the view.
-    self.ViewLoading.layer.cornerRadius=8.0f;
+    self.ViewLoading.layer.cornerRadius=5.0f;
     self.ViewLoading.layer.masksToBounds=YES;
-    self.ViewLoading.layer.borderWidth = 1.0f;
-    self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
+    //self.ViewLoading.layer.borderWidth = 1.0f;
+    //self.ViewLoading.layer.borderColor=[[UIColor colorNamed:@"TrippoColor"]CGColor];
 
     
 }
@@ -413,5 +413,15 @@ NSURLSessionDataTask *downloadTask = [[NSURLSession sharedSession]
 
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
+
+/*
+ created date:      24/07/2021
+ last modified:     24/07/2021
+ remarks:
+ */
+- (IBAction)ClosePressed:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:Nil];
+}
+
 
 @end

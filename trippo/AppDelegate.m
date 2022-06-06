@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <Realm/Realm.h>
 #import "MenuVC.h"
-#import "LoginVC.h"
+//#import "LoginVC.h"
 
 @interface AppDelegate ()
 
@@ -100,7 +100,7 @@
      Migration block - to use if we change the model..
     */
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
-    config.schemaVersion = 19;
+    config.schemaVersion = 23;
     config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) { };
     [RLMRealmConfiguration setDefaultConfiguration:config];
     
@@ -129,6 +129,7 @@
     return YES;
 }
 
+/*
 -(void) InitRealm :(NSURL*) url {
     self.PoiBackgroundImageDictionary = [[NSMutableDictionary alloc] init];
     
@@ -139,7 +140,7 @@
     NSDictionary<NSString *, RLMSyncUser *> *allUsers = [RLMSyncUser allUsers];
     
     if (allUsers.count==1) {
-        /* idea here is to login with default configuration, so not being dependent upon internet. */
+        
         NSURL *syncURL = [NSURL URLWithString:@"realms://incredible-wooden-hat.de1a.cloud.realm.io/~/trippo"];
         RLMRealmConfiguration.defaultConfiguration = [RLMSyncUser.currentUser configurationWithURL:syncURL fullSynchronization:YES];
         
@@ -153,7 +154,7 @@
         [self.window makeKeyAndVisible];
     }
     else {
-        /* here we must log the user in */
+        
         self.window = [[UIWindow alloc] initWithFrame:UIScreen.mainScreen.bounds];
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         LoginVC *login = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
@@ -162,6 +163,7 @@
     }
     
 }
+*/
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

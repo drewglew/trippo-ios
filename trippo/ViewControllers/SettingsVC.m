@@ -33,6 +33,11 @@
 
     self.TableViewOpenNotifications.delegate = self;
     self.TableViewOpenNotifications.rowHeight = 150;
+    
+    self.TableViewOpenNotifications.layer.borderWidth = 1.0f;
+    self.TableViewOpenNotifications.layer.borderColor = [UIColor colorNamed:@"TrippoColor"].CGColor;
+    
+    
     [self GetOpenNotifications];
 }
 
@@ -145,6 +150,7 @@ remarks:
     
 }
 
+/*
 - (IBAction)LogoutButton:(id)sender {
     
     NSDictionary<NSString *, RLMSyncUser *> *allUsers = [RLMSyncUser allUsers];
@@ -153,10 +159,8 @@ remarks:
         RLMSyncUser *user = [RLMSyncUser currentUser];
         [user logOut];
     }
-    
-    
-    
 }
+*/
 
 -(BOOL) textFieldShouldReturn: (UITextField *) textField {
     [textField resignFirstResponder];
@@ -166,7 +170,7 @@ remarks:
 
 /*
  created date:      19/02/2019
- last modified:     19/02/2019
+ last modified:     25/07/2021
  remarks:
  */
 - (IBAction)ActionButtonPressed:(id)sender {
@@ -181,6 +185,9 @@ remarks:
             self.Settings.TripCellColumns = [NSNumber numberWithInt:3];
             self.Settings.ActivityCellColumns = [NSNumber numberWithInt:3];
             self.Settings.NodeScale = [NSNumber numberWithInt:60];
+            self.Settings.mainpoifiltername = @"";
+            self.Settings.mainpoifilterselectedtypes = @"";
+            self.Settings.mainpoifilterselectedtypes = @"";
             [self.realm beginWriteTransaction];
             [self ResetAssistantState :0];
             [self.realm addObject:self.Settings];

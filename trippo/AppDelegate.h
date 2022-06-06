@@ -14,7 +14,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, UNUserNotificationCenterDelegate>
 #define AppDelegateDef ((AppDelegate *)[[UIApplication sharedApplication] delegate])
-@property (strong) UIWindow *window;
+@property (strong, nonatomic) UIWindow *window;
 @property (nonatomic) NSString *databasename;
 @property (nonatomic) NSString *HomeCurrencyCode;
 @property (nonatomic) NSString *HomeCountryCode;

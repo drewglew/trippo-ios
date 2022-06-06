@@ -85,7 +85,7 @@
             moreButton.layer.cornerRadius = 5.0;
             moreButton.clipsToBounds = true;
             [moreButton addTarget:self action:@selector(MoreButtonPressed ) forControlEvents:UIControlEventTouchUpInside];
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3 weight:UIImageSymbolWeightRegular scale:UIImageSymbolScaleSmall];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:NodeSize/3 weight:UIImageSymbolWeightThin scale:UIImageSymbolScaleSmall];
             [moreButton setImage:[[UIImage systemImageNamed:@"command" withConfiguration:config] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         
             moreButton.tintColor = [UIColor colorNamed:@"TrippoColor"];

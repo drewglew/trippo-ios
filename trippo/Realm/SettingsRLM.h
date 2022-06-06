@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *userkey;
 @property NSString *username;
 @property NSString *useremail;
+@property NSString *mainpoifiltername;
+@property NSString *mainpoifilterstateindex;
+@property NSString *mainpoifilterselectedtypes;
 @property NSNumber<RLMInt> *TripCellColumns; // 1 to 5 default 3 ProjectListVC
 @property NSNumber<RLMInt> *ActivityCellColumns; // 1 to 5 default 3 ActivityListVC
 @property NSNumber<RLMInt> *NodeScale;  //20 to 200 default 60 / TravelPlanVC

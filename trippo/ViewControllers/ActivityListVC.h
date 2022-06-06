@@ -24,7 +24,7 @@
 #import "DiaryDatesNSO.h"
 #import "MultiplierConstraint.h"
 #import "CustomCollectionView.h"
-#import "WeatherRLM.h"
+#import "Reachability.h"
 
 
 
@@ -52,6 +52,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *ButtonRouting;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonPayment;
 @property RLMResults<ActivityRLM*> *AllActivitiesInTrip;
+
+
 @property (assign) bool keyboardIsShowing;
 @property (assign) bool WeatherActualStateIsCompleted;
 @property RLMRealm *realm;

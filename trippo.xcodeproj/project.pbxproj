@@ -34,7 +34,6 @@
 		3A273B95214CD95E00E3793E /* PaymentRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A273B94214CD95E00E3793E /* PaymentRLM.m */; };
 		3A291BD5213D917500FDFDFB /* ExchangeRateRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A291BD4213D917500FDFDFB /* ExchangeRateRLM.m */; };
 		3A291BD8213D949F00FDFDFB /* ExpenseRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A291BD7213D949F00FDFDFB /* ExpenseRLM.m */; };
-		3A2D8D7C215AA4DD009CDB32 /* tessdata in Resources */ = {isa = PBXBuildFile; fileRef = 3A2D8D7B215AA4DD009CDB32 /* tessdata */; };
 		3A3075DE21220446007D53C9 /* HCSStarRatingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A3075DC21220445007D53C9 /* HCSStarRatingView.m */; };
 		3A374EE620936A9300E5A652 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A374EE520936A9300E5A652 /* AppDelegate.m */; };
 		3A374EEC20936A9300E5A652 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A374EEA20936A9300E5A652 /* Main.storyboard */; };
@@ -61,6 +60,7 @@
 		3A6571DF22E247D20071E166 /* TravelPlanVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6571DE22E247D20071E166 /* TravelPlanVC.m */; };
 		3A6571E722E24C3A0071E166 /* JENCustomDecorationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6571E322E24C3A0071E166 /* JENCustomDecorationView.m */; };
 		3A6571E822E24C3A0071E166 /* JENNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6571E522E24C3A0071E166 /* JENNode.m */; };
+		3A6B3A7426B5943D00F78559 /* NearbyMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A6B3A7326B5943C00F78559 /* NearbyMapVC.m */; };
 		3A7397B0225A183800781004 /* ExpenseDataEntryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7397AF225A183800781004 /* ExpenseDataEntryVC.m */; };
 		3A79F213222D912500C68D77 /* MultiplierConstraint.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A79F212222D912500C68D77 /* MultiplierConstraint.m */; };
 		3A7A95D62324E4DF00DE5082 /* trippoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A7A95D52324E4DF00DE5082 /* trippoTests.m */; };
@@ -81,6 +81,9 @@
 		3AA4B98723CE4A8F00D2849F /* NotificationNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4B98623CE4A8F00D2849F /* NotificationNSO.m */; };
 		3AA4DA6821267FE900F7CAC9 /* CirclePart.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4DA6721267FE900F7CAC9 /* CirclePart.m */; };
 		3AA4DA6B2126807400F7CAC9 /* GraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA4DA6A2126807400F7CAC9 /* GraphView.m */; };
+		3AA691DF260A6A3C00DDCDBB /* CustomAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA691DE260A6A3C00DDCDBB /* CustomAnnotationView.m */; };
+		3AA691E4260A6ADD00DDCDBB /* ClusterAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA691E3260A6ADD00DDCDBB /* ClusterAnnotationView.m */; };
+		3AA691E9260A77FD00DDCDBB /* PoiMapVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AA691E8260A77FD00DDCDBB /* PoiMapVC.m */; };
 		3AAB60BF20FCF8C300A22047 /* NearbyListingVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB60BE20FCF8C300A22047 /* NearbyListingVC.m */; };
 		3AAB60C220FCFCE800A22047 /* NearbyPoiCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB60C120FCFCE800A22047 /* NearbyPoiCell.m */; };
 		3AAB60C520FCFEA600A22047 /* NearbyPoiNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAB60C420FCFEA600A22047 /* NearbyPoiNSO.m */; };
@@ -97,11 +100,11 @@
 		3AEBAC2225F3F4960090E57B /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AEBAC2125F3F4950090E57B /* CloudKit.framework */; };
 		3AEE018F20A0B05700AE260E /* AnnotationMK.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEE018E20A0B05700AE260E /* AnnotationMK.m */; };
 		3AEE019220A0CBB100AE260E /* CountryNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AEE019120A0CBB100AE260E /* CountryNSO.m */; };
-		3AF785C721308FFE00DD5A5B /* LoginVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785C621308FFE00DD5A5B /* LoginVC.m */; };
 		3AF785D6213129E400DD5A5B /* TripRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785D5213129E400DD5A5B /* TripRLM.m */; };
 		3AF785DC21319BB600DD5A5B /* ActivityRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785DB21319BB600DD5A5B /* ActivityRLM.m */; };
 		3AF785DF21319C8C00DD5A5B /* PoiRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785DE21319C8C00DD5A5B /* PoiRLM.m */; };
 		3AF785E221319D2200DD5A5B /* ImageCollectionRLM.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF785E121319D2100DD5A5B /* ImageCollectionRLM.m */; };
+		3AF7D1BE26AD6C6B002CB7F9 /* AttachNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF7D1BD26AD6C6B002CB7F9 /* AttachNSO.m */; };
 		3AFE3573209E504F00C46180 /* ScheduleNSO.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE3572209E504F00C46180 /* ScheduleNSO.m */; };
 		D47E4EACCBB20FD32F6AC828 /* libPods-trippo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E856F7EF5DAFD9B99FE6779E /* libPods-trippo.a */; };
 /* End PBXBuildFile section */
@@ -182,7 +185,6 @@
 		3A291BD4213D917500FDFDFB /* ExchangeRateRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExchangeRateRLM.m; sourceTree = "<group>"; };
 		3A291BD6213D949F00FDFDFB /* ExpenseRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExpenseRLM.h; sourceTree = "<group>"; };
 		3A291BD7213D949F00FDFDFB /* ExpenseRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExpenseRLM.m; sourceTree = "<group>"; };
-		3A2D8D7B215AA4DD009CDB32 /* tessdata */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tessdata; sourceTree = SOURCE_ROOT; };
 		3A3075DC21220445007D53C9 /* HCSStarRatingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HCSStarRatingView.m; sourceTree = "<group>"; };
 		3A3075DD21220445007D53C9 /* HCSStarRatingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HCSStarRatingView.h; sourceTree = "<group>"; };
 		3A374EE120936A9300E5A652 /* trHippo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = trHippo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -238,6 +240,8 @@
 		3A6571E322E24C3A0071E166 /* JENCustomDecorationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JENCustomDecorationView.m; sourceTree = "<group>"; };
 		3A6571E422E24C3A0071E166 /* JENNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JENNode.h; sourceTree = "<group>"; };
 		3A6571E522E24C3A0071E166 /* JENNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JENNode.m; sourceTree = "<group>"; };
+		3A6B3A7226B5943C00F78559 /* NearbyMapVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NearbyMapVC.h; sourceTree = "<group>"; };
+		3A6B3A7326B5943C00F78559 /* NearbyMapVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NearbyMapVC.m; sourceTree = "<group>"; };
 		3A7397AE225A183800781004 /* ExpenseDataEntryVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExpenseDataEntryVC.h; sourceTree = "<group>"; };
 		3A7397AF225A183800781004 /* ExpenseDataEntryVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExpenseDataEntryVC.m; sourceTree = "<group>"; };
 		3A79F211222D912500C68D77 /* MultiplierConstraint.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiplierConstraint.h; sourceTree = "<group>"; };
@@ -279,6 +283,12 @@
 		3AA4DA6721267FE900F7CAC9 /* CirclePart.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CirclePart.m; sourceTree = "<group>"; };
 		3AA4DA692126807300F7CAC9 /* GraphView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
 		3AA4DA6A2126807400F7CAC9 /* GraphView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GraphView.m; sourceTree = "<group>"; };
+		3AA691DD260A6A3C00DDCDBB /* CustomAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomAnnotationView.h; sourceTree = "<group>"; };
+		3AA691DE260A6A3C00DDCDBB /* CustomAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomAnnotationView.m; sourceTree = "<group>"; };
+		3AA691E2260A6ADD00DDCDBB /* ClusterAnnotationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClusterAnnotationView.h; sourceTree = "<group>"; };
+		3AA691E3260A6ADD00DDCDBB /* ClusterAnnotationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClusterAnnotationView.m; sourceTree = "<group>"; };
+		3AA691E7260A77FD00DDCDBB /* PoiMapVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PoiMapVC.h; sourceTree = "<group>"; };
+		3AA691E8260A77FD00DDCDBB /* PoiMapVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PoiMapVC.m; sourceTree = "<group>"; };
 		3AAB42EA223EF08A0018396C /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwitterKit.framework; path = Pods/TwitterKit/iOS/TwitterKit.framework; sourceTree = "<group>"; };
 		3AAB60BD20FCF8C300A22047 /* NearbyListingVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NearbyListingVC.h; sourceTree = "<group>"; };
 		3AAB60BE20FCF8C300A22047 /* NearbyListingVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NearbyListingVC.m; sourceTree = "<group>"; };
@@ -311,8 +321,6 @@
 		3AEE019020A0CBB100AE260E /* CountryNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CountryNSO.h; sourceTree = "<group>"; };
 		3AEE019120A0CBB100AE260E /* CountryNSO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CountryNSO.m; sourceTree = "<group>"; };
 		3AF2404C2180EC1D007B280F /* trippo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = trippo.entitlements; sourceTree = "<group>"; };
-		3AF785C521308FFE00DD5A5B /* LoginVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoginVC.h; sourceTree = "<group>"; };
-		3AF785C621308FFE00DD5A5B /* LoginVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LoginVC.m; sourceTree = "<group>"; };
 		3AF785D4213129E400DD5A5B /* TripRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TripRLM.h; sourceTree = "<group>"; };
 		3AF785D5213129E400DD5A5B /* TripRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TripRLM.m; sourceTree = "<group>"; };
 		3AF785DA21319BB600DD5A5B /* ActivityRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ActivityRLM.h; sourceTree = "<group>"; };
@@ -321,6 +329,8 @@
 		3AF785DE21319C8C00DD5A5B /* PoiRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PoiRLM.m; sourceTree = "<group>"; };
 		3AF785E021319D2100DD5A5B /* ImageCollectionRLM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCollectionRLM.h; sourceTree = "<group>"; };
 		3AF785E121319D2100DD5A5B /* ImageCollectionRLM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageCollectionRLM.m; sourceTree = "<group>"; };
+		3AF7D1BC26AD6C6B002CB7F9 /* AttachNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AttachNSO.h; sourceTree = "<group>"; };
+		3AF7D1BD26AD6C6B002CB7F9 /* AttachNSO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AttachNSO.m; sourceTree = "<group>"; };
 		3AFE3571209E504F00C46180 /* ScheduleNSO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ScheduleNSO.h; sourceTree = "<group>"; };
 		3AFE3572209E504F00C46180 /* ScheduleNSO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ScheduleNSO.m; sourceTree = "<group>"; };
 		E856F7EF5DAFD9B99FE6779E /* libPods-trippo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-trippo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -422,7 +432,6 @@
 				3AF2404C2180EC1D007B280F /* trippo.entitlements */,
 				3A7D4C9923CD0C6D00843833 /* trHippoLaunchScreen.storyboard */,
 				3A93FC87232D889F00CC1F5F /* country.json */,
-				3A2D8D7B215AA4DD009CDB32 /* tessdata */,
 				3AF785D3213129A600DD5A5B /* Realm */,
 				3A224CB12095917300075457 /* CollectionViewCells */,
 				3A224CB02095916000075457 /* TableViewCells */,
@@ -473,8 +482,6 @@
 				3AAB60BE20FCF8C300A22047 /* NearbyListingVC.m */,
 				3A63496E212F12AA00BE53FC /* SettingsVC.h */,
 				3A63496F212F12AA00BE53FC /* SettingsVC.m */,
-				3AF785C521308FFE00DD5A5B /* LoginVC.h */,
-				3AF785C621308FFE00DD5A5B /* LoginVC.m */,
 				3A046D4F2224621200EA26A9 /* DocumentsVC.h */,
 				3A046D502224621200EA26A9 /* DocumentsVC.m */,
 				3A523F602242CAD60073305D /* PoiPreviewVC.h */,
@@ -483,6 +490,10 @@
 				3A6571DE22E247D20071E166 /* TravelPlanVC.m */,
 				3AB52F5C22E4D117000E9ED8 /* TravelPlanDetailVC.h */,
 				3AB52F5D22E4D117000E9ED8 /* TravelPlanDetailVC.m */,
+				3AA691E7260A77FD00DDCDBB /* PoiMapVC.h */,
+				3AA691E8260A77FD00DDCDBB /* PoiMapVC.m */,
+				3A6B3A7226B5943C00F78559 /* NearbyMapVC.h */,
+				3A6B3A7326B5943C00F78559 /* NearbyMapVC.m */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -542,6 +553,12 @@
 				3AB52F6022E966F6000E9ED8 /* JourneyItemNSO.m */,
 				3AA4B98523CE4A8F00D2849F /* NotificationNSO.h */,
 				3AA4B98623CE4A8F00D2849F /* NotificationNSO.m */,
+				3AA691DD260A6A3C00DDCDBB /* CustomAnnotationView.h */,
+				3AA691DE260A6A3C00DDCDBB /* CustomAnnotationView.m */,
+				3AA691E2260A6ADD00DDCDBB /* ClusterAnnotationView.h */,
+				3AA691E3260A6ADD00DDCDBB /* ClusterAnnotationView.m */,
+				3AF7D1BC26AD6C6B002CB7F9 /* AttachNSO.h */,
+				3AF7D1BD26AD6C6B002CB7F9 /* AttachNSO.m */,
 			);
 			path = GenericObjects;
 			sourceTree = "<group>";
@@ -685,7 +702,7 @@
 		3A374ED920936A9200E5A652 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0930;
+				LastUpgradeCheck = 1250;
 				ORGANIZATIONNAME = "andrew glew";
 				TargetAttributes = {
 					3A374EE020936A9200E5A652 = {
@@ -734,7 +751,6 @@
 				3A374EEE20936A9600E5A652 /* Assets.xcassets in Resources */,
 				3A7D4C9A23CD0C7000843833 /* trHippoLaunchScreen.storyboard in Resources */,
 				3A374EEC20936A9300E5A652 /* Main.storyboard in Resources */,
-				3A2D8D7C215AA4DD009CDB32 /* tessdata in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +812,7 @@
 			files = (
 				3A7D8ABB22B82B7A002DC657 /* WeatherRLM.m in Sources */,
 				3AA4DA6821267FE900F7CAC9 /* CirclePart.m in Sources */,
+				3AA691E9260A77FD00DDCDBB /* PoiMapVC.m in Sources */,
 				3A224CBA2095F1DF00075457 /* ProjectDataEntryVC.m in Sources */,
 				3A224CC320976B1100075457 /* ActivityNSO.m in Sources */,
 				3A224CC02096E2C700075457 /* ActivityListCell.m in Sources */,
@@ -812,6 +829,7 @@
 				3A85AD7D22BFE36E007965D8 /* WeatherCell.m in Sources */,
 				3A374EFC209372CC00E5A652 /* MenuVC.m in Sources */,
 				3AF785DC21319BB600DD5A5B /* ActivityRLM.m in Sources */,
+				3AF7D1BE26AD6C6B002CB7F9 /* AttachNSO.m in Sources */,
 				3A224CC62097792800075457 /* PoiSearchVC.m in Sources */,
 				3A374F032093735300E5A652 /* ProjectListVC.m in Sources */,
 				3A6571DA22E243EB0071E166 /* JENSubtreeView.m in Sources */,
@@ -820,10 +838,10 @@
 				3A58B4C3211F547100699008 /* TypeNSO.m in Sources */,
 				3AAB60BF20FCF8C300A22047 /* NearbyListingVC.m in Sources */,
 				3A374F152093877F00E5A652 /* PoiNSO.m in Sources */,
-				3AF785C721308FFE00DD5A5B /* LoginVC.m in Sources */,
 				3A44DEE5230893DE00756AD2 /* ItineraryRLM.m in Sources */,
 				3AA4B98423CE3DBD00D2849F /* NotificationCell.m in Sources */,
 				3A046D4B222303DA00EA26A9 /* AttachmentRLM.m in Sources */,
+				3A6B3A7426B5943D00F78559 /* NearbyMapVC.m in Sources */,
 				3AF785E221319D2200DD5A5B /* ImageCollectionRLM.m in Sources */,
 				3A6571DC22E243EB0071E166 /* JENTreeView.m in Sources */,
 				3A9CE745221C879700A4CB98 /* SettingsRLM.m in Sources */,
@@ -851,6 +869,7 @@
 				3A97DCA92250FBE400B64D7C /* TTTAttributedLabel.m in Sources */,
 				3AB915F520D1917B001A08A9 /* WikiVC.m in Sources */,
 				3A58B4C0211F534E00699008 /* TypeCell.m in Sources */,
+				3AA691DF260A6A3C00DDCDBB /* CustomAnnotationView.m in Sources */,
 				3AB915EF20CD9BE4001A08A9 /* ImageCollectionCell.m in Sources */,
 				3A97DCA62250A66100B64D7C /* CustomCollectionView.m in Sources */,
 				3AEE018F20A0B05700AE260E /* AnnotationMK.m in Sources */,
@@ -877,6 +896,7 @@
 				3A7397B0225A183800781004 /* ExpenseDataEntryVC.m in Sources */,
 				3A7D4C9823CB02A500843833 /* AssistantRLM.m in Sources */,
 				3A374EE620936A9300E5A652 /* AppDelegate.m in Sources */,
+				3AA691E4260A6ADD00DDCDBB /* ClusterAnnotationView.m in Sources */,
 				3A81B50C209D90CA005CABDA /* AlphaView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -937,6 +957,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -963,7 +984,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -996,6 +1017,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -1016,7 +1038,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
@@ -1039,12 +1061,12 @@
 					"$(PROJECT_DIR)/Pods/TwitterKit/iOS",
 				);
 				INFOPLIST_FILE = trippo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1052,10 +1074,7 @@
 					"/usr/lib/libc++.1.dylib",
 					"-l\"Realm\"",
 					"-l\"TOCropViewController\"",
-					"-l\"TesseractOCRiOS\"",
 					"-l\"c++\"",
-					"-l\"lept\"",
-					"-l\"realmcore-ios\"",
 					"-l\"stdc++\"",
 					"-l\"z\"",
 					"-framework",
@@ -1087,12 +1106,12 @@
 					"$(PROJECT_DIR)/Pods/TwitterKit/iOS",
 				);
 				INFOPLIST_FILE = trippo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.9.2;
+				MARKETING_VERSION = 1.9.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1100,10 +1119,7 @@
 					"/usr/lib/libc++.1.dylib",
 					"-l\"Realm\"",
 					"-l\"TOCropViewController\"",
-					"-l\"TesseractOCRiOS\"",
 					"-l\"c++\"",
-					"-l\"lept\"",
-					"-l\"realmcore-ios\"",
 					"-l\"stdc++\"",
 					"-l\"z\"",
 					"-framework",

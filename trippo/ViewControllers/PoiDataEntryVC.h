@@ -25,7 +25,6 @@
 #import "PoiRLM.h"
 #import "TripRLM.h"
 #import "SettingsRLM.h"
-#import <TesseractOCR/TesseractOCR.h>
 #import "TOCropViewController.h"
 #import "AnnotationMK.h"
 #import "ActivityDataEntryVC.h"
@@ -39,7 +38,7 @@
 @end
 
 
-@interface PoiDataEntryVC : UIViewController<UICollectionViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MKMapViewDelegate, ImagePickerDelegate, WikiGeneratorDelegate, UIScrollViewDelegate, UITextViewDelegate,UITextFieldDelegate, CLLocationManagerDelegate, G8TesseractDelegate, TOCropViewControllerDelegate, ActivityDataEntryDelegate>
+@interface PoiDataEntryVC : UIViewController<UICollectionViewDelegate, UIPickerViewDelegate, UIPickerViewDataSource, UICollectionViewDataSource, UIImagePickerControllerDelegate, UINavigationControllerDelegate, MKMapViewDelegate, ImagePickerDelegate, WikiGeneratorDelegate, UIScrollViewDelegate, UITextViewDelegate,UITextFieldDelegate, CLLocationManagerDelegate, TOCropViewControllerDelegate, ActivityDataEntryDelegate>
 
 @property (nonatomic, readwrite) CLLocationCoordinate2D Coordinates;
 @property (nonatomic) NSString *Title;
@@ -69,6 +68,8 @@
 @property (strong, nonatomic) NSArray *DistancePickerItems;
 @property (weak, nonatomic) IBOutlet UITextField *TextFieldTitle;
 @property (weak, nonatomic) IBOutlet UITextView *TextViewNotes;
+@property (weak, nonatomic) IBOutlet UITextField *TextFieldWebsite;
+
 @property (weak, nonatomic)  UITextField *ActiveTextField;
 @property (weak, nonatomic) UITextView *ActiveTextView;
 

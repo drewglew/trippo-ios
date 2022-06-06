@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AttachmentRLM.h"
+#import "AttachNSO.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (weak, nonatomic) IBOutlet UILabel *LabelUploadedDt;
 @property (weak, nonatomic) IBOutlet UILabel *LabelInfo;
 @property (weak, nonatomic) IBOutlet UIButton *ButtonAddNew;
-@property (strong, nonatomic) AttachmentRLM *document;
+@property (strong, nonatomic) AttachNSO *document;
 @property (weak, nonatomic) IBOutlet UIImageView *ImageViewChecked;
 //@property (assign) bool isAttachmentSelected;
 @end

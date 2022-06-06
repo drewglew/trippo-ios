@@ -66,6 +66,10 @@ MKLocalSearchResponse *results;
     self.TableViewSearchResult.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.SegmentMapType.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
     [self.SegmentMapType setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
+    self.SegmentLongPressMode.selectedSegmentTintColor = [UIColor colorNamed:@"TrippoColor"];
+    [self.SegmentLongPressMode setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor systemBackgroundColor], NSFontAttributeName: [UIFont systemFontOfSize:13]} forState:UIControlStateSelected];
+    
     /* new block 20200111 */
     RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
     
@@ -106,7 +110,7 @@ MKLocalSearchResponse *results;
 
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
         button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
         [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
         [button setTintColor: [UIColor secondarySystemBackgroundColor]];
         [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -118,7 +122,6 @@ MKLocalSearchResponse *results;
 
 -(void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
 }
 
 /*
@@ -252,41 +255,187 @@ remarks:
 
 /*
  created date:      27/04/2018
- last modified:     29/04/2018
+ last modified:     23/03/2021
  remarks: User gestures a long tap, the annotation is placed where the figure is.
  */
 -(void)AddAnnotationToMap:(UILongPressGestureRecognizer *)gesture
 {
     UIGestureRecognizer *recognizer = (UIGestureRecognizer*) gesture;
     
-    if(UIGestureRecognizerStateBegan == gesture.state)
-    {
+    if(UIGestureRecognizerStateBegan == gesture.state) {
+    
         CGPoint tapPoint = [recognizer locationInView:self.MapView];
         CLLocationCoordinate2D location = [self.MapView convertPoint:tapPoint toCoordinateFromView:self.MapView];
+        
+        if ([self.SegmentLongPressMode selectedSegmentIndex] == 0)
+        {
+            CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
 
-        CLGeocoder *geoCoder = [[CLGeocoder alloc] init];
-        
-        
-        /* work here 31/08/2019 */
+            [geoCoder reverseGeocodeLocation: [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude] completionHandler:^(NSArray *placemarks, NSError *error) {
+                if (!error) {
+                    
+                    AnnotationMK *anno = [[AnnotationMK alloc] init];
 
-        
-        
-        [geoCoder reverseGeocodeLocation: [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude] completionHandler:^(NSArray *placemarks, NSError *error) {
-            if (!error) {
+                    if ([placemarks count]>0) {
                 
-                AnnotationMK *anno = [[AnnotationMK alloc] init];
+                        CLPlacemark *placemark = [placemarks firstObject];
+                        anno.coordinate = placemark.location.coordinate;
+                        anno.title = placemark.name;
+                        
+                        NSString *AdminArea = placemark.subAdministrativeArea;
+                        if ([AdminArea isEqualToString:@""] || AdminArea == NULL) {
+                            AdminArea = placemark.administrativeArea;
+                        }
+                        
+                        anno.subtitle = [NSString stringWithFormat:@"%@, %@", AdminArea, placemark.ISOcountryCode ];
+                        
+                        anno.Country = placemark.country;
+                        anno.SubLocality = placemark.subLocality;
+                        anno.Locality = placemark.locality;
+                        anno.PostCode = placemark.postalCode;
+                        anno.CountryCode = placemark.ISOcountryCode;
+                        anno.FullThoroughFare = [NSString stringWithFormat:@"%@, %@", placemark.thoroughfare, placemark.subThoroughfare];
+                        //anno.subtitle = placemark.subLocality;
+                        [self.MapView addAnnotation:anno];
+                        [self.MapView selectAnnotation:anno animated:true];
+                        
+                        NSLog(@"%@", anno);
 
-                if ([placemarks count]>0) {
+                        
+                    } else {
+                        anno.title = @"Unknown Place";
+                    }
+                     [self.MapView addAnnotation:anno];
+                     [self.MapView selectAnnotation:anno animated:true];
+                }
+            }];
+            
+                
+        } else {
+                
+            CLLocationDistance radius = 50.0;
+            
+            
+            MKLocalPointsOfInterestRequest *poiRequest = [[MKLocalPointsOfInterestRequest alloc] initWithCenterCoordinate:location radius:radius];
+    
+            localSearch = [[MKLocalSearch alloc] initWithPointsOfInterestRequest:poiRequest];
+            [localSearch startWithCompletionHandler:^(MKLocalSearchResponse *response, NSError *error){
+
+                
+                if ([response.mapItems count] == 0) {
+                    return;
+                }
+                if (!error) {
+                    NSLog(@"Whole response %@", response);
+                    
+                    AnnotationMK *anno = [[AnnotationMK alloc] init];
+                    
+                    MKMapItem *poi = [response.mapItems firstObject];
+                    
+                    NSLog(@"Category = %@",poi.pointOfInterestCategory);
+                    
+                    MKPlacemark *placemark = poi.placemark;
                     
                     
+                    int categoryid = 0;
+                    if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryAirport"]) {
+                        categoryid = 1;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryBeach"]) {
+                        categoryid = 17;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryBrewery"]) {
+                        categoryid = 4;
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryCafe"]) {
+                        categoryid = 36;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryCampground"]) {
+                        // TO ADD
+                        categoryid = 58;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryCarRental"]) {
+                        categoryid = 7;
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryFitnessCenter"]) {
+                        categoryid = 45;
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryFoodMarket"]) {
+                        categoryid = 43;
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryGasStation"]) {
+                        categoryid = 34;
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryHospital"]) {
+                        // cross.case
+                        
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryHotel"]) {
+                        categoryid = 0;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryLibrary"]) {
+
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryMovieTheater"]) {
+                        categoryid = 12;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryMuseum"]) {
+                        categoryid = 30;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryNationalPark"]) {
+                        categoryid = 31;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryNightlife"]) {
+                        categoryid = 16;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryPark"]) {
+                        categoryid = 14;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryParking"]) {
+                        categoryid = 8;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryPublicTransport"]) {
+                        // TO ADD
+                        categoryid = 51;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryRestaurant"]) {
+                        categoryid = 36;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategorySchool"]) {
+                        categoryid = 41;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryStadium"]) {
+                        categoryid = 53;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryStore"]) {
+                        categoryid = 43;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryTheater"]) {
+                        categoryid = 48;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryUniversity"]) {
+                        categoryid = 41;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryWinery"]) {
+                        categoryid = 19;
+                    }
+                    else if ([poi.pointOfInterestCategory isEqualToString:@"MKPOICategoryZoo"]) {
+                        categoryid = 57;
+                    }
                     
-                    CLPlacemark *placemark = [placemarks firstObject];
+                        
+                    
+                    NSLog(@"First Object - %@", poi);
+                    
                     anno.coordinate = placemark.location.coordinate;
-                    anno.title = placemark.name;
+                    anno.title = poi.name;
                     
-                   
-                    
-                     NSString *AdminArea = placemark.subAdministrativeArea;
+                    NSString *AdminArea = placemark.subAdministrativeArea;
                     if ([AdminArea isEqualToString:@""] || AdminArea == NULL) {
                         AdminArea = placemark.administrativeArea;
                     }
@@ -299,24 +448,18 @@ remarks:
                     anno.PostCode = placemark.postalCode;
                     anno.CountryCode = placemark.ISOcountryCode;
                     anno.FullThoroughFare = [NSString stringWithFormat:@"%@, %@", placemark.thoroughfare, placemark.subThoroughfare];
-
-                    //anno.subtitle = placemark.subLocality;
+                    anno.Website = [NSString stringWithFormat:@"%@",poi.url];
+                    anno.categoryid = [NSNumber numberWithInt:categoryid];
+                    
                     [self.MapView addAnnotation:anno];
                     [self.MapView selectAnnotation:anno animated:true];
                     
-                    NSLog(@"%@", anno);
-
-                    
                 } else {
-                    anno.title = @"Unknown Place";
+                    return;
                 }
-                 [self.MapView addAnnotation:anno];
-                 [self.MapView selectAnnotation:anno animated:true];
-            }
-        }];
-        
+            }];
+        }
     }
-    
 }
 
 /*
@@ -481,6 +624,8 @@ remarks:
     if (![annotation isKindOfClass:[MKUserLocation class]]) {
         AnnotationMK *annotation = (AnnotationMK *)[view annotation];
         self.PointOfInterest.name = annotation.title;
+        self.PointOfInterest.website = annotation.Website;
+        self.PointOfInterest.categoryid = annotation.categoryid;
         self.PointOfInterest.administrativearea = annotation.subtitle;
         self.PointOfInterest.lat = [NSNumber numberWithDouble:annotation.coordinate.latitude];
         self.PointOfInterest.lon = [NSNumber numberWithDouble:annotation.coordinate.longitude];
@@ -521,6 +666,8 @@ remarks:
     self.PointOfInterest.country = @"";
     self.PointOfInterest.countrycode = @"";
     self.PointOfInterest.fullthoroughfare = @"";
+    self.PointOfInterest.website = @"";
+    self.PointOfInterest.categoryid = [NSNumber numberWithInt:0];
     self.Coordinates = kCLLocationCoordinate2DInvalid;
     self.PointOfInterest.lat = [NSNumber numberWithDouble:0];
     self.PointOfInterest.lon = [NSNumber numberWithDouble:0];
@@ -557,10 +704,9 @@ remarks:
     bool coordinatesAreValid = (CLLocationCoordinate2DIsValid(self.Coordinates));
                                 
     if (coordinatesAreValid) {
-        [self performSegueWithIdentifier:@"ShowPoiWithMapData" sender:self];
+       [self performSegueWithIdentifier:@"ShowPoiWithMapData" sender:self];
 
     } else {
-        
         NSLog(@"Nothing doing!");
     }
 }
@@ -574,6 +720,21 @@ remarks:
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
+
+/*
+ created date:      24/03/2021
+ last modified:     24/03/2021
+ remarks:           segue controls .
+ */
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    
+    if([identifier isEqualToString:@"ShowPoiWithMapData"]){
+        return (CLLocationCoordinate2DIsValid(self.Coordinates));
+    } else {
+        return TRUE;
+    }
+}
+
 /*
  created date:      28/04/2018
  last modified:     10/08/2018
@@ -584,6 +745,7 @@ remarks:
     // Pass the selected object to the new view controller.
     
     if([segue.identifier isEqualToString:@"ShowPoiWithMapData"]){
+    
         PoiDataEntryVC *controller = (PoiDataEntryVC *)segue.destinationViewController;
         controller.delegate = self;
         controller.realm = self.realm;
@@ -608,6 +770,10 @@ remarks:
         controller.readonlyitem = false;
         controller.fromproject = self.fromproject;
         controller.fromnearby = false;
+        if (self.fromproject) {
+            controller.TripItem = self.TripItem;
+            controller.ActivityItem = self.ActivityItem;
+        }
     }
 }
 

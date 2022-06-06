@@ -6,7 +6,6 @@ target 'trippo' do
   # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
 
 pod 'Realm'
-pod 'TesseractOCRiOS'
 pod 'TOCropViewController'
 
 end

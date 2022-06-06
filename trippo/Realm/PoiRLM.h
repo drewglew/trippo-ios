@@ -35,6 +35,7 @@
 @property (strong, nonatomic) NSString *authorname;
 @property (strong, nonatomic) NSString *authorkey;
 @property (strong, nonatomic) NSString *sharedby;
+@property (strong, nonatomic) NSString *website;
 @property (strong, nonatomic) NSString *devicesharedby;
 @property (strong, nonatomic) NSDate *exporteddt;
 @property (strong, nonatomic) NSNumber<RLMInt> *poisharedflag;

@@ -10,6 +10,8 @@
 #import "ActivityRLM.h"
 #import "AttachmentCell.h"
 #import "ToolBoxNSO.h"
+#import "AttachNSO.h"
+#import <MobileCoreServices/MobileCoreServices.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -23,6 +25,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <DocumentsDelegate> delegate;
 @property (strong, nonatomic) NSMutableArray *documentitems;
 @property RLMResults<AttachmentRLM*> *DocumentCollection;
+
+
+
 @property ActivityRLM *Activity;
 @property RLMRealm *realm;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *FooterHeightConstraint;

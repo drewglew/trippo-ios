@@ -24,6 +24,7 @@ CGFloat DocumentFooterFilterHeightConstant;
     [super viewDidLoad];
     self.TableViewDocuments.delegate = self;
     self.TableViewDocuments.rowHeight = 75.0f;
+    self.TableViewDocuments.allowsMultipleSelection = YES;
   
     [self loadAttachmentListing];
 
@@ -36,15 +37,34 @@ CGFloat DocumentFooterFilterHeightConstant;
     DocumentFooterFilterHeightConstant = self.FooterHeightConstraint.constant;
     __weak typeof(self) weakSelf = self;
     self.notification = [self.realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
-        [weakSelf loadAttachmentListing];
+        //[weakSelf loadAttachmentListing];
         [weakSelf.TableViewDocuments reloadData];
     }];
     
 }
 
 
+/*
+ created date:      25/02/2019
+ last modified:     25/07/2021
+ remarks:
+ */
 -(void)loadAttachmentListing {
-    self.DocumentCollection = [AttachmentRLM allObjects];
+    
+    self.DocumentCollection = [AttachmentRLM objectsWhere:@"isactivity=0"];
+    self.documentitems = [[NSMutableArray alloc] init];
+    for (AttachmentRLM *baseAttach in self.DocumentCollection) {
+        
+        AttachmentRLM *activityAttach = [[self.Activity.attachments objectsWhere:@"key=%@",baseAttach.key] firstObject];
+        
+        AttachNSO *a = [[AttachNSO alloc] init];
+        a.filename = baseAttach.filename;
+        a.importeddate = baseAttach.importeddate;
+        a.key = baseAttach.key;
+        a.notes = baseAttach.notes;
+        a.isselected = [NSNumber numberWithInteger:[activityAttach.isselected integerValue]];
+        [self.documentitems addObject:a];
+    }
 }
 
 
@@ -64,78 +84,66 @@ CGFloat DocumentFooterFilterHeightConstant;
  */
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.DocumentCollection.count;
+    return self.documentitems.count;
 }
 
 
 /*
  created date:      25/02/2019
- last modified:     27/02/2019
+ last modified:     25/07/2021
  remarks:           table view with sections.
  */
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     AttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"AttachmentCellId"];
-    AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
+    if (!cell) {
+        cell = [[AttachmentCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"AttachmentCellId"];
+    }
+    AttachNSO *document = [self.documentitems objectAtIndex:indexPath.row];
+    cell.document = document;
     cell.LabelNotes.text = document.notes;
     cell.LabelUploadedDt.text = [NSString stringWithFormat:@"%@", [ToolBoxNSO FormatPrettyDate:document.importeddate]];
-    cell.document = document;
-       return cell;
+    return cell;
 }
 
 /*
- created date:      26/02/2019
- last modified:     26/02/2019
- remarks:           table view with sections.
+ created date:      25/02/2019
+ last modified:     25/07/2021
+ remarks:
  */
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(AttachmentCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
-    RLMResults <AttachmentRLM*> *items = [self.Activity.attachments objectsWhere:@"key=%@",document.key];
-    
-    // NSLog(@"Key - %@",self.Activity.attachments[0].key);
-    NSLog(@"document = %@",document);
-    NSLog(@"activity attachments  = %@",self.Activity);
-    
-    if (items.count==0) {
-        [cell setSelected: false];
-        [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    } else {
-        
+    AttachNSO *document = [self.documentitems objectAtIndex:indexPath.row];    
+    if (cell.document.isselected==[NSNumber numberWithInteger:1]) {
         [cell setSelected: true];
         [tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    } else {
+        [cell setSelected: false];
+        [tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
 }
 
 
-
+/*
+ created date:      25/02/2019
+ last modified:     25/07/2021
+ remarks:
+ */
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    
-    
-    AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
-    
-    NSLog(@"%@",document);
-    
-    [self.realm transactionWithBlock:^{
-        document.isselected = [NSNumber numberWithInt:1];
-    }];
-    
-    
+    AttachNSO *document = [self.documentitems objectAtIndex:indexPath.row];
+    document.isselected = [NSNumber numberWithInteger:1];
 }
 
 
+/*
+ created date:      25/02/2019
+ last modified:     25/07/2021
+ remarks:
+ */
 - (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath  {
-    AttachmentRLM *document = [self.DocumentCollection objectAtIndex:indexPath.row];
-    
-    NSLog(@"%@",document);
-    
-    [self.realm transactionWithBlock:^{
-        document.isselected = [NSNumber numberWithInt:0];
-    }];
-    
-    
+    AttachNSO *document = [self.documentitems objectAtIndex:indexPath.row];
+    document.isselected = [NSNumber numberWithInteger:0];
 }
 
 /*
@@ -188,47 +196,7 @@ CGFloat DocumentFooterFilterHeightConstant;
     return edit;
 }
 
-/*
-created date:      14/09/2019
-last modified:     14/09/2019
-remarks:
-*/
-- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView leadingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
- 
-    UIContextualAction *deleteAction = [[UIContextualAction alloc] init];
-    
-    deleteAction = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"Delete" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [self tableView:tableView deleteDocument:indexPath];
-        self.TableViewDocuments.editing = NO;
-    }];
-    
-    deleteAction.backgroundColor = [UIColor systemRedColor];
-    deleteAction.image = [UIImage systemImageNamed:@"trash"];
 
-    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[deleteAction]];
-    config.performsFirstActionWithFullSwipe = NO;
-    return config;
-}
-
-/*
- created date:      27/02/2019
- last modified:     27/02/2019
- remarks:           Might not be totally necessary, but seperated out from editActionsForRowAtIndexPath method above.
- */
-- (void)tableView:(UITableView *)tableView deleteDocument:(NSIndexPath *)indexPath  {
-    
-    AttachmentRLM *item = [self.DocumentCollection objectAtIndex:indexPath.row];
-    
-    RLMResults *usedactivities = [ActivityRLM objectsWhere:@"ANY attachments.key = %@",item.key];
-    
-    if (usedactivities.count == 0) {
-        [self.realm transactionWithBlock:^{
-            [self.realm deleteObject:item];
-        }];
-    }
-    
-    NSLog(@"delete called!");
-}
 
 
 /*
@@ -244,7 +212,7 @@ remarks:
     [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                         [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
+                         [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneButtonClickedDismissKeyboard)],
                          nil];
     [doneToolbar sizeToFit];
     textField.inputAccessoryView = doneToolbar;
@@ -270,59 +238,32 @@ remarks:
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
-
+/*
+ created date:      25/02/2019
+ last modified:     25/07/2021
+ remarks:
+ */
 - (IBAction)ActionPressed:(id)sender {
     
-    //NSArray *selectedIndexPathArray = [self.TableViewDocuments indexPathsForSelectedRows];
-    
-    
-    
     
     [self.Activity.realm beginWriteTransaction];
-    
     [self.Activity.attachments removeAllObjects];
     [self.Activity.realm commitWriteTransaction];
-    
     [self.Activity.realm beginWriteTransaction];
     
-    //NSArray *selectedIndexPathArray = [self.TableViewDocuments indexPathsForSelectedRows];
-    
-    for (AttachmentRLM *a in self.DocumentCollection) {
-        
-        NSLog(@"Attachment: %@",a);
-        
-        if ([a.isselected intValue] == 1) {
-            [self.Activity.attachments addObject:a];
+    for (AttachNSO *a in self.documentitems) {
+        if ([a.isselected longValue] == 1) {
+            AttachmentRLM *attach = [[AttachmentRLM alloc] init];
+            attach.filename = a.filename;
+            attach.importeddate = a.importeddate;
+            attach.key = a.key;
+            attach.isselected = a.isselected;
+            attach.isactivity = [NSNumber numberWithInteger:1];
+            attach.notes = a.notes;
+            [self.Activity.attachments addObject:attach];
         }
     }
-    /*for (NSIndexPath *indexPath in selectedIndexPathArray) {
-        AttachmentRLM *item = [self.DocumentCollection objectAtIndex:indexPath.row];
-        
-        [self.Activity.attachments addObject:item];
-        
-        NSLog(@"Activity Attachments: %@",self.Activity.attachments );
-        NSLog(@"%@", item.notes);
-    }*/
-    
-    //NSLog(@"number of attachments in Activity:%lu",(unsigned long)self.Activity.attachments.count);
-    
-    /*
-    for (int section = 0; section < [self.TableViewDocuments numberOfSections]; section++) {
-        for (int row = 0; row < [self.TableViewDocuments numberOfRowsInSection:section]; row++) {
-            NSIndexPath* cellPath = [NSIndexPath indexPathForRow:row inSection:section];
-            AttachmentCell* cell = [self.TableViewDocuments cellForRowAtIndexPath:cellPath];
-            
-            
-            if (cell.isSelected) {
-                 [self.Activity.attachments addObject:cell.document];
-            } else {
-                NSLog(@"%@",cell.document.notes);
-            }
-        }
-    }
-     */
     [self.Activity.realm commitWriteTransaction];
-    
     [self dismissViewControllerAnimated:YES completion:Nil];
 }
 
@@ -382,6 +323,7 @@ remarks:
                                                                                                  a.importeddate = [NSDate date];
                                                                                                  a.filename = [NSString stringWithFormat:@"/PdfImportedDocs/%@.pdf",a.key];
                                                                                                  a.notes = PdfFileName;
+                                                                                                 a.isactivity = [NSNumber numberWithInteger:0];
                                                                                                  
                                                                                                  pdfDirectory = [pdfDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"PdfImportedDocs/%@.pdf", a.key]];
                                                                                                  
@@ -425,6 +367,81 @@ remarks:
 - (IBAction)SegmentFilter:(id)sender {
 }
 
+/*
+ created date:      21/03/2021
+ last modified:     21/03/2021
+ remarks:
+ */
+- (IBAction)PasteButtonPressed:(id)sender {
 
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    NSData *data = [pasteboard dataForPasteboardType:(NSString *)kUTTypePDF];
+    
+    
+
+    if (data!=nil) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Pasting PDF Document"
+                                                                                 message:@"Please amend the file name, so you can identify it when attaching to a Point of Interest or an Activity."
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        [alertController.view setTintColor:[UIColor labelColor]];
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            // optionally configure the text field
+            textField.text = @"Pasted PDF Document";
+            textField.keyboardType = UIKeyboardTypeAlphabet;
+            [textField setClearButtonMode:UITextFieldViewModeAlways];
+        }];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"OK"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action) {
+            
+            UITextField *textField = [alertController.textFields firstObject];
+
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *pdfDirectory = [paths objectAtIndex:0];
+            NSString *dataPath = [pdfDirectory stringByAppendingPathComponent:@"PdfImportedDocs"];
+            [[NSFileManager defaultManager] createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:nil];
+
+            AttachmentRLM *a = [[AttachmentRLM alloc] init];
+            a.key = [[NSUUID UUID] UUIDString];
+            a.importeddate = [NSDate date];
+            a.filename = [NSString stringWithFormat:@"/PdfImportedDocs/%@.pdf",a.key];
+            a.notes = textField.text;
+            a.isactivity = [NSNumber numberWithInteger:0];
+
+            pdfDirectory = [pdfDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"PdfImportedDocs/%@.pdf", a.key]];
+
+
+            NSError *error;
+            bool success = [data writeToFile: pdfDirectory  options:NSDataWritingAtomic error:&error];
+            if (!success) {
+             NSLog(@"writeToFile failed with error %@", error);
+            dispatch_async(dispatch_get_main_queue(), ^(void){
+                 self.TextFieldURL.text=@"Error saving file!";
+             });
+            } else {
+             dispatch_async(dispatch_get_main_queue(), ^(void){
+                 [self.realm beginWriteTransaction];
+                 [self.realm addObject:a];
+                 [self.realm commitWriteTransaction];
+                 
+             });
+            }
+        }];
+
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel handler:^(UIAlertAction * action) {
+                                                                   NSLog(@"You pressed cancel");
+                                                               }];
+        
+        
+        
+        [alertController addAction:okAction];
+        [alertController addAction:cancelAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
 
 @end

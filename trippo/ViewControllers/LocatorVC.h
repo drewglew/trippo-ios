@@ -48,6 +48,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *LabelWarningNoInet;
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentMapType;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *SegmentLongPressMode;
+
 
 
 @end

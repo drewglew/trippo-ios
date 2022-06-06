@@ -19,4 +19,4 @@
 @property (nonatomic) NSNumber<RLMDouble> *lat;
 @end
 
-RLM_ARRAY_TYPE(CountryRLM)
+RLM_COLLECTION_TYPE(CountryRLM)

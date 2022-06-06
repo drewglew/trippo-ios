@@ -83,7 +83,7 @@
 
         UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
         button.frame = CGRectMake(helperView.bounds.size.width - 40.0, 3.5, 35.0, 35.0); // x,y,width,height
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
         [button setImage:[UIImage systemImageNamed:@"xmark.circle" withConfiguration:config] forState:UIControlStateNormal];
         [button setTintColor: [UIColor secondarySystemBackgroundColor]];
         [button addTarget:self action:@selector(helperViewButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -340,8 +340,8 @@ remarks:
     UILabel* actualSummaryLabel = [[UILabel alloc] init];
     actualSummaryLabel.frame = CGRectMake(10, 5, tableView.frame.size.width - 200, 20);
     actualSummaryLabel.backgroundColor = [UIColor clearColor];
-    actualSummaryLabel.textColor = [UIColor secondaryLabelColor];
-    actualSummaryLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
+    actualSummaryLabel.textColor = [UIColor labelColor];
+    actualSummaryLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
     actualSummaryLabel.text = @"Actual Total";
     actualSummaryLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -359,7 +359,7 @@ remarks:
     actualSummaryAmtLabel.frame = CGRectMake(tableView.frame.size.width - 160, 5, 150, 20);
     actualSummaryAmtLabel.backgroundColor = [UIColor clearColor];
     actualSummaryAmtLabel.textColor = [UIColor labelColor];
-    actualSummaryAmtLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
+    actualSummaryAmtLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
     actualSummaryAmtLabel.text = [numberHomeFormatter stringFromNumber:[NSNumber numberWithDouble:actamt]];
     actualSummaryAmtLabel.textAlignment = NSTextAlignmentRight;
     
@@ -369,7 +369,7 @@ remarks:
     plannedSummaryLabel.frame = CGRectMake(10, 26, tableView.frame.size.width - 200, 20);
     plannedSummaryLabel.backgroundColor = [UIColor clearColor];
     plannedSummaryLabel.textColor = [UIColor secondaryLabelColor];
-    plannedSummaryLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
+    plannedSummaryLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
     plannedSummaryLabel.text = @"Planned Total";
     plannedSummaryLabel.textAlignment = NSTextAlignmentLeft;
     [footerView addSubview:plannedSummaryLabel];
@@ -377,8 +377,8 @@ remarks:
     UILabel* plannedSummaryAmtLabel = [[UILabel alloc] init];
     plannedSummaryAmtLabel.frame = CGRectMake(tableView.frame.size.width - 160, 26, 150, 20);
     plannedSummaryAmtLabel.backgroundColor = [UIColor clearColor];
-    plannedSummaryAmtLabel.textColor = [UIColor labelColor];
-    plannedSummaryAmtLabel.font = [UIFont systemFontOfSize:17 weight:UIFontWeightBold];
+    plannedSummaryAmtLabel.textColor = [UIColor secondaryLabelColor];
+    plannedSummaryAmtLabel.font = [UIFont systemFontOfSize:14 weight:UIFontWeightRegular];
     plannedSummaryAmtLabel.text = [numberHomeFormatter stringFromNumber:[NSNumber numberWithDouble:plannedamt]];
     plannedSummaryAmtLabel.textAlignment = NSTextAlignmentRight;
     [footerView addSubview:plannedSummaryAmtLabel];

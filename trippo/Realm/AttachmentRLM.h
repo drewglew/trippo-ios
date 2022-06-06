@@ -16,8 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSString *notes;
 @property NSDate *importeddate;
 @property NSNumber<RLMInt> *isselected;
+@property NSNumber<RLMInt> *isactivity;
 @end
 
-RLM_ARRAY_TYPE(AttachmentRLM)
+RLM_COLLECTION_TYPE(AttachmentRLM)
 
 NS_ASSUME_NONNULL_END

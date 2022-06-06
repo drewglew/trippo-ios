@@ -22,5 +22,4 @@
 + (BOOL)isSameDt:(NSDate*)date1 otherDay:(NSDate*)date2;
 + (BOOL)isSameDay:(NSDate*)date1 otherDay:(NSDate*)date2;
 + (UIImage *)imageWithColor:(UIColor *)color ;
-+ (NSString *) getWeatherSystemImage:(NSString *) DarkSkyIconName;
 @end

@@ -25,6 +25,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property NSNumber<RLMInt> *visibility;
 @end
 
-RLM_ARRAY_TYPE(WeatherRLM)
+RLM_COLLECTION_TYPE(WeatherRLM)
 
 NS_ASSUME_NONNULL_END

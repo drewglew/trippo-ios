@@ -15,6 +15,8 @@
 int BlurredMainViewPresentedHeight;
 int BlurredImageViewPresentedHeight=60;
 int DocumentListingViewPresentedHeight = 250;
+RLMResults <ActivityRLM*> *activitiesInSameTrip;
+bool datesAccepted = true;
 bool UpdatedActivity = false;
 @implementation ActivityDataEntryVC
 @synthesize ImageViewPoi;
@@ -22,7 +24,7 @@ bool UpdatedActivity = false;
 
 /*
  created date:      01/05/2018
- last modified:     12/01/2020
+ last modified:     06/06/2022
  remarks:
  */
 - (void)viewDidLoad {
@@ -38,10 +40,16 @@ bool UpdatedActivity = false;
     self.EndDtTimeZonePicker.delegate = self;
     self.EndDtTimeZonePicker.dataSource = self;
     
+    
     self.TextFieldStartDt.delegate = self;
     self.TextFieldEndDt.delegate = self;
     
     [super viewDidLoad];
+    
+
+    if ([self.Poi.website isEqualToString:@""] || self.Poi.website == nil) {
+        self.ButtonWebsite.hidden = true;
+    }
     
     UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightBold];
     
@@ -63,12 +71,13 @@ bool UpdatedActivity = false;
     
     self.TableViewAttachments.delegate = self;
     
-    self.TextFieldName.layer.cornerRadius=8.0f;
+    self.TextFieldName.layer.cornerRadius=5.0f;
     self.TextFieldName.layer.masksToBounds=YES;
-    self.TextFieldName.layer.borderColor=[[UIColor clearColor] CGColor];
-    self.TextFieldName.layer.borderWidth= 1.0f;
 
-    self.TextViewNotes.layer.cornerRadius=8.0f;
+    self.TextFieldReference.layer.cornerRadius=5.0f;
+    self.TextFieldReference.layer.masksToBounds=YES;
+    
+    self.TextViewNotes.layer.cornerRadius=5.0f;
     self.TextViewNotes.layer.masksToBounds=YES;
 
     self.ViewSelectedKey.layer.cornerRadius=28;
@@ -83,6 +92,7 @@ bool UpdatedActivity = false;
     NSDate *defaultStartDt = now;
     NSDate *defaultEndDt = now;
     
+    activitiesInSameTrip = [ActivityRLM objectsWhere:@"tripkey=%@ and state=%@",self.Trip.key, self.Activity.state];
     
     if (self.deleteitem) {
         UIImage *btnImage = [UIImage imageNamed:@"TrashCan"];
@@ -97,7 +107,7 @@ bool UpdatedActivity = false;
 
         [self LoadActivityData];
         [self LoadDocuments];
-        
+
         self.CollectionViewActivityImages.scrollEnabled = true;
 
         if (self.Activity.state == [NSNumber numberWithInteger:0]) {
@@ -115,12 +125,12 @@ bool UpdatedActivity = false;
                 [self.ButtonLeaving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
             }
             
-            self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
-            [self.ViewUpdateActualWeather setHidden:TRUE];
         }
         
         BOOL datesAreEqual = [[NSCalendar currentCalendar] isDate:self.Activity.startdt
                                                       equalToDate:self.Activity.enddt toUnitGranularity:NSCalendarUnitMinute];
+        
+        [self.imageViewDateRangeStatus setImage:[UIImage systemImageNamed:@"checkmark.circle.fill"]];
         
         if (datesAreEqual && self.Activity.state==[NSNumber numberWithInteger:1]) {
             
@@ -130,8 +140,6 @@ bool UpdatedActivity = false;
             self.GeoWarningLabelHeightConstraint.constant = 75.0f;
             [self.ButtonArriving setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
 
-            self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
-            [self.ViewUpdateActualWeather setHidden:TRUE];
            
         } else if (self.Activity.state == [NSNumber numberWithInteger:1]) {
             // we set the colour in the main method that covers its normal set.
@@ -167,13 +175,12 @@ bool UpdatedActivity = false;
         self.Activity.startdt = now;
         self.Activity.enddt = now;
         
-        self.ViewUpdateActualWeatherHeightConstraint.constant = 0.0f;
-        [self.ViewUpdateActualWeather setHidden:TRUE];
         [self.ButtonPayment setEnabled:false];
         
     } else if (self.newitem) {
 
         NSLog(@"%@",self.Trip.defaulttimezonename);
+        NSLog(@"%@",self.Trip);
         
         self.StartDtTimeZoneNameTextField.text = self.Trip.defaulttimezonename;
         self.EndDtTimeZoneNameTextField.text = self.Trip.defaulttimezonename;
@@ -271,24 +278,18 @@ bool UpdatedActivity = false;
     
     /* new datepicker */
     
-    [self.DatePickerStartDt addTarget:self action:@selector(onDatePickerStartValueChanged:) forControlEvents:UIControlEventEditingDidEnd];
+    [self.DatePickerStartDt addTarget:self action:@selector(datePickerStartDismissed:) forControlEvents:UIControlEventEditingDidEnd]; // method to respond to changes in the picker value
     
-    [self.DatePickerStartDt addTarget:self action:@selector(onDatePickerStartSelected:) forControlEvents:UIControlEventEditingDidBegin];
+    [self.DatePickerEndDt addTarget:self action:@selector(datePickerEndDismissed:) forControlEvents:UIControlEventEditingDidEnd];
+  
     
     self.DatePickerStartDt.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
     self.DatePickerStartDt.date = self.startDt;
-    
-    [self.DatePickerEndDt addTarget:self action:@selector(onDatePickerEndValueChanged:) forControlEvents:UIControlEventEditingDidEnd];
-    
-    [self.DatePickerEndDt addTarget:self action:@selector(onDatePickerEndSelected:) forControlEvents:UIControlEventEditingDidBegin];
-    
     self.DatePickerEndDt.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
     self.DatePickerEndDt.date = self.endDt;
     
     self.DatePickerStartDt.maximumDate = self.DatePickerEndDt.date;
     self.DatePickerEndDt.minimumDate = self.DatePickerStartDt.date;
-    
-    
     
     /* add toolbar control for 'Done' option */
     UIToolbar *toolBar=[[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
@@ -321,9 +322,7 @@ bool UpdatedActivity = false;
             [self.ButtonLeaving setBackgroundColor:[UIColor lightGrayColor]];
         }
     }
-    if (![self.ButtonUpdateActualWeather isEnabled]) {
-        [self.ButtonUpdateActualWeather setBackgroundColor:[UIColor colorWithRed:179.0f/255.0f green:25.0f/255.0f blue:49.0f/255.0f alpha:1.0]];
-    }
+    
     
     
     self.StartDtTimeZoneNameTextField.inputView = self.StartDtTimeZonePicker;
@@ -337,7 +336,6 @@ bool UpdatedActivity = false;
     __weak typeof(self) weakSelf = self;
     self.notification = [self.realm addNotificationBlock:^(NSString *note, RLMRealm *realm) {
         [weakSelf LoadDocuments];
-       // [weakSelf.TableViewAttachments reloadData];
     }];
     
     self.ActivityScrollView.delegate = self;
@@ -351,14 +349,120 @@ bool UpdatedActivity = false;
     [self.EndDtTimeZonePicker selectRow:anIndex inComponent:0 animated:YES];
     
     [self registerForKeyboardNotifications];
-    
-    /* new block 20200111 */
-    RLMResults <SettingsRLM*> *settings = [SettingsRLM allObjects];
-    
-    NSString *ViewName = [NSString stringWithFormat:@"%@~%@",@"ActivityDataEntryVC",self.Activity.state];
 }
 
+
    
+/*
+ created date:      11/03/2021
+ last modified:     11/03/2021
+ remarks:
+ */
+-(void)datePickerStartDismissed:(id)sender{
+    
+    //if (self.newitem || [activitesCount intValue] == 0) {
+    self.DatePickerEndDt.minimumDate = self.DatePickerStartDt.date;
+    //}
+    self.startDt =  self.DatePickerStartDt.date;
+    [self dismissPicker];
+}
+
+/*
+ created date:      11/03/2021
+ last modified:     11/03/2021
+ remarks:
+ */
+-(void)datePickerEndDismissed:(id)sender{
+    //if (self.newitem || [activitesCount intValue] == 0) {
+    self.DatePickerStartDt.maximumDate = self.DatePickerEndDt.date;
+    //}
+    self.endDt =  self.DatePickerEndDt.date;
+    [self dismissPicker];
+}
+
+/*
+ created date:      11/03/2021
+ last modified:     11/03/2021
+ remarks:
+ */
+-(void)dismissPicker {
+    
+    NSDate *startdt = self.startDt;
+    NSDate *enddt = self.endDt;
+
+    /* validate against the Trip */
+    bool AdjustTripStartDt = false;
+    bool AdjustTripEndDt = false;
+
+    NSComparisonResult resulttripstartdt = [startdt compare:self.Trip.startdt];
+    NSComparisonResult resulttripenddt = [enddt compare:self.Trip.enddt];
+
+    if (resulttripstartdt == NSOrderedAscending) {
+        AdjustTripStartDt = true;
+    }
+    if (resulttripenddt == NSOrderedDescending) {
+        AdjustTripEndDt = true;
+    }
+
+    NSString *dateInfoMessage = [[NSString alloc] init];
+
+    if (activitiesInSameTrip.count==0) {
+        
+        // we are probably fine to continue as long as dates fit into Trip date range
+
+    } else {
+
+        bool ErrorInCurrentItem = false;
+        
+        for (ActivityRLM* activity in activitiesInSameTrip) {
+            if (![self.Activity.key isEqualToString:activity.key]) {
+
+                bool areDatesInsideRange = [self areDates:self.startDt :self.endDt inRangeFirstDate:activity.startdt lastDate:activity.enddt];
+                
+                if (areDatesInsideRange) {
+                    
+                    NSLog(@"Activity item has dates that are allowed!");
+                    
+                } else {
+
+                    ErrorInCurrentItem = true;
+                    NSString *prettystartdt = [self FormatPrettyDate :activity.startdt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@"\n"];
+                    
+                    NSString *prettyenddt = [self FormatPrettyDate :activity.enddt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@"\n"];
+                    
+                    dateInfoMessage = [NSString stringWithFormat:@"Dates need to be within bounds of %@ and %@.", prettystartdt, prettyenddt];
+                    
+                    self.labelConflictedActivity.text = activity.name;
+                    
+                    break;
+                    
+                }
+                /* new block from 2019-08-27 end */
+            }
+        }
+        if (ErrorInCurrentItem) {
+            
+            [self.imageViewDateRangeStatus setImage:[UIImage systemImageNamed:@"x.circle.fill"]];
+            [self.imageViewDateRangeStatus setTintColor:[UIColor redColor]];
+            [self.labelDateRangeStatus setText:dateInfoMessage];
+            [self.labelDateRangeStatus setTextColor:[UIColor redColor]];
+            datesAccepted = false;
+            self.labelConflictedActivity.hidden = false;
+            
+        } else  {
+            
+            [self.imageViewDateRangeStatus setImage:[UIImage systemImageNamed:@"checkmark.circle.fill"]];
+            [self.imageViewDateRangeStatus setTintColor:[UIColor colorNamed:@"TrippoColor"]];
+            [self.labelDateRangeStatus setText:@"Dates accepted!"];
+            [self.labelDateRangeStatus setTextColor:[UIColor colorNamed:@"TrippoColor"]];
+            /* only perform this batch update if no errors have occurred beforehand & we are working on planned activities */
+            datesAccepted = true;
+            self.labelConflictedActivity.hidden = true;
+        }
+    }
+}
+
+
 
 /*
 created date:       15/08/2019
@@ -383,7 +487,7 @@ remarks:
             self.ViewCheckInOut.hidden = false;
             self.ViewCheckInOut.backgroundColor = [UIColor systemRedColor];
             
-            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightRegular ];
+            UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightThin ];
             
             [self.ButtonCheckInOut setImage:[UIImage systemImageNamed:@"arrow.left.to.line" withConfiguration:config] forState:UIControlStateNormal];
             
@@ -403,7 +507,7 @@ remarks:
         
         self.ViewCheckInOut.backgroundColor = [UIColor systemGreenColor];
         
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithPointSize:50.0f weight:UIImageSymbolWeightThin];
        
         
         [self.ButtonCheckInOut setImage:[UIImage systemImageNamed:@"arrow.right.to.line" withConfiguration:config] forState:UIControlStateNormal];
@@ -507,9 +611,8 @@ remarks:
 -(void)addDoneToolBarToKeyboard:(UITextView *)textView
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    //doneToolbar.backgroundColor = [UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0];
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
@@ -521,8 +624,8 @@ remarks:
 -(void)addDoneToolBarForTextFieldToKeyboard:(UITextField *)textField
 {
     UIToolbar* doneToolbar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
-    doneToolbar.barStyle = UIBarStyleDefault;
-    [doneToolbar setTintColor:[UIColor colorWithRed:255.0f/255.0f green:91.0f/255.0f blue:73.0f/255.0f alpha:1.0]];
+    doneToolbar.barStyle = UIBarButtonItemStylePlain;
+    [doneToolbar setTintColor:[UIColor colorNamed:@"TrippoColor"]];
     doneToolbar.items = [NSArray arrayWithObjects:
                          [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
                          [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneButtonClickedDismissKeyboard)],
@@ -578,7 +681,7 @@ remarks:            Add wiki document into collection if possible.
         wikidocument.key = @"WIKIPEDIA";
         wikidocument.filename = [NSString stringWithFormat:@"/WikiDocs/%@.pdf",self.Poi.key];
         wikidocument.notes = @"Wikipedia Document";
-        wikidocument.isselected = [NSNumber numberWithInt:1];
+        wikidocument.isselected = [NSNumber numberWithInteger:1];
         [self.DocumentCollection addObject:wikidocument];
     }
     [self.TableViewAttachments reloadData];
@@ -693,7 +796,7 @@ remarks:            Add wiki document into collection if possible.
     
     [self.NotificationMapView setCenterCoordinate:coord animated:YES];
     
-    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coord, [radius doubleValue] * 2.2, [radius doubleValue] * 2.2);
+    MKCoordinateRegion viewRegion = MKCoordinateRegionMakeWithDistance(coord, [radius doubleValue] * 5, [radius doubleValue] * 5);
     MKCoordinateRegion adjustedRegion = [self.PoiMapView regionThatFits:viewRegion];
     [self.PoiMapView setRegion:adjustedRegion animated:YES];
     [self.PoiMapView addAnnotation:anno];
@@ -749,7 +852,7 @@ remarks:            Add wiki document into collection if possible.
                                         alloc]initWithCircle:(MKCircle *)overlay];
 
         aRenderer.fillColor =  [UIColor colorNamed:@"TrippoColor"];
-        [aRenderer setAlpha:0.05];
+        [aRenderer setAlpha:0.25];
         return aRenderer;
     }
     else
@@ -777,20 +880,28 @@ remarks:
 }
 
 
+
 /*
-created date:      27/08/2019
-last modified:     27/08/2019
-remarks:
+created date:       27/08/2019
+last modified:      12/03/2021
+remarks:            Improved date logic.  called when user accepts change to single
+ 
 */
-- (BOOL)isDate:(NSDate *)date inRangeFirstDate:(NSDate *)firstDate lastDate:(NSDate *)lastDate {
+- (BOOL)areDates:(NSDate *)itemStartDt :(NSDate *)itemEndDt inRangeFirstDate:(NSDate *)activityFirstDate lastDate:(NSDate *)activityLastDate {
     
-    return !([date compare:firstDate] == NSOrderedAscending) && !([date compare:lastDate] == NSOrderedDescending);
+    if (([itemStartDt compare:activityFirstDate] == NSOrderedDescending) && ([itemEndDt compare:activityLastDate] == NSOrderedDescending) && ([itemStartDt compare:activityLastDate] == NSOrderedAscending)) {
+        return false;
+    } else if (([itemStartDt compare:activityFirstDate] == NSOrderedAscending) && ([itemEndDt compare:activityLastDate] == NSOrderedAscending) && ([itemEndDt compare:activityFirstDate] == NSOrderedDescending)) {
+        return false;
+    } else {
+        return true;
+    }
 }
 
 
 /*
  created date:      01/05/2018
- last modified:     29/07/2019
+ last modified:     11/03/2021
  remarks:  TODO [self.delegate didUpdateActivityImage]; add to update
  */
 - (IBAction)ActionButtonPressed:(id)sender {
@@ -799,166 +910,15 @@ remarks:
         return;
     }
    
-    /*
-    if user does not enter any dates, the dates stored match the project dates entered.
-    If user modifies the dates and start date is earlier than project start date or end date is later than end date -
-    modify the project date & any other PLANNED dates that were equal to it previously.
-    
-    Additionally validate all planned dates in following way when they are manually modified.
-    Take example 1.
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     *Planned activity B: start 14/1/19 16:00 end 16/1/19 21:00
-    
-    The start date of activity B cannot be after activity A starts and end date cannot be after 15/1/19 10:30 when activity A ends.
-    Either activity B end date must be equal/less than end date of activity A
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     *Planned activity B: start 14/1/19 16:00 end 15/1/19 10:30
-    or activity B must start before or after activity A begins.
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     *Planned activity B: start 10/1/19 09:00 end 16/1/19 10:30
-    
-    
-    Now example 2:
-    
-    Extend example 1 with adding activity C.
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     Planned activity B: start 14/1/19 16:00 end 15/1/19 09:30
-     *Planned activity C: start 5/1/19 09:00 end 14/1/19 08:00
-    
-    Either activity C start date must be after both activity A + B’s start date
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     Planned activity B: start 14/1/19 16:00 end 15/1/19 09:30
-     *Planned activity C: start 14/1/19 17:00 end 14/1/19 08:00
-    
-    Or activity C end date must be after activity A+B’s end date
-     Planned activity A: start 10/1/19 10:00 end 15/1/19 10:30
-     Planned activity B: start 14/1/19 16:00 end 15/1/19 09:30
-     *Planned activity C: start 5/1/19 09:00 end 16/1/19 08:00
-    */
-    
-    
-        NSDate *startdt = self.startDt;
-        NSDate *enddt = self.endDt;
-
-        /* validate against the Trip */
-        bool AdjustTripStartDt = false;
-        bool AdjustTripEndDt = false;
-
-        NSComparisonResult resulttripstartdt = [startdt compare:self.Trip.startdt];
-        NSComparisonResult resulttripenddt = [enddt compare:self.Trip.enddt];
-
-        if (resulttripstartdt == NSOrderedAscending) {
-            AdjustTripStartDt = true;
-        }
-        if (resulttripenddt == NSOrderedDescending) {
-            AdjustTripEndDt = true;
-        }
-    
-        RLMResults <ActivityRLM*> *activities = [ActivityRLM objectsWhere:@"tripkey=%@ and state=%@",self.Trip.key, self.Activity.state];
-
-        if (activities.count==0) {
-            [self UpdateActivityRealmData];
-        } else {
-            
-            NSString *AlertMessage = [[NSString alloc] init];
-
-            bool ErrorInCurrentItem = false;
-            for (ActivityRLM* activity in activities) {
-                
-                /* we do not want to waste comparing activity against itself */
-                if (![self.Activity.key isEqualToString:activity.key]) {
- 
-                    /* new block from 2019-08-27 start */
-
-                    bool isStartDtInsideRange = [self isDate:self.startDt  inRangeFirstDate:activity.startdt lastDate:activity.enddt];
-                    
-                    bool isEndDtInsideRange = [self isDate:self.endDt  inRangeFirstDate:activity.startdt lastDate:activity.enddt];
-                    
-                    if ((isStartDtInsideRange && isEndDtInsideRange) || (!isStartDtInsideRange && !isEndDtInsideRange)) {
-                        NSLog(@"Activity has dates that are allowed!");
-                    } else {
-                        
-                        ErrorInCurrentItem = true;
-                        NSString *prettystartdt = [self FormatPrettyDate :activity.startdt :[NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text] :@"\n"];
-                        
-                        NSString *prettyenddt = [self FormatPrettyDate :activity.enddt :[NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text] :@"\n"];
-                        
-                        
-                        
-                        AlertMessage = [NSString stringWithFormat:@"The start and end dates of current activity must be contained within the activity %@ with date range %@ and %@ or outside of these bounds. Please modify and correct before updating.", prettystartdt, prettyenddt, activity.name];
-                        break;
-                        
-                    }
-                    /* new block from 2019-08-27 end */
-                }
-            }
-            if (ErrorInCurrentItem) {
-                
-                UIAlertController * alert = [UIAlertController
-                                             alertControllerWithTitle:@"Error in date range"
-                                             message:AlertMessage
-                                             preferredStyle:UIAlertControllerStyleAlert];
-                
-                
-                
-                [alert.view setTintColor:[UIColor labelColor]];
-                
-                UIAlertAction* okButton = [UIAlertAction
-                                           actionWithTitle:@"Ok"
-                                           style:UIAlertActionStyleDefault
-                                           handler:^(UIAlertAction * action) {
-                                               
-                                           }];
-                
-                [alert addAction:okButton];
-                [self presentViewController:alert animated:YES completion:nil];
-                
-            } else  {
-                /* only perform this batch update if no errors have occurred beforehand & we are working on planned activities */
-            
-                for (ActivityRLM* activity in activities) {
-                    /* we do not want to waste comparing activity against itself */
-                    if (![self.Activity.key isEqualToString:activity.key]) {
-                        NSDate *activitystartdt = activity.startdt;
-                        NSDate *activityenddt = activity.enddt;
-                        /* organize planned draft items to match expected modification to Trip  */
-                        if (AdjustTripStartDt || AdjustTripEndDt) {
-                            NSComparisonResult resultoriginalstartdt = [self.Trip.startdt compare:activitystartdt];
-                            NSComparisonResult resultoriginalenddt = [self.Trip.enddt compare:activityenddt];
-                            if (resultoriginalstartdt == NSOrderedSame && resultoriginalenddt == NSOrderedSame) {
-                                [activity.realm beginWriteTransaction];
-                                activity.startdt = startdt;
-                                activity.enddt = enddt;
-                                [activity.realm commitWriteTransaction];
-                            }
-                        }
-                    }
-                }
-                /* new block to update also the Trip information to reflect changes made over the activity */
-                if (AdjustTripStartDt || AdjustTripEndDt) {
-            
-                    if (AdjustTripStartDt) {
-                        [self.Trip.realm beginWriteTransaction];
-                        self.Trip.startdt = startdt;
-                        [self.Trip.realm commitWriteTransaction];
-                    }
-                    if (AdjustTripEndDt) {
-                        [self.Trip.realm beginWriteTransaction];
-                        self.Trip.enddt = enddt;
-                        [self.Trip.realm commitWriteTransaction];
-                    }
-                    
-                }
-
-                [self UpdateActivityRealmData];
-            }
-        }
-    
+    if (!datesAccepted) {
+        return;
+    }
+    [self UpdateActivityRealmData];
 }
 
 /*
  created date:      21/02/2019
- last modified:     20/06/2019
+ last modified:     09/03/2021
  remarks:           
  */
 - (void)UpdateActivityRealmData
@@ -1075,18 +1035,14 @@ remarks:
              [self setGeoNotifyOff :false];
             self.Activity.geonotifycheckout = [NSNumber numberWithInt:0];
         }
-        
+        [self.Activity.realm commitWriteTransaction];
         
         if (self.Activity.images.count>0) {
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *imagesDirectory = [paths objectAtIndex:0];
-            
             NSString *dataPath = [imagesDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"/Images/Trips/%@/Activities/%@",self.Trip.key, self.Activity.compondkey]];
-            
-            
             NSFileManager *fm = [NSFileManager defaultManager];
             [fm createDirectoryAtPath:dataPath withIntermediateDirectories:YES attributes:nil error:nil];
-            
             NSInteger count = [self.Activity.images count];
             
             for (NSInteger index = (count - 1); index >= 0; index--) {
@@ -1094,24 +1050,30 @@ remarks:
                 
                 if (imgobject.ImageFlaggedDeleted) {
                     /* else we are good to delete it */
-                    NSString *filepathname = [imagesDirectory stringByAppendingPathComponent:imgobject.ImageFileReference];
-                    NSError *error = nil;
-                    BOOL success = [fm removeItemAtPath:filepathname error:&error];
-                    if (!success || error) {
-                        NSLog(@"something failed in deleting unwanted data");
+                    if (imgobject.ImageFileReference!=nil) {
+                        NSString *filepathname = [imagesDirectory stringByAppendingPathComponent:imgobject.ImageFileReference];
+                        NSError *error = nil;
+                        BOOL success = [fm removeItemAtPath:filepathname error:&error];
+                        if (!success || error) {
+                            NSLog(@"something failed in deleting unwanted data");
+                        }
                     }
-                    
-                    [self.Activity.images removeObjectAtIndex:index];
+                    [self.realm transactionWithBlock:^{
+                        [self.Activity.images removeObjectAtIndex:index];
+                    }];
                     
                 } else if ([imgobject.ImageFileReference isEqualToString:@""] || imgobject.ImageFileReference==nil) {
                     /* here we add the attachment to file system and dB */
-                    imgobject.NewImage = true;
+                    
                     NSData *imageData =  UIImagePNGRepresentation([self.ActivityImageDictionary objectForKey:imgobject.key]);
                     NSString *filename = [NSString stringWithFormat:@"%@.png", imgobject.key];
                     NSString *filepathname = [dataPath stringByAppendingPathComponent:filename];
                     [imageData writeToFile:filepathname atomically:YES];
                     
-                    imgobject.ImageFileReference = [NSString stringWithFormat:@"Images/Trips/%@/Activities/%@/%@",self.Trip.key, self.Activity.compondkey,filename];
+                    [self.realm transactionWithBlock:^{
+                        imgobject.NewImage = true;
+                        imgobject.ImageFileReference = [NSString stringWithFormat:@"Images/Trips/%@/Activities/%@/%@",self.Trip.key, self.Activity.compondkey,filename];
+                    }];
                     NSLog(@"new image");
                     [delegate didUpdateActivityImages:true];
                     
@@ -1126,7 +1088,6 @@ remarks:
             }
         }
         UpdatedActivity = true;
-        [self.Activity.realm commitWriteTransaction];
         [self dismissModalStack];
     }
 }
@@ -1204,6 +1165,12 @@ remarks:
         NSURL *targetURL = [NSURL fileURLWithPath:PdfDataFilePath];
         NSData *data = [NSData dataWithContentsOfURL:targetURL];
 
+        NSString *fileExtension = [targetURL pathExtension];
+        NSString *UTI = (__bridge_transfer NSString *)UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)fileExtension, NULL);
+        NSString *contentType = (__bridge_transfer NSString *)UTTypeCopyPreferredTagWithClass((__bridge CFStringRef)UTI, kUTTagClassMIMEType);
+        
+        // not used, but need to manage.
+        
         [self.WebViewPreview loadData:data MIMEType:@"application/pdf" characterEncodingName:@"UTF-8" baseURL:[NSURL URLWithString:@""]];
         
     }
@@ -1301,11 +1268,13 @@ remarks:
     
     NSDateFormatter *df = [NSDateFormatter new];
     [df setDateFormat:@"EEE, dd MMM yyyy"];
-    df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
+    df.timeZone = TimeZone;
+    //df.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
     
     NSDateFormatter *dft = [NSDateFormatter new];
     [dft setDateFormat:@"HH:mm"];
-    dft.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
+    dft.timeZone = TimeZone;
+    //dft.timeZone = [NSTimeZone timeZoneForSecondsFromGMT:TimeZone.secondsFromGMT];
     
     return [NSString stringWithFormat:@"%@ %@",[df stringFromDate:Dt], [dft stringFromDate:Dt]];
 }
@@ -1434,7 +1403,7 @@ remarks:
 
 /*
  created date:      19/08/2018
- last modified:     02/03/2021
+ last modified:     10/03/2021
  remarks:
  */
 -(void)InsertActivityImage {
@@ -1568,10 +1537,15 @@ remarks:
                                     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
                                     NSData *data = [pasteboard dataForPasteboardType:(NSString *)kUTTypePNG];
                                     
-                                    if (data==nil) {
-                                        data = [pasteboard dataForPasteboardType:(NSString *)kUTTypeJPEG];
+                                    NSArray *types = UIPasteboardTypeListImage;
+                                    if ([pasteboard containsPasteboardTypes:types]) {
+                                        for (NSString *itemType in types) {
+                                            if ([pasteboard dataForPasteboardType:itemType]) {
+                                                data = [pasteboard dataForPasteboardType:(NSString *)itemType];
+                                            }
+                                        }
                                     }
-        
+
                                     if (data!=nil) {
 
                                         if (self.imagestate==1) {
@@ -1643,6 +1617,8 @@ remarks:
                                                       ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
                                                       imgobject.key = [[NSUUID UUID] UUIDString];
                                                       
+                                                      self.SelectedImageKey = imgobject.key;
+                                                      
                                                       UIImage *image = [ToolBoxNSO imageWithImage:result scaledToSize:size];
                                                       
                                                       if (self.Activity.images.count==0) {
@@ -1651,10 +1627,15 @@ remarks:
                                                           imgobject.KeyImage = 0;
                                                       }
                                                       
+                                                      [self.ImageViewKeyActivity setImage:image];
+                                                      [self.ImagePicture setImage:image];
+                                                      // TODO
+                                                      imgobject.info = @"";
+                                                      
                                                       [self.realm beginWriteTransaction];
                                                       [self.Activity.images addObject:imgobject];
                                                       [self.realm commitWriteTransaction];
-                                                      
+                                                  
                                                       [self.ActivityImageDictionary setObject:image forKey:imgobject.key];
                                                       
                                                   } else if (self.imagestate==2) {
@@ -1739,16 +1720,18 @@ remarks:
             ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
             imgobject.key = [[NSUUID UUID] UUIDString];
             
+            self.SelectedImageKey = imgobject.key;
 
             if (self.Activity.images.count==0) {
                 imgobject.KeyImage = 1;
-                [self.ImagePicture setImage:chosenImage];
-                [self.ImageViewKeyActivity setImage:chosenImage];
-                self.labelPhotoInfo.text = @"Live Photo";
-                
             } else {
                 imgobject.KeyImage = 0;
             }
+            
+            [self.ImagePicture setImage:chosenImage];
+            [self.ImageViewKeyActivity setImage:chosenImage];
+            self.labelPhotoInfo.text = @"Live Photo";
+            
             
             [self.realm beginWriteTransaction];
             [self.Activity.images addObject:imgobject];
@@ -1788,6 +1771,8 @@ remarks:
         ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
         imgobject.key = [[NSUUID UUID] UUIDString];
         
+        self.SelectedImageKey = imgobject.key;
+        
         CGSize size = CGSizeMake(self.TextViewNotes.frame.size.width * 2, self.TextViewNotes.frame.size.width * 2);
 
         image = [ToolBoxNSO imageWithImage:image scaledToSize:size];
@@ -1797,6 +1782,11 @@ remarks:
         } else {
             imgobject.KeyImage = 0;
         }
+        
+        [self.ImagePicture setImage:image];
+        [self.ImageViewKeyActivity setImage:image];
+        imgobject.info = @"Pasted Image";
+        self.labelPhotoInfo.text = imgobject.info;
         
         [self.realm beginWriteTransaction];
         [self.Activity.images addObject:imgobject];
@@ -1824,24 +1814,6 @@ remarks:
         
         self.imagestate=0;
         
-    } else {
-    
-        G8Tesseract *tesseract = [[G8Tesseract alloc] initWithLanguage:@"eng"];
-        tesseract.delegate = self;
-        
-        tesseract.image = [ToolBoxNSO convertImageToGrayScale :image];
-        
-        tesseract.maximumRecognitionTime = 20.0;
-        [tesseract recognize];
-        
-        if (!self.TextViewNotes.selectedTextRange.empty) {
-            // use selected position to obtain location where to add the text
-            [self.TextViewNotes replaceRange:self.TextViewNotes.selectedTextRange withText:[tesseract recognizedText]];
-        } else {
-            // append to the end of the detail.
-            self.TextViewNotes.text = [NSString stringWithFormat:@"%@\n%@", self.TextViewNotes.text, [tesseract recognizedText]];
-        }
-        NSLog(@"%@", [tesseract recognizedText]);
     }
         
     if (@available(iOS 13, *)) {
@@ -1867,17 +1839,23 @@ remarks:
         
         ImageCollectionRLM *imgobject = [[ImageCollectionRLM alloc] init];
         imgobject.key = [[NSUUID UUID] UUIDString];
+        
+        self.SelectedImageKey = imgobject.key;
+        
         [self.ActivityImageDictionary setObject:img.Image forKey:imgobject.key];
         
         if (self.Activity.images.count==0) {
             imgobject.KeyImage = 1;
-            [self.ImagePicture setImage:img.Image];
-            [self.ImageViewKeyActivity setImage:img.Image];
-            self.labelPhotoInfo.text = img.Description;
         } else {
             imgobject.KeyImage = 0;
         }
+        [self.ImagePicture setImage:img.Image];
+        [self.ImageViewKeyActivity setImage:img.Image];
+        self.labelPhotoInfo.text = img.Description;
         imgobject.info = img.Description;
+        
+        
+        
         [self.realm beginWriteTransaction];
         [self.Activity.images addObject:imgobject];
         [self.realm commitWriteTransaction];
@@ -1913,7 +1891,7 @@ remarks:
     ActivityImageCell *cell=[collectionView dequeueReusableCellWithReuseIdentifier:@"ActivityImageId" forIndexPath:indexPath];
     NSInteger NumberOfItems = self.Activity.images.count + 1;
     if (indexPath.row == NumberOfItems -1) {
-        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightRegular];
+        UIImageSymbolConfiguration *config = [UIImageSymbolConfiguration configurationWithWeight:UIImageSymbolWeightThin];
               
         cell.ImageActivity.image = [UIImage systemImageNamed:@"plus" withConfiguration:config];
         [cell.ImageActivity setTintColor: [UIColor colorNamed:@"TrippoColor"]];
@@ -1995,6 +1973,7 @@ remarks:
 }
 
 
+
 /*
  created date:      19/08/2018
  last modified:     19/08/2018
@@ -2039,7 +2018,7 @@ remarks:
             }];
         }
     } else if (self.ViewMain.hidden == false) {
-
+        
         if (self.ViewEffectBlurDetailHeightConstraint.constant==BlurredMainViewPresentedHeight) {
             [UIView animateWithDuration:0.5 animations:^{
                 self.ViewEffectBlurDetailHeightConstraint.constant=0;
@@ -2151,12 +2130,12 @@ remarks:
  */
 - (IBAction)UploadImagePressed:(id)sender {
     
-
+    
     NSData *dataImage = UIImagePNGRepresentation(self.ImagePicture.image);
     NSString *stringImage = [dataImage base64EncodedStringWithOptions:0];
-
+    
     NSString *ImageFileReference = [NSString stringWithFormat:@"Images/Trips/%@/Activities/%@/%@.png",self.Activity.tripkey, self.Activity.compondkey, self.SelectedImageKey];
-
+    
     NSString *ImageFileDirectory = [NSString stringWithFormat:@"Images/Trips/%@/Activities/%@",self.Activity.tripkey, self.Activity.compondkey];
     
     NSDictionary* dataJSON = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -2242,7 +2221,7 @@ remarks:
  remarks:           Give user option of origins..
  */
 - (IBAction)ShowDirectionsPressed:(id)sender {
-
+    
     self.locationManager = [[CLLocationManager alloc]init];
     self.locationManager.delegate = self;
     self.locationManager.distanceFilter = kCLDistanceFilterNone;
@@ -2259,16 +2238,16 @@ remarks:
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"startdt < %@", self.Activity.startdt];
     
     RLMResults *filteredActivities = [ActivitiesInTrip objectsWithPredicate:predicate];
-
+    
     filteredActivities = [filteredActivities sortedResultsUsingDescriptors:@[
-                                                                             [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO]]];
-
+        [RLMSortDescriptor sortDescriptorWithKeyPath:@"startdt" ascending:NO]]];
+    
     
     int MaxList = 8;
     if (filteredActivities.count < MaxList) {
         MaxList = (int)filteredActivities.count;
     }
-
+    
     UIAlertController * alertPickOrigin = [UIAlertController
                                            alertControllerWithTitle:@"Origin"
                                            message:[NSString stringWithFormat:@"Choose the location you wish to travel from to get to %@", self.Activity.name]
@@ -2280,18 +2259,18 @@ remarks:
                              actionWithTitle:@"My current position"
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction * action) {
-                                 
-                                 [self MapEngineSelection :nil :self.Poi];
-                                 
-                             }];
+        
+        [self MapEngineSelection :nil :self.Poi];
+        
+    }];
     
     [alertPickOrigin addAction:action];
-
+    
     for (NSInteger index = 0; index < MaxList; index++) {
-
+        
         ActivityRLM *item = [filteredActivities objectAtIndex:index];
         PoiRLM *poiitem = item.poi;
-
+        
         if (poiitem == nil) {
             poiitem = [PoiRLM objectForPrimaryKey:item.poikey];
         }
@@ -2300,8 +2279,8 @@ remarks:
                                  actionWithTitle:item.name
                                  style:UIAlertActionStyleDefault
                                  handler:^(UIAlertAction * action) {
-                                     [self MapEngineSelection :poiitem :self.Poi];
-                                 }];
+            [self MapEngineSelection :poiitem :self.Poi];
+        }];
         
         [alertPickOrigin addAction:action];
     }
@@ -2310,18 +2289,18 @@ remarks:
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction *action) {
-                                                         }];
+    }];
     
     [alertPickOrigin addAction:cancelAction];
     [self presentViewController:alertPickOrigin animated:YES completion:nil];
-
+    
 }
 
 
 -(void) MapEngineSelection :(PoiRLM*) from :(PoiRLM*) to {
     
     NSString *messageText = [[NSString alloc] init];
- 
+    
     if (from == nil) {
         messageText = [NSString stringWithFormat:@"Choose the map you wish to present and calculate selected route between your current position and %@", to.name];
     } else {
@@ -2329,63 +2308,63 @@ remarks:
     }
     
     UIAlertController * alertPickMapEngine = [UIAlertController
-                                           alertControllerWithTitle:@"Which Map?"
-                                           message:messageText
-                                           preferredStyle:UIAlertControllerStyleAlert];
+                                              alertControllerWithTitle:@"Which Map?"
+                                              message:messageText
+                                              preferredStyle:UIAlertControllerStyleAlert];
     
     
     [alertPickMapEngine.view setTintColor:[UIColor labelColor]];
     
     UIAlertAction* actionApple = [UIAlertAction
-                             actionWithTitle:@"Apple Maps"
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction * action) {
-                                 
-                                 NSString* directionsURL;
-                                 if (from == nil) {
-                                     directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
-                                 } else {
-                                     directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
-                                 }
-                                 
-                                 if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-                                     [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
-                                 }
-                                 
-                                 
-                                 
-                             }];
+                                  actionWithTitle:@"Apple Maps"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction * action) {
+        
+        NSString* directionsURL;
+        if (from == nil) {
+            directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+        } else {
+            directionsURL = [NSString stringWithFormat:@"https://maps.apple.com/?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+        }
+        
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
+        }
+        
+        
+        
+    }];
     
     [alertPickMapEngine addAction:actionApple];
     
     UIAlertAction* actionGoogle = [UIAlertAction
-                                  actionWithTitle:@"Google Maps"
-                                  style:UIAlertActionStyleDefault
-                                  handler:^(UIAlertAction * action) {
-                                   
-                                      NSString *directionsURL;
-                                      
-                                      if (from == nil) {
-                                          directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
-                                      } else {
-                                          directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
-                                      }
-                                      
-                                      if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
-                                      
-                                          [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
-                                      
-                                      }
-                                      
-                                      
-                                  }];
+                                   actionWithTitle:@"Google Maps"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction * action) {
+        
+        NSString *directionsURL;
+        
+        if (from == nil) {
+            directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%f,%f&daddr=%@,%@",self.locationManager.location.coordinate.latitude, self.locationManager.location.coordinate.longitude, to.lat, to.lon];
+        } else {
+            directionsURL = [NSString stringWithFormat:@"https://maps.google.com/maps?saddr=%@,%@&daddr=%@,%@",from.lat, from.lon, to.lat, to.lon];
+        }
+        
+        if ([[UIApplication sharedApplication] respondsToSelector:@selector(openURL:options:completionHandler:)]) {
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString: directionsURL] options:@{} completionHandler:^(BOOL success) {}];
+            
+        }
+        
+        
+    }];
     
     [alertPickMapEngine addAction:actionGoogle];
     
     UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                            style:UIAlertActionStyleCancel
                                                          handler:^(UIAlertAction *action) {
-                                                         }];
+    }];
     
     [alertPickMapEngine addAction:cancelAction];
     [self presentViewController:alertPickMapEngine animated:YES completion:nil];
@@ -2439,20 +2418,20 @@ remarks:
 - (void)pickerView:(UIPickerView *)thePickerView
       didSelectRow:(NSInteger)row
        inComponent:(NSInteger)component {
-     
+    
     
     if (thePickerView == self.StartDtTimeZonePicker) {
         self.StartDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
         self.DatePickerStartDt.timeZone = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
         
         
-              
+        
     } else if (thePickerView == self.EndDtTimeZonePicker) {
         self.EndDtTimeZoneNameTextField.text = [self.timezones objectAtIndex: row];
         self.DatePickerEndDt.timeZone = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
         
-            
-    } 
+        
+    }
     
 }
 
@@ -2464,7 +2443,7 @@ remarks:
  */
 - (void)onDatePickerStartValueChanged:(UIDatePicker *)datePicker
 {
-   // NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
+    // NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
     NSTimeZone *timeZoneEndDp = [NSTimeZone timeZoneWithName:self.EndDtTimeZoneNameTextField.text];
     
     self.startDt = datePicker.date;
@@ -2472,7 +2451,7 @@ remarks:
     self.DatePickerEndDt.minimumDate = datePicker.date;
     
     NSComparisonResult result = [datePicker.date compare:self.endDt];
-
+    
     switch (result)
     {
         case NSOrderedDescending:
@@ -2507,7 +2486,7 @@ remarks:
 - (void)onDatePickerEndValueChanged:(UIDatePicker *)datePicker
 {
     NSTimeZone *timeZoneStartDp = [NSTimeZone timeZoneWithName:self.StartDtTimeZoneNameTextField.text];
-
+    
     self.endDt = datePicker.date;
     
     self.DatePickerStartDt.maximumDate = datePicker.date;
@@ -2543,7 +2522,7 @@ remarks:
 {
     
     //datePicker.minimumDate = self.DatePickerStartDt.date;
-
+    
 }
 
 
@@ -2595,14 +2574,14 @@ remarks:
     [keyboardRectAsObject getValue:&keyboardRect];
     
     /*
-    NSDictionary* info = [paramNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    CGRect bkgndRect = self.TextViewNotes.superview.frame;
-    bkgndRect.size.height += kbSize.height;
-    [self.TextViewNotes.superview setFrame:bkgndRect];
-    [self.ActivityScrollView setContentOffset:CGPointMake(0.0, self.TextViewNotes.frame.origin.y-kbSize.height) animated:YES];
-    */
-//    [self.TextViewNotes scrollRangeToVisible:self.TextViewNotes.selectedRange];
+     NSDictionary* info = [paramNotification userInfo];
+     CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+     CGRect bkgndRect = self.TextViewNotes.superview.frame;
+     bkgndRect.size.height += kbSize.height;
+     [self.TextViewNotes.superview setFrame:bkgndRect];
+     [self.ActivityScrollView setContentOffset:CGPointMake(0.0, self.TextViewNotes.frame.origin.y-kbSize.height) animated:YES];
+     */
+    //    [self.TextViewNotes scrollRangeToVisible:self.TextViewNotes.selectedRange];
     // [self.TextViewNotes setNeedsDisplay];
 }
 
@@ -2641,7 +2620,7 @@ remarks:
 -(void) InitGeoNotification :(NSString *) CategoryIdentifier :(bool) NotifyOnEntry :(NSString *) Body {
     
     UNMutableNotificationContent *content = [UNMutableNotificationContent new];
-    content.title = [NSString stringWithFormat: @"trHippo activity - %@\non trip %@", self.Activity.name, self.Trip.name];
+    content.title = [NSString stringWithFormat: @"Trips activity - %@\non trip %@", self.Activity.name, self.Trip.name];
     if (NotifyOnEntry) {
         content.subtitle = @"Check In";
     } else {
@@ -2663,7 +2642,7 @@ remarks:
     if([radius longValue] > 7500) {
         radius = [NSNumber numberWithBool:7500];
     }
-
+    
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake([self.Poi.lat doubleValue], [self.Poi.lon doubleValue]);
     CLCircularRegion* region = [[CLCircularRegion alloc] initWithCenter:center
                                                                  radius:[radius longValue] identifier:[NSString stringWithFormat:@"REGION~%@", identifier]];
@@ -2671,11 +2650,11 @@ remarks:
     region.notifyOnEntry = NotifyOnEntry;
     region.notifyOnExit = !NotifyOnEntry;
     
-     UNLocationNotificationTrigger *locTrigger = [UNLocationNotificationTrigger triggerWithRegion:region repeats:YES];
-
-     // UNTimeIntervalNotificationTrigger *locTrigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:60 repeats:YES];
+    UNLocationNotificationTrigger *locTrigger = [UNLocationNotificationTrigger triggerWithRegion:region repeats:YES];
     
-
+    // UNTimeIntervalNotificationTrigger *locTrigger = [UNTimeIntervalNotificationTrigger triggerWithTimeInterval:60 repeats:YES];
+    
+    
     
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier
                                                                           content:content trigger:locTrigger];
@@ -2715,9 +2694,9 @@ remarks:
  remarks:           TODO!
  */
 -(void) setGeoNotifyButton :(UIButton*)button :(bool)NotifyOnEntry {
-
+    
     NSString *ActivityIdentifier;
-
+    
     if (NotifyOnEntry) {
         ActivityIdentifier = [NSString stringWithFormat:@"CHECKIN~%@", self.Activity.key];
     } else {
@@ -2731,7 +2710,7 @@ remarks:
             
             if ([ActivityIdentifier isEqualToString:identifier]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                        button.hidden = false;
+                    button.hidden = false;
                 });
             }
             
@@ -2748,13 +2727,13 @@ remarks:
  */
 -(void) setGeoNotifyOff :(bool)NotifyOnEntry {
     NSString *identifier;
-
+    
     if (NotifyOnEntry) {
-       identifier = [NSString stringWithFormat:@"CHECKIN~%@", self.Activity.key];
+        identifier = [NSString stringWithFormat:@"CHECKIN~%@", self.Activity.key];
     } else {
-       identifier = [NSString stringWithFormat:@"CHECKOUT~%@", self.Activity.key];
+        identifier = [NSString stringWithFormat:@"CHECKOUT~%@", self.Activity.key];
     }
-
+    
     NSArray *pendingNotification = [NSArray arrayWithObjects:identifier, nil];
     [AppDelegateDef.UserNotificationCenter removePendingNotificationRequestsWithIdentifiers:pendingNotification];
 }
@@ -2777,7 +2756,7 @@ remarks:
         // set whatever color you want after tap button
         [button setBackgroundColor:[UIColor lightGrayColor]];
     }
-
+    
     
     return ModifiedToggleFlag;
 }
@@ -2800,7 +2779,7 @@ remarks:
     self.toggleNotifyLeavingFlag = [self setNotifyButtonToggle:self.ButtonLeaving :self.toggleNotifyLeavingFlag];
 }
 
-    
+
 /*
  created date:      24/06/2019
  last modified:     24/06/2019
@@ -2827,13 +2806,13 @@ remarks:
 - (IBAction)ButtonEditPhotoInfoPressed:(id)sender {
     
     UIAlertController *alert = [UIAlertController
-                                  alertControllerWithTitle:@"Edit information to selected photo"
-                                  message:@"Provide metadata"
-                                  preferredStyle:UIAlertControllerStyleAlert];
-
+                                alertControllerWithTitle:@"Edit information to selected photo"
+                                message:@"Provide metadata"
+                                preferredStyle:UIAlertControllerStyleAlert];
+    
     UIAlertAction *ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction * action) {
-                                                
+                                               handler:^(UIAlertAction * action) {
+        
         for (ImageCollectionRLM *imgObject in self.Activity.images) {
             if ([imgObject.key isEqualToString:self.SelectedImageKey]) {
                 UITextField *PhotoRemark = alert.textFields[0];
@@ -2845,12 +2824,12 @@ remarks:
             NSLog(@"%@",imgObject);
         }
     }];
-        
+    
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault
-                                                handler:^(UIAlertAction * action) {
-                                                        [alert dismissViewControllerAnimated:YES completion:nil];
-                                                }];
-
+                                                   handler:^(UIAlertAction * action) {
+        [alert dismissViewControllerAnimated:YES completion:nil];
+    }];
+    
     [alert addAction:ok];
     [alert addAction:cancel];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
@@ -2862,7 +2841,7 @@ remarks:
     }];
     [self presentViewController:alert animated:YES completion:nil];
     alert.view.tintColor = [UIColor colorNamed:@"MenuFGColor"];
-
+    
 }
 
 /*
@@ -2913,6 +2892,23 @@ remarks:
             [self.realm commitWriteTransaction];
         }
     }
+    
+    
+}
+
+/*
+ created date:      06/06/2022
+ last modified:     06/06/2022
+ remarks:
+ */
+- (IBAction)WesbiteButtonPressed:(id)sender {
+    UIApplication *application = [UIApplication sharedApplication];
+    NSURL *URL = [NSURL URLWithString:self.Poi.website];
+    [application openURL:URL options:@{} completionHandler:^(BOOL success) {
+        if (success) {
+             NSLog(@"Opened url");
+        }
+    }];
 }
 
 @end

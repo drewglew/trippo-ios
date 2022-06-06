@@ -1,9 +1,9 @@
-CLANG_CXX_LIBRARY = compiler-default
 CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = NO
+FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Realm/core"
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Realm" "${PODS_ROOT}/Headers/Public/TOCropViewController" "${PODS_ROOT}/Headers/Public/TesseractOCRiOS"
-LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Realm" "${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController" "${PODS_CONFIGURATION_BUILD_DIR}/TesseractOCRiOS" "${PODS_ROOT}/Realm/core" "${PODS_ROOT}/TesseractOCRiOS/TesseractOCR/lib"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"Realm" -l"TOCropViewController" -l"TesseractOCRiOS" -l"c++" -l"jpeg" -l"lept" -l"png" -l"realmcore-ios" -l"tesseract" -l"tiff" -l"z" -framework "Foundation" -framework "Security" -framework "UIKit"
+HEADER_SEARCH_PATHS = $(inherited) "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/Realm" "${PODS_ROOT}/Headers/Public/TOCropViewController" "${PODS_XCFRAMEWORKS_BUILD_DIR}/realm-monorepo/Headers"
+LIBRARY_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/Realm" "${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController" "${PODS_XCFRAMEWORKS_BUILD_DIR}/realm-monorepo"
+OTHER_LDFLAGS = $(inherited) -ObjC -l"Realm" -l"TOCropViewController" -l"c++" -l"realm-monorepo" -l"z" -framework "Security"
 PODS_BUILD_DIR = ${BUILD_DIR}
 PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
 PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
